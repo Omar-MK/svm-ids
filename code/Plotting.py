@@ -12,111 +12,31 @@ import pandas as pd
 from sklearn.decomposition import PCA
 from mpl_toolkits.mplot3d import Axes3D
 
-def plotCountBarChart(df, col, labels=[], tickLabels='', show=True, save=False, path='plots/'):
-    """
-    This method is used to plot a bar chart that displays counts of unique values of a single column in a dataframe
-    """
 
-    title, yLabel = setLabels(labels)
+def plotCountBarChart(df, fig_mate, tick_labels='', show=True, save=False):
+    """
+    This method is used to plot a bar chart that displays counts of
+    unique values of a single column in a dataframe.
+    This method uses a FigureMate objects to set its title, x-axis,
+    y-axis, and save path.
+    """
+    y_label = fig_mate.get_y()
+    x_label = fig_mate.get_x()
     fig = plt.figure()
     ax = fig.gca()
-    counts = df[col].value_counts()
-    counts.plot.bar(ax = ax, color = 'blue')
-    ax.set_title(title + ' ' + col)
+    counts = df[x_label].value_counts()
+    counts.plot.bar(ax = ax)
+    ax.set_title(fig_mate.get_heading())
     if tickLabels == '':
-        ax.set(ylabel=yLabel, xlabel=col)
+        ax.set(ylabel=y_label, xlabel=x_label)
     else:
-        ax.set(xticklabels=tickLabels, ylabel=yLabel, xlabel=col)
+        ax.set(xticklabels=tickLabels, ylabel=y_label, xlabel=x_label)
     plt.tight_layout()
     if save:
-        plt.savefig((path + title + '_' + col).replace(' ', '_') + ".png", dpi=300)
+        plt.savefig(fig_mate.get_path() + ".png", dpi=300)
     if show:
         plt.show()
     plt.close()
-
-
-def plotHistogram(df, cols, labels = [], bins = 10, show=True, save=False, path='plots/'):
-    """
-    This method is used to plot histograms of multiple columns in a dataframe
-    """
-    title, yLabel = setLabels(labels)
-    for col in cols:
-        fig = plt.figure()
-        ax = fig.gca()
-        df[col].plot.hist(ax = ax, bins = bins)
-        ax.set_title(title + ' ' + col)
-        ax.set_xlabel('Normalised ' + col)
-        ax.set_ylabel('Density')
-        plt.tight_layout()
-        if save:
-            plt.savefig((path + title + '_' + col).replace(' ', '_') + ".png", dpi=300)
-        if show:
-            plt.show()
-        plt.close()
-
-
-def plotDensityHist(df, cols, labels = [], bins = 20, hist = False, show=True, save=False, path='plots/'):
-    """
-    This method is used to plot combinations of histograms and kde plots of multiple columns in a dataframe.
-    """
-
-    title, yLabel = setLabels(labels)
-    for col in cols:
-        fig = plt.figure()
-        ax = fig.gca()
-        sns.set_style("whitegrid")
-        sns.distplot(df[col], bins=bins, rug=True, hist=hist)
-        plt.title(title + ' ' + col)
-        plt.xlabel('Normalised ' + col)
-        plt.ylabel('Density')
-        plt.tight_layout()
-        if save:
-            plt.savefig((path + title + '_' + col).replace(' ', '_') + ".png", dpi=300)
-        if show:
-            plt.show()
-        plt.close()
-
-
-def plotScatter(df, input_cols, output_cols, alpha = 1, show=True, save=False, path='plots/', multiFigure=True):
-    """
-    This method is used to plot a scattergraph of multiple columns in a dataframe.
-    """
-
-    if multiFigure:
-        for outCol in output_cols:
-            for inCol in input_cols:
-                fig = plt.figure()
-                ax = fig.gca()
-                df.plot.scatter(x = inCol, y = outCol, ax = ax, alpha = alpha)
-                ax.set_title('Scatter plot of ' + inCol + ' vs ' + outCol)
-                ax.set_xlabel('Normalised ' + inCol)
-                ax.set_ylabel('Normalised ' + outCol)
-                if save:
-                    plt.savefig((path + 'Scatter_plot_' + inCol + '_vs_' + outCol).replace(' ', '_') + ".png", dpi=300)
-                if show:
-                    plt.show()
-                plt.close()
-    else:
-        color = ['blue', 'red']
-        for inCol in input_cols:
-            fig = plt.figure()
-            ax = fig.gca()
-            outputs = ''
-            i = 0
-            for outCol in output_cols:
-                df.plot.scatter(x = inCol, y = outCol, ax = ax, alpha = alpha, color=color[i], label=outCol)
-                outputs += outCol + ', '
-                i += 1
-            outputs = outputs[:-2]
-            ax.set_title('Scatter plot of ' + inCol + ' vs ' + outputs)
-            ax.set_xlabel('Normalised ' + inCol)
-            ax.set_ylabel(outputs)
-            ax.legend()
-            if save:
-                plt.savefig((path + 'Scatter_plot_' + inCol + '_vs_' + outputs).replace(' ', '_') + ".png", dpi=300)
-            if show:
-                plt.show()
-            plt.close()
 
 
 def plotBox(df, input_cols, output_cols, show=True, save=False, path='plots/'):
@@ -159,20 +79,6 @@ def plotViolin(df, input_cols, output_cols, show=True, save=False, path='plots/'
             if show:
                 plt.show()
             plt.close()
-
-
-def setLabels(labels):
-    """
-    Helper method used to get the title and y-axis label from a list.
-    """
-
-    title = ''
-    yLabel = 'Count'
-    if len(labels) > 0:
-        title = labels[0]
-        if len(labels) == 2:
-            yLabel = labels[1]
-    return title, yLabel
 
 
 def plotClusters(df, input_cols, three_D=False, label_prefixes='', title='', show=True, save=False, path='plots/'):
@@ -245,7 +151,7 @@ def plotSeperation(df, cols, std_dev=0, show=True, save=False, path='plots/'):
         ax.set_title('Line plot of feature mean value for each class')
     else:
         ax.set_title('Line plot of feature mean value with ' + str(std_dev) + ' SD error regions for each class')
-    ax.set_xlabel('Feature number')
+    ax.set_xlabel('Features')
     ax.set_ylabel('Feature mean value per class')
     for label in set(df.iloc[:, -1]):
         label_rows = df[df.iloc[:, -1] == label]
