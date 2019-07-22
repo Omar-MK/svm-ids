@@ -1,0 +1,189 @@
+Loading  Monday-WorkingHours.pcap_ISCX.csv
+sys:1: DtypeWarning: Columns (20) have mixed types. Specify dtype option on import or set low_memory=False.
+Checking for null values
+64 NaN and inf cells found in df
+Number of columns containing NaN/inf values:  1
+Number of rows dropped containing NaN/inf values:  64
+Checking data types...
+The following columns were determined to contain inconsistent data types:
+['Flow ID', 'Source IP', 'Destination IP', 'Timestamp', 'Flow Bytes/s', 'Flow Packets/s']
+Attempting fix...
+could not convert string to float: '192.168.10.5-8.254.250.126-49188-80-6'
+could not convert string to float: '8.254.250.126'
+could not convert string to float: '192.168.10.5'
+Timestamp column changed to Date/Time format
+Flow Bytes/s column changed to float64 format
+Flow Packets/s column changed to float64 format
+Remaining columns with unexpected data types are:  ['Flow ID', 'Source IP', 'Destination IP']
+Augmenting temporal features...
+Augmenting features to keep track of connections by IP addresses...
+Unique attacks in Monday-WorkingHours.pcap_ISCX.csv :  ['BENIGN']
+Adding datapoints from current file to main database...
+Number of unique classes as expected
+cocatenation sucess:  True
+Loading  Tuesday-WorkingHours.pcap_ISCX.csv
+sys:1: DtypeWarning: Columns (20,21) have mixed types. Specify dtype option on import or set low_memory=False.
+Checking for null values
+201 NaN and inf cells found in df
+Number of columns containing NaN/inf values:  1
+Number of rows dropped containing NaN/inf values:  201
+Checking data types...
+The following columns were determined to contain inconsistent data types:
+['Flow ID', 'Source IP', 'Destination IP', 'Timestamp', 'Flow Bytes/s', 'Flow Packets/s']
+Attempting fix...
+could not convert string to float: '192.168.10.3-192.168.10.5-88-49182-6'
+could not convert string to float: '192.168.10.5'
+could not convert string to float: '192.168.10.3'
+Timestamp column changed to Date/Time format
+Flow Bytes/s column changed to float64 format
+Flow Packets/s column changed to float64 format
+Remaining columns with unexpected data types are:  ['Flow ID', 'Source IP', 'Destination IP']
+Augmenting temporal features...
+Augmenting features to keep track of connections by IP addresses...
+Unique attacks in Tuesday-WorkingHours.pcap_ISCX.csv :  ['BENIGN', 'SSH-Patator', 'FTP-Patator']
+Adding datapoints from current file to main database...
+Number of unique classes as expected
+cocatenation sucess:  True
+Loading  Wednesday-workingHours.pcap_ISCX.csv
+Checking for null values
+1008 NaN and inf cells found in df
+Number of columns containing NaN/inf values:  1
+Number of rows dropped containing NaN/inf values:  1008
+Checking data types...
+The following columns were determined to contain inconsistent data types:
+['Flow ID', 'Source IP', 'Destination IP', 'Timestamp', 'Flow Bytes/s', 'Flow Packets/s']
+Attempting fix...
+could not convert string to float: '192.168.10.14-209.48.71.168-49459-80-6'
+could not convert string to float: '192.168.10.14'
+could not convert string to float: '209.48.71.168'
+Timestamp column changed to Date/Time format
+Flow Bytes/s column changed to float64 format
+Flow Packets/s column changed to float64 format
+Remaining columns with unexpected data types are:  ['Flow ID', 'Source IP', 'Destination IP']
+Augmenting temporal features...
+Augmenting features to keep track of connections by IP addresses...
+Unique attacks in Wednesday-workingHours.pcap_ISCX.csv :  ['BENIGN', 'DoS GoldenEye', 'DoS Hulk', 'DoS Slowhttptest', 'DoS slowloris', 'Heartbleed']
+Adding datapoints from current file to main database...
+Number of unique classes as expected
+cocatenation sucess:  True
+Loading  Thursday-WorkingHours-Morning-WebAttacks.pcap_ISCX.csv
+Checking for null values
+20 NaN and inf cells found in df
+Number of columns containing NaN/inf values:  1
+Number of rows dropped containing NaN/inf values:  20
+Checking data types...
+The following columns were determined to contain inconsistent data types:
+['Flow ID', 'Source IP', 'Destination IP', 'Timestamp', 'Flow Bytes/s', 'Flow Packets/s']
+Attempting fix...
+could not convert string to float: '192.168.10.3-192.168.10.50-389-33898-6'
+could not convert string to float: '192.168.10.50'
+could not convert string to float: '192.168.10.3'
+Timestamp column changed to Date/Time format
+Flow Bytes/s column changed to float64 format
+Flow Packets/s column changed to float64 format
+Remaining columns with unexpected data types are:  ['Flow ID', 'Source IP', 'Destination IP']
+Augmenting temporal features...
+Augmenting features to keep track of connections by IP addresses...
+Unique attacks in Thursday-WorkingHours-Morning-WebAttacks.pcap_ISCX.csv :  ['BENIGN', 'Web Attack – Sql Injection', 'Web Attack – XSS', 'Web Attack – Brute Force']
+Adding datapoints from current file to main database...
+Number of unique classes as expected
+cocatenation sucess:  True
+Loading  Thursday-WorkingHours-Afternoon-Infilteration.pcap_ISCX.csv
+Checking for null values
+18 NaN and inf cells found in df
+Number of columns containing NaN/inf values:  1
+Number of rows dropped containing NaN/inf values:  18
+Checking data types...
+The following columns were determined to contain inconsistent data types:
+['Flow ID', 'Source IP', 'Destination IP', 'Timestamp', 'Flow Bytes/s', 'Flow Packets/s']
+Attempting fix...
+could not convert string to float: '192.168.10.12-192.168.10.50-60148-22-6'
+could not convert string to float: '192.168.10.12'
+could not convert string to float: '192.168.10.50'
+Timestamp column changed to Date/Time format
+Flow Bytes/s column changed to float64 format
+Flow Packets/s column changed to float64 format
+Remaining columns with unexpected data types are:  ['Flow ID', 'Source IP', 'Destination IP']
+Augmenting temporal features...
+Augmenting features to keep track of connections by IP addresses...
+Unique attacks in Thursday-WorkingHours-Afternoon-Infilteration.pcap_ISCX.csv :  ['BENIGN', 'Infiltration']
+Adding datapoints from current file to main database...
+Number of unique classes as expected
+cocatenation sucess:  True
+Loading  Friday-WorkingHours-Morning.pcap_ISCX.csv
+Checking for null values
+28 NaN and inf cells found in df
+Number of columns containing NaN/inf values:  1
+Number of rows dropped containing NaN/inf values:  28
+Checking data types...
+The following columns were determined to contain inconsistent data types:
+['Flow ID', 'Source IP', 'Destination IP', 'Timestamp', 'Flow Bytes/s', 'Flow Packets/s']
+Attempting fix...
+could not convert string to float: '192.168.10.3-192.168.10.50-3268-56108-6'
+could not convert string to float: '192.168.10.50'
+could not convert string to float: '192.168.10.3'
+Timestamp column changed to Date/Time format
+Flow Bytes/s column changed to float64 format
+Flow Packets/s column changed to float64 format
+Remaining columns with unexpected data types are:  ['Flow ID', 'Source IP', 'Destination IP']
+Augmenting temporal features...
+Augmenting features to keep track of connections by IP addresses...
+Unique attacks in Friday-WorkingHours-Morning.pcap_ISCX.csv :  ['Bot', 'BENIGN']
+Adding datapoints from current file to main database...
+Number of unique classes as expected
+cocatenation sucess:  True
+Loading  Friday-WorkingHours-Afternoon-PortScan.pcap_ISCX.csv
+Checking for null values
+15 NaN and inf cells found in df
+Number of columns containing NaN/inf values:  1
+Number of rows dropped containing NaN/inf values:  15
+Checking data types...
+The following columns were determined to contain inconsistent data types:
+['Flow ID', 'Source IP', 'Destination IP', 'Timestamp', 'Flow Bytes/s', 'Flow Packets/s']
+Attempting fix...
+could not convert string to float: '192.168.10.12-192.168.10.50-35396-22-6'
+could not convert string to float: '192.168.10.12'
+could not convert string to float: '192.168.10.50'
+Timestamp column changed to Date/Time format
+Flow Bytes/s column changed to float64 format
+Flow Packets/s column changed to float64 format
+Remaining columns with unexpected data types are:  ['Flow ID', 'Source IP', 'Destination IP']
+Augmenting temporal features...
+Augmenting features to keep track of connections by IP addresses...
+Unique attacks in Friday-WorkingHours-Afternoon-PortScan.pcap_ISCX.csv :  ['BENIGN', 'PortScan']
+Adding datapoints from current file to main database...
+Number of unique classes as expected
+cocatenation sucess:  True
+Loading  Friday-WorkingHours-Afternoon-DDos.pcap_ISCX.csv
+Checking for null values
+4 NaN and inf cells found in df
+Number of columns containing NaN/inf values:  1
+Number of rows dropped containing NaN/inf values:  4
+Checking data types...
+The following columns were determined to contain inconsistent data types:
+['Flow ID', 'Source IP', 'Destination IP', 'Timestamp', 'Flow Bytes/s', 'Flow Packets/s']
+Attempting fix...
+could not convert string to float: '192.168.10.5-104.16.207.165-54865-443-6'
+could not convert string to float: '104.16.207.165'
+could not convert string to float: '192.168.10.5'
+Timestamp column changed to Date/Time format
+Flow Bytes/s column changed to float64 format
+Flow Packets/s column changed to float64 format
+Remaining columns with unexpected data types are:  ['Flow ID', 'Source IP', 'Destination IP']
+Augmenting temporal features...
+Augmenting features to keep track of connections by IP addresses...
+Unique attacks in Friday-WorkingHours-Afternoon-DDos.pcap_ISCX.csv :  ['BENIGN', 'DDoS']
+Adding datapoints from current file to main database...
+Number of unique classes as expected
+cocatenation sucess:  True
+Dropping no longer needed features...
+Encoding class labels...
+Calculating number of duplicated rows...
+Number of duplicated rows:  118385
+Creating csv with class keys and values...
+Splitting data into training and testing sets...
+Empty time difference values are filled with max time diff from training data
+Creating multiclass dataframes...
+Creating binary dataframes...
+Attack = 1 in binary data
+Saving datasets...

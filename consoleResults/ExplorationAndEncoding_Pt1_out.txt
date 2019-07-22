@@ -1,0 +1,217 @@
+*** Checking the number of samples in the dataframes for each class ***
+trainingset_augmented_multiclass
+ 0     1765177
+4      146906
+2      102411
+10      87564
+3        8233
+7        6347
+11       4718
+6        4541
+5        4221
+1        1562
+12       1205
+14        521
+9          29
+13         17
+8           9
+
+*** Checking the counts of categorical data in training sets ***
+number of unique Destination Ports:  50175
+
+Destination Port
+53       764678
+80       456050
+443      401560
+123       18933
+22        13381
+21        10656
+137        5648
+389        5083
+88         4403
+465        2921
+139        2283
+8080       2205
+3268       2020
+445        1672
+0          1275
+138        1237
+135        1085
+49666       627
+5353        526
+5355        305
+49671       254
+1124        249
+1900        233
+1041        230
+1042        228
+1037        223
+1026        216
+1           202
+444         186
+42          178
+          ...
+23894         1
+41283         1
+11608         1
+16961         1
+3420          1
+30037         1
+22876         1
+21841         1
+47439         1
+30038         1
+3417          1
+41837         1
+9564          1
+11613         1
+34121         1
+38219         1
+20818         1
+18769         1
+25941         1
+7035          1
+39243         1
+33641         1
+3416          1
+11612         1
+15231         1
+44367         1
+19795         1
+25942         1
+11133         1
+44052         1
+Name: Destination Port, Length: 50175, dtype: int64
+number of unique Protocols:  3
+Protocol
+6     1335157
+17     796991
+0        1275
+
+OUTLIER INFO:
+
+Multiclass Training:
+
+Class: 0
+Outlier information
+Total outliers found:  2084714
+That makes up  1.2051251425060883 % of the data
+Maximum number of outliers in a single column:  103488
+Column name:  Bwd IAT Total
+The number of rows containing outliers is:  556656
+Percentage of rows containing outliers:  31.535421093748674 \%
+
+
+Class: 1
+Outlier information
+Total outliers found:  2112
+That makes up  1.3797068123023857 % of the data
+Maximum number of outliers in a single column:  145
+Column name:  Av time diff between last n connections, n=20
+The number of rows containing outliers is:  475
+Percentage of rows containing outliers:  30.409731113956468 \%
+
+Class: 2
+Outlier information
+Total outliers found:  32017
+That makes up  0.31901268577853265 % of the data
+Maximum number of outliers in a single column:  6222
+Column name:  Idle Min
+The number of rows containing outliers is:  14569
+Percentage of rows containing outliers:  14.226010877737744 \%
+
+Class: 3
+Outlier information
+Total outliers found:  13382
+That makes up  1.658581566964208 % of the data
+Maximum number of outliers in a single column:  653
+Column name:  time since last conn
+The number of rows containing outliers is:  2752
+Percentage of rows containing outliers:  33.426454512328434 \%
+
+Class: 4
+Outlier information
+Total outliers found:  119846
+That makes up  0.8324495713905073 % of the data
+Maximum number of outliers in a single column:  11629
+Column name:  PSH Flag Count
+The number of rows containing outliers is:  34909
+Percentage of rows containing outliers:  23.76281431663785 \%
+
+Class: 5
+Outlier information
+Total outliers found:  6040
+That makes up  1.4601434034879055 % of the data
+Maximum number of outliers in a single column:  238
+Column name:  Total Length of Bwd Packets
+The number of rows containing outliers is:  1339
+Percentage of rows containing outliers:  31.72234067756456 \%
+
+Class:6
+Outlier information
+Total outliers found:  1740
+That makes up  0.390995420409961 % of the data
+Maximum number of outliers in a single column:  124
+Column name:  Fwd IAT Std
+The number of rows containing outliers is:  538
+Percentage of rows containing outliers:  11.847610658445276 \%
+
+Class: 7
+Outlier information
+Total outliers found:  808
+That makes up  0.1299022839007984 % of the data
+Maximum number of outliers in a single column:  84
+Column name:  Flow Packets/s
+The number of rows containing outliers is:  282
+Percentage of rows containing outliers:  4.443043957775327 \%
+
+Class: 8
+Outlier information
+Total outliers found:  31260
+That makes up  0.36428165894287 % of the data
+Maximum number of outliers in a single column:  1305
+Column name:  % connections s-IP to d-IP within n=20
+The number of rows containing outliers is:  3690
+Percentage of rows containing outliers:  4.214060572838153 \%
+
+Class: 9
+Outlier information
+Total outliers found:  1834
+That makes up  0.39665717919215165 % of the data
+Maximum number of outliers in a single column:  196
+Column name:  % connections s-IP to d-port within n=5
+The number of rows containing outliers is:  528
+Percentage of rows containing outliers:  11.191182704535821 \%
+
+Class: 10
+Outlier information
+Total outliers found:  3515
+That makes up  2.057793857646329 % of the data
+Maximum number of outliers in a single column:  135
+Column name:  Flow IAT Max
+The number of rows containing outliers is:  461
+Percentage of rows containing outliers:  26.448651749856566 \%
+
+Binary Training
+
+Class: 0
+Outlier information
+Total outliers found:  2084714
+That makes up  1.2051251425060883 % of the data
+Maximum number of outliers in a single column:  103488
+Column name:  Bwd IAT Total
+The number of rows containing outliers is:  556656
+Percentage of rows containing outliers:  31.535421093748674 \%
+
+Class: 1
+Outlier information
+Total outliers found:  430609
+That makes up  1.193092664290358 % of the data
+Maximum number of outliers in a single column:  23292
+Column name:  Bwd IAT Max
+The number of rows containing outliers is:  83126
+Percentage of rows containing outliers:  22.571167903031355 \%
+
+
+number of correlations found:  13
+Correlated features are : [('Flow Duration', 'Fwd IAT Total'), ('Total Fwd Packets', 'Subflow Fwd Packets'), ('Total Backward Packets', 'Subflow Bwd Packets'), ('Total Length of Fwd Packets', 'Subflow Fwd Bytes'), ('Total Length of Bwd Packets', 'Subflow Bwd Bytes'), ('Fwd Packet Length Mean', 'Avg Fwd Segment Size'), ('Bwd Packet Length Max', 'Bwd Packet Length Std'), ('Bwd Packet Length Mean', 'Avg Bwd Segment Size'), ('Flow Packets/s', 'Fwd Packets/s'), ('Fwd Header Length', 'Fwd Header Length.1'), ('Max Packet Length', 'Packet Length Std'), ('% connections d-IP within n=20', '% connections d-IP within n=15'), ('% connections s-IP within n=20', '% connections s-IP within n=15')]

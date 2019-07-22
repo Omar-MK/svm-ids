@@ -1,0 +1,9 @@
+0. will probably need to fix figures for other svm i.e. remove/replace string from bagging classier
+
+add balance_by_sampling in both puresvm and ensemble learning
+
+implement stochastic gradient descent in SVM.py
+sklearn.linear_model.SGDClassifier
+
+
+3. implement a method you pass to it an index and it searches a list of saved training model objections for a model and prints stats for that model. Then plot the conf matrix for this model.
