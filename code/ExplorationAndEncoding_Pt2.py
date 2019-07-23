@@ -19,8 +19,6 @@ from DataChecking import *
 from DataTransformation import *
 from Plotting import *
 from cleaningAndAugmentation import save_dataset
-from sklearn.preprocessing import StandardScaler
-from DataWrangler import DataWrangler
 
 
 def main():
@@ -31,7 +29,8 @@ def main():
 
     # loading stored object containing datasets
     print("*** Loading datasets.obj object ***")
-    datasets = pickle.load(open("../datasets/transformed/datasets_end_pt1.obj", "rb"))
+    datasets = pickle.load(
+        open("../datasets/transformed/datasets_end_pt1.obj", "rb"))
 
     # now applying un-supervised data quality boosting methods
 
@@ -45,7 +44,11 @@ def main():
     # dataset since co-variate features in this dataset will also be covariate in
     # the binary class, yet not neccessarily the other way around.
     print("\n*** Checking for co-variate numerical features ***")
-    common_correlated_features = get_correlated_features(datasets[0], cols=datasets[0].columns[2:-1], classification=True, threshold=0.9, verbose=True)
+    common_correlated_features = get_correlated_features(datasets[0],
+        cols=datasets[0].columns[2:-1],
+        classification=True,
+        threshold=0.9,
+        verbose=True)
 
     # now removing correlated features
     print("removing correlated features")
@@ -56,10 +59,10 @@ def main():
     print("features remaining: ", datasets[0].columns)
     print("number of features remaining: ", len(datasets[0].columns))
 
-    # the next step is to peform principal component analysis (FAMD) to project and
-    # cat features and numerical features onto common planes. This also reduces the
-    # dimensionality of the datasets. This is followed by KMeans clustering to
-    # balance out the counts of rows for each class.
+    # the next step is to peform principal component analysis (FAMD) to project
+    # and cat features and numerical features onto common planes. This also
+    # reduces the dimensionality of the datasets. This is followed by KMeans
+    # clustering to balance out the counts of rows for each class.
     print("\n*** Carrying out FAMD and clustering ***")
 
     for i in range(len(datasets)):
@@ -71,7 +74,10 @@ def main():
             # balancing sample counts for each class through clustering - only
             # applied on training sets
             print("now clustering data")
-            df = balance_sample_counts(df, max_clusters=3000, mini_batch_multiplier=3, verbose=True)
+            df = balance_sample_counts(df,
+                max_clusters=3000,
+                mini_batch_multiplier=3,
+                verbose=True)
 
             # Re-checking outliers
             print("\nRe-checking for outliers after clustering")
@@ -79,17 +85,41 @@ def main():
                 print("\nOutlier information for class : ", label)
                 print_outlier_information(df[df.iloc[:, -1] == label].iloc[:, :-1], 3)
 
+            # remove outliers
+            outliers, outlier_loc = get_outliers(df, df.columns[:-1], 3)
+            row = []
+            for (row, count) in outlier_loc:
+                rows += [row]
+            df = df.drop(df.index[rows])
+            print("total sum of outliers dropped = ", len(rows))
+
+
             # re-visualising seperabilitiy of left over engineered features
             print("\nSaving seprability plots")
-            plotSeperation(df, df.columns[:-1], std_dev=0.5, show=False, save=True, path='../plots/visualisation/sep_after_' + fnames[i])
+            plotSeperation(df,
+                df.columns[:-1],
+                std_dev=0.5,
+                show=False,
+                save=True,
+                path='../plots/visualisation/sep_after_' + fnames[i])
 
             # visualising clusters
             print("\nSaving cluster plots")
-            plotClusters(df, df.columns[:-1], title="Cluster visualisation post feature engineering", label_prefixes="Connection type: ", three_D=True, show=False, save=True, path='../plots/visualisation/cluster_after_' + fnames[i])
+            plotClusters(df,
+                df.columns[:-1],
+                title="Cluster visualisation post feature engineering",
+                label_prefixes="Connection type: ",
+                three_D=True,
+                show=False,
+                save=True,
+                path='../plots/visualisation/cluster_after_' + fnames[i])
 
         # saving final datasets
         print("\n*** Saving %s ***" % fnames[i])
-        save_dataset(df, fnames[i] + "_unsupervised", "../datasets/transformed/postUnsupervised/", save_as="obj")
+        save_dataset(df,
+            fnames[i] + "_unsupervised",
+            "../datasets/transformed/postUnsupervised/",
+            save_as="obj")
 
 if __name__ == "__main__":
     main()
