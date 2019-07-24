@@ -3,6 +3,7 @@ Author: Omar M Khalil - 170018405
 
 This file contains methods used for checking raw data in a Pandas DataFrame
 """
+import pandas as pd
 
 def check_num_of_unique_values(df, expectedNumOfUniqueVals):
     """
@@ -27,7 +28,7 @@ def get_outliers(df, cols, threshold):
     outliers = [] # a list of the columns that contain outliers and the count of outliers in those columns
     outlierLocations = [0] * len(df.index) # a list of the number of outliers at each row index
     for col in cols:
-        rows = df.loc[:][col]
+        rows = df.loc[:, col]
         mean = rows.mean()
         thresholdDiff = threshold * rows.std()
 
@@ -46,7 +47,7 @@ def get_outliers(df, cols, threshold):
 
             # now the outlierLocations list is updated
             for index in outlier_rows:
-                outlierLocations[index] = outlierLocations[index] + 1
+                outlierLocations[index] += 1
 
     # collecting only the rows with outliers into a single list of tuples from outlierLocations
     reduced_outlierLocations = []
@@ -57,6 +58,44 @@ def get_outliers(df, cols, threshold):
         j += 1
     return outliers, reduced_outlierLocations
 
+
+def drop_outliers(df, cols, threshold):
+    """
+    This is an optimised alternative to get_outliers. The method will find outliers for each class in the dataframe (where the class or labels column is the last column) and drop them returning a dataframe with removed outliers.
+    """
+    # initialise empty dataframe object (new_df)
+    new_df = None
+    # iterate over each label in df
+    j = 0
+    for label in set(df.iloc[:, -1]):
+        # take the sub-df of the current label
+        sub_df = df[df.iloc[:, -1] == label]
+        # initialise list to hold index values of rows to be dropped
+        rows_to_drop = []
+        # iterate over each column
+        for col in cols:
+            # find the maximum distance from mean allowable in the column
+            mean = sub_df.loc[:, col].mean()
+            max_dist_from_mean = sub_df.loc[:, col].std() * threshold
+            # iterate over the rows of the column
+            i = 0
+            for val in sub_df.loc[:, col].values:
+                # if a row value violates condition add true to list
+                if abs(mean - val) > max_dist_from_mean:
+                    rows_to_drop += [i]
+                i += 1
+        # drop rows with outliers
+        index_vals = []
+        sub_df.drop(sub_df.index[rows_to_drop])
+
+        # concatenate data to new_df
+        if j == 0:
+            new_df = sub_df
+        else:
+            new_df = new_df.append(sub_df, ignore_index=True)
+        j += 1
+
+    return new_df
 
 
 def print_outlier_information(df, threshold):

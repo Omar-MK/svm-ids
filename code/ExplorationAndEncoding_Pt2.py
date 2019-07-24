@@ -1,16 +1,24 @@
 """
 Author: Omar M Khalil - 170018405
 
-This is the second part of ExplorationAndEncoding_pt1.py and includes further changes to post-supervised datasets.
+This is the second part of ExplorationAndEncoding_pt1.py and includes further
+changes to post-supervised datasets.
 
 The file contains code used to:
 1. Load the object containing the datasets.
-2. Check for co-variate numerical features and reduce the features to remove co-variance.
-3. carry out FAMD projection of the data to project the features into a lower feature space. This has the effect of turning all features into numeric features.
-4. Using the numeric feautres, KMeans clustering is applied balance data point count per class.
-5. Re-check for outliers, and based on user input, the outliers are removed or kept.
-6. Plot the seprability plot and 3D cluster plots from steps 10 and 11 are remade to visualise effect of changes.
-7. Save the post-superivsed datasets.
+2. Remove outliers within each class
+3. Check for co-variate numerical features and reduce the features to remove
+co-variance.
+4. carry out FAMD projection of the data to project the features into a lower
+feature space. This has the effect of turning all features into numeric
+features.
+5. Using the numeric feautres, KMeans clustering is applied balance data point
+count per class.
+6. Re-check for outliers, and based on user input, the outliers are removed or
+kept.
+7. Plot the seprability plot and 3D cluster plots from steps 10 and 11 are
+remade to visualise effect of changes.
+8. Save the post-superivsed datasets.
 """
 
 import pandas as pd
@@ -18,7 +26,7 @@ import pickle
 from DataChecking import *
 from DataTransformation import *
 from Plotting import *
-from cleaningAndAugmentation import save_dataset
+from CleaningAndAugmentation import save_dataset
 from sklearn.preprocessing import StandardScaler
 from DataWrangler import DataWrangler
 
@@ -38,35 +46,20 @@ def main():
     print("*** Loading datasets.obj object ***")
     datasets = pickle.load(open("../datasets/transformed/datasets_end_pt1.obj", "rb"))
 
-    # now applying un-supervised data quality boosting methods
-    print("\n*** Checking for outliers after clustering ***")
-    for label in set(df.iloc[:, -1]):
-        print("\nOutlier information for class : ", label)
-        print_outlier_information(df[df.iloc[:, -1] == label].iloc[:, :-1], 3)
-
-    # first removing "outliers" i.e. datapoints that are 3 standard deviations from mean.
+    # first removing "outliers" datapoints 3 standard deviations from mean.
     print("*** Removing outliers ***")
-    for i in range (datasets):
-        # getting a list of outlier tuples (row num, count of outliers)
-        df = datasets[i]
-        outliers, outlier_loc = get_outliers(df, df.columns[:1], 3)
-        rows = []
-        for (row, count) in outlier_loc:
-            rows += [row]
-        df = df.drop(df.index[rows])
-        datasets[i] = df
-        print("total rows removed in " + fnames[i] + " = " + len(rows))
+    for i in range(2):
+        datasets[i] = drop_outliers(datasets[i], datasets[i].iloc[:, 2:-1], 3)
 
-
-    # first We can check to see if any numerical features are highly correlated
+    # next we can check to see if any numerical features are highly correlated
     # (co-variate). This could allow us to reduce the number of features. The
     # pearson r test is used to detect if there is any correlation between
     # numerical features.
     # the following code will find the correlated features for every class and
     # append a list of tuples of the feature column numbers in
-    # all_correlated_features. Note, this process is only applied to the multiclass
-    # dataset since co-variate features in this dataset will also be covariate in
-    # the binary class, yet not neccessarily the other way around.
+    # all_correlated_features. Note, this process is only applied to the
+    # multiclass dataset since co-variate features in this dataset will also be
+    # covariate in the binary class, yet not neccessarily the other way around.
     print("\n*** Checking for co-variate numerical features ***")
     common_correlated_features = get_correlated_features(datasets[0], cols=datasets[0].columns[2:-1], classification=True, threshold=0.9, verbose=True)
 
