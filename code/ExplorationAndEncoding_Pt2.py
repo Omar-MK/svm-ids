@@ -29,11 +29,34 @@ def main():
             "testingset_augmented_multiclass",
             "testingset_augmented_binary"]
 
+    title_prefix = ['Multiclass Training Set ',
+        'Binary Training Set ',
+        'Multiclass Testing Set ',
+        'Binary Testing Set ']
+
     # loading stored object containing datasets
     print("*** Loading datasets.obj object ***")
     datasets = pickle.load(open("../datasets/transformed/datasets_end_pt1.obj", "rb"))
 
     # now applying un-supervised data quality boosting methods
+    print("\n*** Checking for outliers after clustering ***")
+    for label in set(df.iloc[:, -1]):
+        print("\nOutlier information for class : ", label)
+        print_outlier_information(df[df.iloc[:, -1] == label].iloc[:, :-1], 3)
+
+    # first removing "outliers" i.e. datapoints that are 3 standard deviations from mean.
+    print("*** Removing outliers ***")
+    for i in range (datasets):
+        # getting a list of outlier tuples (row num, count of outliers)
+        df = datasets[i]
+        outliers, outlier_loc = get_outliers(df, df.columns[:1], 3)
+        rows = []
+        for (row, count) in outlier_loc:
+            rows += [row]
+        df = df.drop(df.index[rows])
+        datasets[i] = df
+        print("total rows removed in " + fnames[i] + " = " + len(rows))
+
 
     # first We can check to see if any numerical features are highly correlated
     # (co-variate). This could allow us to reduce the number of features. The
@@ -73,19 +96,20 @@ def main():
             print("now clustering data")
             df = balance_sample_counts(df, max_clusters=3000, mini_batch_multiplier=3, verbose=True)
 
-            # Re-checking outliers
-            print("\nRe-checking for outliers after clustering")
-            for label in set(df.iloc[:, -1]):
-                print("\nOutlier information for class : ", label)
-                print_outlier_information(df[df.iloc[:, -1] == label].iloc[:, :-1], 3)
+            # plotting barchart to vis ditribution of labels
+            print("Saving label count plot")
+            fm = FigureMate(heading=title_prefix[i], tick_labels=axes_labels[i%2], path="../plots/visualisation/after/")
+            construct_frequency_plot(datasets[i], datasets[i].columns[-1], fm, show=0, save=1)
 
             # re-visualising seperabilitiy of left over engineered features
-            print("\nSaving seprability plots")
-            plotSeperation(df, df.columns[:-1], std_dev=0.5, show=False, save=True, path='../plots/visualisation/sep_after_' + fnames[i])
+            print("\nSaving seprability plot")
+            fm = FigureMate(heading=title_prefix[i%2], path="../plots/visualisation/after/")
+            construct_seperation_plot(df, df.columns[:-1], fm, std_dev=0.5, show=0, save=1)
 
             # visualising clusters
-            print("\nSaving cluster plots")
-            plotClusters(df, df.columns[:-1], title="Cluster visualisation post feature engineering", label_prefixes="Connection type: ", three_D=True, show=False, save=True, path='../plots/visualisation/cluster_after_' + fnames[i])
+            print("\nSaving cluster plot")
+            fm = FigureMate(heading=title_prefix[i%2] + "Cluster visualisation post feature engineering", prefix=0, path="../plots/visualisation/after/")
+            construct_cluster_plot(df, df.columns[:-1], fm, dimensions=3, show=0, save=1)
 
         # saving final datasets
         print("\n*** Saving %s ***" % fnames[i])

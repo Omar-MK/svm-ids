@@ -49,6 +49,13 @@ def save_datasets(datasets, fnames, path, save_as="csv"):
                 open((path + fname + ".obj").replace('_augmented', ''), "wb"))
 
 
+def plot_label_counts(datasets, title_prefix, axes_labels, path_suffix=''):
+    for i in range(len(datasets)):
+        # plotting barchart to vis ditribution of labels
+        fm = FigureMate(heading=title_prefix[i], tick_labels=axes_labels[i%2], path="../plots/visualisation/before/" + path_suffix)
+        construct_frequency_plot(datasets[i], datasets[i].columns[-1], fm, show=0, save=1)
+
+
 def main():
     # loading the input and output data
     print("*** Loading datasets ***")
@@ -91,17 +98,7 @@ def main():
         'Binary Testing Set ']
     axes_labels = [mcl, ["BENIGN", "Attack"]]
 
-    for i in range(len(datasets[:2])):
-        # plotting barchart to vis ditribution of labels
-        fm = FigureMate(x_lbl=datasets[i].columns[-1], plot_type="Frequency")
-        fm.set_heading(title_prefix[i] + fm.get_heading())
-        fm.set_path("../plots/visualisation/")
-        plotCountBarChart(datasets[i],
-            fm,
-            tickLabels=axes_labels[i%2],
-            show=False,
-            save=True)
-
+    plot_label_counts(datasets[:2], title_prefix[:2], axes_labels)
 
     # the results above indicate that clustering is required to balance out the
     # classes for both binary and multiclass training sets. Moreover, Heartbleed
@@ -130,6 +127,8 @@ def main():
     pickle.dump(["BENIGN", "Attack"],
         open("../datasets/transformed/binary_label_encodings.obj", "wb"))
 
+    plot_label_counts(datasets[:2], title_prefix, axes_labels, path_suffix="changed_")
+
     # checking counts of values of categorical attributes. This is important to
     # see if the categorical attributes can be dropped. If not, the
     # K-Prototypes algorithm could be used instead of k-means to cluster the
@@ -137,51 +136,36 @@ def main():
     cat_cols = datasets[0].columns[0:2]
     print("\n*** Checking the counts of categorical data in training sets ***")
     # plotting counts of categorical attributes
-    cat_plot_df = datasets[0]
+    cat_df = datasets[0]
     for col in cat_cols:
         num_cats = len(set(datasets[0][col]))
         print("number of unique " + col + "s: ", num_cats)
         print_unique_counts(datasets[0], [col])
         if num_cats > 25:
-            cat_plot_df = datasets[0].
-                loc[datasets[0][col].
-                isin(datasets[0][col].
-                value_counts().
-                index[:25])]
+            cat_df = datasets[0].loc[datasets[0][col].isin(datasets[0][col].value_counts().index[:25])]
 
-        fm = FigureMate(x_lbl=col, plot_type="Frequency")
-        fm.set_heading("Training Set " + fm.get_heading())
-        fm.set_path("../plots/visualisation/before_")
-        plotCountBarChart(cat_plot_df, fm, show=False, save=True)
+        fm = FigureMate(heading="Training Set",
+            path="../plots/visualisation/before/")
+        construct_frequency_plot(cat_df, col, fm, show=0, save=1)
 
     # plotting categorical features vs labels to get a better understanding of
     # correlations
     # the following filters applied to the main dataset ensure that only port
     # numbers and protocols that occur with a class which is not Benign are
     # plotted.
-    cat_plot_df = datasets[0][datasets[0].Label != 0]
-    cat_plot_df = cat_plot_df.loc[cat_plot_df[cat_cols[0]]
-        .isin(cat_plot_df[cat_cols[0]]
+    cat_df = datasets[0][datasets[0].Label != 0]
+    cat_df = cat_df.loc[cat_df[cat_cols[0]]
+        .isin(cat_df[cat_cols[0]]
         .value_counts()
         .index[:25])]
 
     i = 0
     for dataset in datasets[:2]:
-        fm = FigureMate(x_lbl=cat_cols[0], plot_type="Frequency")
-        fm.set_heading(title_prefix[i] + fm.get_heading() + " (attacks only)")
-        fm.set_path("../plots/visualisation/before_")
-        plotCountBarChart(cat_plot_df, fm, show=False, save=True)
-        plotBox(cat_plot_df, cat_cols,
-            ['Label'],
-            show=False,
-            save=True,
-            path= fm.get_path() + "attack_only_" + title_prefix[i])
-        plotViolin(cat_plot_df,
-            cat_cols,
-            ['Label'],
-            show=False,
-            save=True,
-            path=fm.get_path() + "attack_only_" + title_prefix[i])
+        fm = FigureMate(heading=title_prefix[i] + " (attacks only)",
+            path="../plots/visualisation/before/" + title_prefix[i] + 'attacks_only_')
+        construct_frequency_plot(cat_df, cat_cols[0], fm, show=0, save=1)
+        construct_box_plot(cat_df, cat_cols, ["Label"], fm, show=0, save=1)
+        construct_violin_plot(cat_df, cat_cols, ["Label"], fm, show=0, save=1)
         i += 1
 
     # the above plots show that protocol 6 is most important when deciding type
@@ -251,13 +235,16 @@ def main():
             drop_first=True)
         df = pd.concat([X, y], axis=1)
         pre_unsupervised_dfs += [df]
-        
+
         # the following plot allows us to see if the numerical features for both
         # classes are seperable. The more seperable they are the better the
         # classifier will be.
         if i < 2:
-            plotSeperation(df, df.columns[:-27], std_dev=0.5, show=False, save=True, path='../plots/visualisation/' + fnames[i])
-            plotClusters(df, df.columns[:-27], title="Cluster visualisation pre feature engineering", label_prefixes="Connection type: ", three_D=True, show=False, save=True, path='../plots/visualisation/cluster_before_' + fnames[i])
+            fm = FigureMate(heading=title_prefix[i%2] + "Cluster visualisation pre feature engineering", prefix=0, path="../plots/visualisation/before/")
+            construct_cluster_plot(df, df.columns[:-27], fm, dimensions=3, show=0, save=1)
+            fm = FigureMate(heading=title_prefix[i%2], path="../plots/visualisation/before/")
+            construct_seperation_plot(df, df.columns[:-27], fm, std_dev=0.5, show=0, save=1)
+
 
     # saving the cleaned and encoded vanilla datasets
     print("\n*** Saving encoded pre-unsupervised datasets ***")
