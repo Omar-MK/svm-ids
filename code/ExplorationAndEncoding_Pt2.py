@@ -79,21 +79,6 @@ def main():
                 mini_batch_multiplier=3,
                 verbose=True)
 
-            # Re-checking outliers
-            print("\nRe-checking for outliers after clustering")
-            for label in set(df.iloc[:, -1]):
-                print("\nOutlier information for class : ", label)
-                print_outlier_information(df[df.iloc[:, -1] == label].iloc[:, :-1], 3)
-
-            # remove outliers
-            outliers, outlier_loc = get_outliers(df, df.columns[:-1], 3)
-            row = []
-            for (row, count) in outlier_loc:
-                rows += [row]
-            df = df.drop(df.index[rows])
-            print("total sum of outliers dropped = ", len(rows))
-
-
             # re-visualising seperabilitiy of left over engineered features
             print("\nSaving seprability plots")
             plotSeperation(df,
