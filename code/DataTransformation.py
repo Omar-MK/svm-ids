@@ -89,7 +89,7 @@ def get_principal_components(df, n_components):
     famd = prince.FAMD(n_components=n_components,
         n_iter=3,
         copy=True,
-        check_input=True,
+        check_input=False,
         engine='auto')
     # fitting famd to data to calculate reduced dimensions
     famd = famd.fit(df.iloc[:, :-1])
@@ -189,3 +189,45 @@ def balance_by_sampling(df):
             balanced_df = pd.concat([balanced_df, sampled_rows])
         i += 1
     return balanced_df
+
+
+def drop_outliers(df, cols, threshold, verbose=False):
+    """
+    This is an optimised alternative to get_outliers. The method will find outliers for each class in the dataframe (where the class or labels column is the last column) and drop them returning a dataframe with removed outliers.
+    """
+    # initialise empty dataframe object (new_df)
+    new_df = None
+    # iterate over each label in df
+    j = 0
+    for label in set(df.iloc[:, -1]):
+        # take the sub-df of the current label
+        sub_df = df[df.iloc[:, -1] == label]
+        prior_sample_count = len(sub_df)
+        # initialise list to hold index values of rows to be dropped
+        rows_to_drop = []
+        # iterate over each column
+        for col in cols:
+            # find the maximum distance from mean allowable in the column
+            mean = sub_df.loc[:, col].mean()
+            max_dist_from_mean = sub_df.loc[:, col].std() * threshold
+            # iterate over the rows of the column
+            i = 0
+            for val in sub_df.loc[:, col].values:
+                # if a row value violates condition add true to list
+                if abs(mean - val) > max_dist_from_mean:
+                    rows_to_drop += [i]
+                i += 1
+        # drop rows with outliers
+        index_vals = []
+        sub_df = sub_df.drop(sub_df.index[rows_to_drop])
+        if verbose:
+            print("sample count for " + str(label) + " prior to outlier removal: ", prior_sample_count)
+            print("sample count after removal: ", len(sub_df))
+        # concatenate data to new_df
+        if j == 0:
+            new_df = sub_df
+        else:
+            new_df = new_df.append(sub_df, ignore_index=True)
+        j += 1
+
+    return new_df

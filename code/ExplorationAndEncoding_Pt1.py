@@ -240,9 +240,9 @@ def main():
         # classes are seperable. The more seperable they are the better the
         # classifier will be.
         if i < 2:
-            fm = FigureMate(heading=title_prefix[i%2] + "Cluster visualisation pre feature engineering", prefix=0, path="../plots/visualisation/before/")
+            fm = FigureMate(heading=title_prefix[i%2] + "Cluster visualisation pre feature engineering", legend_labels=axes_labels[i%2], prefix=0, path="../plots/visualisation/before/")
             construct_cluster_plot(df, df.columns[:-27], fm, dimensions=3, show=0, save=1)
-            fm = FigureMate(heading=title_prefix[i%2], path="../plots/visualisation/before/")
+            fm = FigureMate(heading=title_prefix[i%2], legend_labels=axes_labels[i%2], path="../plots/visualisation/before/")
             construct_seperation_plot(df, df.columns[:-27], fm, std_dev=0.5, show=0, save=1)
 
 

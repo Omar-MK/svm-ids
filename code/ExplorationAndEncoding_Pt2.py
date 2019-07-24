@@ -23,11 +23,10 @@ remade to visualise effect of changes.
 
 import pandas as pd
 import pickle
-from DataChecking import *
 from DataTransformation import *
 from Plotting import *
 from CleaningAndAugmentation import save_dataset
-
+from FigureMate import FigureMate
 
 def main():
     fnames = ["trainingset_augmented_multiclass",
@@ -40,6 +39,11 @@ def main():
         'Multiclass Testing Set ',
         'Binary Testing Set ']
 
+    # loading label encodings
+    mcl = pickle.load(open("../datasets/transformed/multiclass_label_encodings.obj", "rb"))
+    bl = pickle.load(open("../datasets/transformed/binary_label_encodings.obj", "rb"))
+    axes_labels = [mcl, bl]
+
     # loading stored object containing datasets
     print("*** Loading datasets.obj object ***")
     datasets = pickle.load(
@@ -48,7 +52,7 @@ def main():
     # first removing "outliers" datapoints 3 standard deviations from mean.
     print("*** Removing outliers ***")
     for i in range(2):
-        datasets[i] = drop_outliers(datasets[i], datasets[i].iloc[:, 2:-1], 3)
+        datasets[i] = drop_outliers(datasets[i], datasets[i].iloc[:, 2:-1], 3, verbose=True)
 
     # next we can check to see if any numerical features are highly correlated
     # (co-variate). This could allow us to reduce the number of features. The
@@ -79,13 +83,15 @@ def main():
     # and cat features and numerical features onto common planes. This also
     # reduces the dimensionality of the datasets. This is followed by KMeans
     # clustering to balance out the counts of rows for each class.
+
     print("\n*** Carrying out FAMD and clustering ***")
 
     for i in range(len(datasets)):
         datasets[i] = datasets[i].drop_duplicates()
         df = datasets[i]
         # getting principal components
-        df = get_principal_components(df, len(datasets[0].columns) - 1)
+        df = get_principal_components(df, len(datasets[0].columns) - 11)
+        print(df)
         if i < 2:
             # balancing sample counts for each class through clustering - only
             # applied on training sets
@@ -95,16 +101,16 @@ def main():
             # plotting barchart to vis ditribution of labels
             print("Saving label count plot")
             fm = FigureMate(heading=title_prefix[i], tick_labels=axes_labels[i%2], path="../plots/visualisation/after/")
-            construct_frequency_plot(datasets[i], datasets[i].columns[-1], fm, show=0, save=1)
+            construct_frequency_plot(df, df.columns[-1], fm, show=0, save=1)
 
             # re-visualising seperabilitiy of left over engineered features
             print("\nSaving seprability plot")
-            fm = FigureMate(heading=title_prefix[i%2], path="../plots/visualisation/after/")
+            fm = FigureMate(heading=title_prefix[i%2], legend_labels=axes_labels[i%2], path="../plots/visualisation/after/")
             construct_seperation_plot(df, df.columns[:-1], fm, std_dev=0.5, show=0, save=1)
 
             # visualising clusters
             print("\nSaving cluster plot")
-            fm = FigureMate(heading=title_prefix[i%2] + "Cluster visualisation post feature engineering", prefix=0, path="../plots/visualisation/after/")
+            fm = FigureMate(heading=title_prefix[i%2] + "Cluster visualisation post feature engineering", legend_labels=axes_labels[i%2], prefix=0, path="../plots/visualisation/after/")
             construct_cluster_plot(df, df.columns[:-1], fm, dimensions=3, show=0, save=1)
 
         # saving final datasets

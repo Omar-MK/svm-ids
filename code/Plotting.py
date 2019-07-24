@@ -24,7 +24,7 @@ def construct_frequency_plot(df, col, fm, show=1, save=0):
     y_label = fm.y_lbl
     ts = fm.heading
     if fm.prefix:
-        x_label += ' ' + col
+        x_label += ' ' + str(col)
         y_label += " Frequency "
         ts += " Frequency of " + x_label + 's'
 
@@ -126,9 +126,9 @@ def construct_cluster_plot(df, input_cols, fm, dimensions=2, show=1, save=0):
     ax = fig.add_subplot(1, 1, 1)
     if dimensions == 3:
         ax = Axes3D(fig)
-        ax.set_zlabel("Principal Component 3")
-    ax.set_xlabel("Principal Component 1")
-    ax.set_ylabel("Principal Component 2")
+        ax.set_zlabel("PC 3")
+    ax.set_xlabel("PC 1")
+    ax.set_ylabel("PC 2")
     ts = fm.heading
     if fm.prefix:
         ts += " Cluster diagram"
@@ -144,10 +144,10 @@ def construct_cluster_plot(df, input_cols, fm, dimensions=2, show=1, save=0):
         else:
             ax.scatter(df.loc[indicies, "PC1"], df.loc[indicies, "PC2"],  marker='x', c=color, s=8, alpha=0.35)
 
-    if fm.tick_labels is None:
-        ax.legend(list(y_set))
+    if fm.legend_labels is None:
+        ax.legend(list(y_set), loc='best')
     else:
-        ax.legend(fm.tick_labels)
+        ax.legend(fm.legend_labels, loc='best')
     ax.grid()
     finalise_figure(title, fig, plt, fm.path, ts, save, show)
 
@@ -181,8 +181,10 @@ def construct_seperation_plot(df, cols, fm, std_dev=0, show=1, save=0):
             means = np.append(means, label_rows[col].mean())
             if std_dev > 0:
                 stdDevs = np.append(stdDevs, label_rows[col].std())
-
-        plt.plot(column_ints, means, 'k', color=colors[i], label='Class: ' + str(label))
+        if fm.legend_labels is None:
+            plt.plot(column_ints, means, 'k', color=colors[i], label='Class: ' + str(label))
+        else:
+            plt.plot(column_ints, means, 'k', color=colors[i], label=fm.legend_labels[i])
         if std_dev > 0:
             plt.plot(column_ints, means, '--', color=colors[i])
             plt.fill_between(column_ints,
@@ -191,7 +193,7 @@ def construct_seperation_plot(df, cols, fm, std_dev=0, show=1, save=0):
                 facecolor=colors[i],
                 alpha=0.35)
         i += 1
-    ax.legend()
+    ax.legend(loc='best')
     finalise_figure(title, fig, plt, fm.path, ts, save, show)
 
 
