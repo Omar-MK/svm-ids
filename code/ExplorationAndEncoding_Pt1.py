@@ -26,6 +26,7 @@ from DataChecking import *
 from DataTransformation import *
 from Plotting import *
 from sklearn.preprocessing import StandardScaler
+from FigureMate import FigureMate
 
 def save_datasets(datasets, fnames, path, save_as="csv"):
     for (df, fname) in zip(datasets, fnames):
@@ -38,12 +39,21 @@ def save_datasets(datasets, fnames, path, save_as="csv"):
             # saving augmented dataset
             df.to_csv(path + fname + ".csv", index=False)
             # saving non-augmented dataset
-            df_reduced.to_csv((path + fname + ".csv").replace('_augmented', ''), index=False)
+            df_reduced.to_csv((path + fname + ".csv")
+                .replace('_augmented', ''), index=False)
         elif save_as == "obj":
             # saving augmented dataset
             pickle.dump(df, open(path + fname + ".obj", "wb"))
             # saving non-augmented dataset
-            pickle.dump(df_reduced, open((path + fname + ".obj").replace('_augmented', ''), "wb"))
+            pickle.dump(df_reduced,
+                open((path + fname + ".obj").replace('_augmented', ''), "wb"))
+
+
+def plot_label_counts(datasets, title_prefix, axes_labels, path_suffix=''):
+    for i in range(len(datasets)):
+        # plotting barchart to vis ditribution of labels
+        fm = FigureMate(heading=title_prefix[i], tick_labels=axes_labels[i%2], path="../plots/visualisation/before/" + path_suffix)
+        construct_frequency_plot(datasets[i], datasets[i].columns[-1], fm, show=0, save=1)
 
 
 def main():
@@ -51,9 +61,9 @@ def main():
     print("*** Loading datasets ***")
     path = "../datasets/cleaned/"
     fnames = ["trainingset_augmented_multiclass",
-            "trainingset_augmented_binary",
-            "testingset_augmented_multiclass",
-            "testingset_augmented_binary"]
+        "trainingset_augmented_binary",
+        "testingset_augmented_multiclass",
+        "testingset_augmented_binary"]
 
     datasets = []
     for file in fnames:
@@ -65,8 +75,8 @@ def main():
     # checking for unexpected data formats during loading
     print("\n*** Checking for unexpected data formats ***")
     # extensive checking of datatypes and data cleaning was already conducted in
-    # cleaningAndAugmentation.py. The following check of column datatype is a quick
-    # method to check loading of datasets was carried out successfully.
+    # cleaningAndAugmentation.py. The following check of column datatype is a
+    # quick method to check loading of datasets was carried out successfully.
     for df in datasets:
         if 'object' in df.columns:
             raise ValueError("Unexpected data type in dataset")
@@ -74,7 +84,7 @@ def main():
             print("All data types are as expected")
 
     # checking class counts
-    print("\n*** Checking the number of samples in the dataframes for each class ***")
+    print("\n*** Checking no. of samples in the dataframes for each class ***")
     for df, fname in zip(datasets[:2], fnames[:2]):
         print(fname + "\n", df.Label.value_counts())
 
@@ -82,12 +92,13 @@ def main():
     # collecting class labels for multiclass axes labels
     mcl = list(class_encodings.keys())
     # defining title labels
-    title_prefix = ['Multiclass Training Set ', 'Binary Training Set ', 'Multiclass Testing Set ', 'Binary Testing Set ']
+    title_prefix = ['Multiclass Training Set ',
+        'Binary Training Set ',
+        'Multiclass Testing Set ',
+        'Binary Testing Set ']
     axes_labels = [mcl, ["BENIGN", "Attack"]]
-    for i in range(len(datasets[:2])):
-        # plotting barchart to vis ditribution of labels
-        plotCountBarChart(datasets[i], datasets[i].columns[-1],             labels=[title_prefix[i] + 'Data Points by', 'Number of Data Points'], tickLabels=axes_labels[i%2], show=False, save=True, path='../plots/visualisation/before')
 
+    plot_label_counts(datasets[:2], title_prefix[:2], axes_labels)
 
     # the results above indicate that clustering is required to balance out the
     # classes for both binary and multiclass training sets. Moreover, Heartbleed
@@ -103,7 +114,7 @@ def main():
         df = df[df.Label != 9] # Infiltration removed
         df.Label = df.Label.replace([10], 8) # moving PortScan to 8
         df.Label = df.Label.replace([11], 9) # moving SSH_Patator to 9
-        df.Label = df.Label.replace([12, 13, 14], 10) # combining all web attacks
+        df.Label = df.Label.replace([12, 13, 14], 10) # combining web attacks
         datasets[i] = df
 
     # updating mcl
@@ -111,45 +122,58 @@ def main():
     mcl[10] = "Web Attack"
     print(mcl)
     # saving mcl and binary class encodings
-    pickle.dump(mcl, open("../datasets/transformed/" + "multiclass_label_encodings" + ".obj", "wb"))
-    pickle.dump(["BENIGN", "Attack"], open("../datasets/transformed/" + "binary_label_encodings" + ".obj", "wb"))
+    pickle.dump(mcl,
+        open("../datasets/transformed/multiclass_label_encodings.obj", "wb"))
+    pickle.dump(["BENIGN", "Attack"],
+        open("../datasets/transformed/binary_label_encodings.obj", "wb"))
 
-    # checking counts of values of categorical attributes. This
-    # is important to see if the categorical attributes can be dropped. If not, the
-    # K-Prototypes algorithm could be used instead of k-means to cluster the data
-    # to reduce instances.
+    plot_label_counts(datasets[:2], title_prefix, axes_labels, path_suffix="changed_")
+
+    # checking counts of values of categorical attributes. This is important to
+    # see if the categorical attributes can be dropped. If not, the
+    # K-Prototypes algorithm could be used instead of k-means to cluster the
+    # data to reduce instances.
     cat_cols = datasets[0].columns[0:2]
     print("\n*** Checking the counts of categorical data in training sets ***")
     # plotting counts of categorical attributes
-    cat_plot_df = datasets[0]
+    cat_df = datasets[0]
     for col in cat_cols:
         num_cats = len(set(datasets[0][col]))
         print("number of unique " + col + "s: ", num_cats)
         print_unique_counts(datasets[0], [col])
         if num_cats > 25:
-            cat_plot_df = datasets[0].loc[datasets[0][col].isin(datasets[0][col].value_counts().index[:25])]
-        plotCountBarChart(cat_plot_df, col, labels=['Training Set Data Points by', 'Number of Data Points'], show=False, save=True, path='../plots/visualisation/before')
+            cat_df = datasets[0].loc[datasets[0][col].isin(datasets[0][col].value_counts().index[:25])]
+
+        fm = FigureMate(heading="Training Set",
+            path="../plots/visualisation/before/")
+        construct_frequency_plot(cat_df, col, fm, show=0, save=1)
 
     # plotting categorical features vs labels to get a better understanding of
     # correlations
     # the following filters applied to the main dataset ensure that only port
-    # numbers and protocols that occur with a class which is not Benign are plotted.
-    cat_plot_df = datasets[0][datasets[0].Label != 0]
-    cat_plot_df = cat_plot_df.loc[cat_plot_df[cat_cols[0]].isin(cat_plot_df[cat_cols[0]].value_counts().index[:25])]
+    # numbers and protocols that occur with a class which is not Benign are
+    # plotted.
+    cat_df = datasets[0][datasets[0].Label != 0]
+    cat_df = cat_df.loc[cat_df[cat_cols[0]]
+        .isin(cat_df[cat_cols[0]]
+        .value_counts()
+        .index[:25])]
+
     i = 0
     for dataset in datasets[:2]:
-        plotCountBarChart(cat_plot_df, cat_cols[0],
-        labels=[title_prefix[i] + ' Data Points by', 'Number of Data Points'], show=False, save=True, path='../plots/visualisation/before_attack_only_')
-        plotBox(cat_plot_df, cat_cols, ['Label'], show=False, save=True, path='../plots/visualisation/attack_only_' + title_prefix[i])
-        plotViolin(cat_plot_df, cat_cols, ['Label'], show=False, save=True, path='../plots/visualisation/attack_only_' + title_prefix[i])
+        fm = FigureMate(heading=title_prefix[i] + " (attacks only)",
+            path="../plots/visualisation/before/" + title_prefix[i] + 'attacks_only_')
+        construct_frequency_plot(cat_df, cat_cols[0], fm, show=0, save=1)
+        construct_box_plot(cat_df, cat_cols, ["Label"], fm, show=0, save=1)
+        construct_violin_plot(cat_df, cat_cols, ["Label"], fm, show=0, save=1)
         i += 1
 
-    # the above plots show that protocol 6 is most important when deciding type of
-    # attack. Similarly, the majority of destination port numbers either indicate
-    # Benign or FTP patator attack. The majority of connections are to ports 53,
-    # 80, and 443. However, when only the destination ports leading to an attack
-    # class are plotted, the top attacks are: 80, 21, 22, and 8080. A decision is
-    # made to:
+    # the above plots show that protocol 6 is most important when deciding type
+    # of attack. Similarly, the majority of destination port numbers either
+    # indicate Benign or FTP patator attack. The majority of connections are to
+    # ports 53, 80, and 443. However, when only the destination ports leading
+    # to an attack class are plotted, the top attacks are: 80, 21, 22, and
+    # 8080. A decision is made to:
     # 1. Keep only port numbers: 80, 21, 22, 8080.. everything else will be 0
     # 2. Keep only protocol 6, the rest are converted to 0.
     print("\n*** Removing categories within categorical features not required ***")
@@ -168,16 +192,16 @@ def main():
 
     # now exploring the numerical features
 
-    # given the difficulty of visualising all 98 numerical features independently,
-    # we can perform some statistics to help us understand the distribution of data
-    # in each feature as well as how well the features help seperation in the
-    # classification task. First we can print descriptive statists. Then, assuming
-    # a normal distribution, we can estimate the number of outliers present. I.e.
-    # If one of the values in a feature is very far from the others of the same
-    # class, this will indicate the spread of the data for each label. To check for
-    # this, the distance each value is from the population mean in standard
-    # deviations is calculated. Values further than 3 SD from the mean are deemed
-    # as outliers.
+    # given the difficulty of visualising all 98 numerical features
+    # independently, we can perform some statistics to help us understand the
+    # distribution of data in each feature as well as how well the features
+    # help seperation in the classification task. First we can print
+    # descriptive statists. Then, assuming a normal distribution, we can
+    # estimate the number of outliers present. I.e. If one of the values in a
+    # feature is very far from the others of the same class, this will indicate
+    # the spread of the data for each label. To check for this, the distance
+    # each value is from the population mean in standard deviations is
+    # calculated. Values further than 3 SD from the mean are deemed as outliers.
     print("\n*** Printing discriptive stats and checking for outliers in the data for each class independently using a threashold of 3 * SD ***")
     for df in datasets[:2]:
         for label in set(df.iloc[:, -1]):
@@ -186,11 +210,12 @@ def main():
             print("\nOutlier information")
             # print_outlier_information(df[df.Label == label].iloc[:, 2:-1], 3)
 
-    # this first round result shows that around a 5th of all "outliers" for every
-    # class come from a single column, yet this column is different for different
-    # classes. Moreover, some classes have as many as 33.4% of all rows containing
-    # outliers. These rows could be removed at this point. However, since
-    # clustering will be used to reduce the data, this is not carried out.
+    # this first round result shows that around a 5th of all "outliers" for
+    # every class come from a single column, yet this column is different for
+    # different classes. Moreover, some classes have as many as 33.4% of all
+    # rows containing outliers. These rows could be removed at this point.
+    # However, since clustering will be used to reduce the data, this is not
+    # carried out.
 
     # normalising numerical data to have a mean ~0 and variance of 1, aids in
     # clustering process and visualisations as well as SVM model building. Also
@@ -205,15 +230,21 @@ def main():
         df.iloc[:, 2:-1] = scaler.transform(df.iloc[:, 2:-1])
         datasets[i] = df
         y = df.iloc[:,-1]
-        X = pd.get_dummies(df.iloc[:,:-1], columns=df.columns[:2], drop_first=True)
+        X = pd.get_dummies(df.iloc[:,:-1],
+            columns=df.columns[:2],
+            drop_first=True)
         df = pd.concat([X, y], axis=1)
         pre_unsupervised_dfs += [df]
+
         # the following plot allows us to see if the numerical features for both
         # classes are seperable. The more seperable they are the better the
         # classifier will be.
         if i < 2:
-            plotSeperation(df, df.columns[:-27], std_dev=0.5, show=False, save=True, path='../plots/visualisation/' + fnames[i])
-            plotClusters(df, df.columns[:-27], title="Cluster visualisation pre feature engineering", label_prefixes="Connection type: ", three_D=True, show=False, save=True, path='../plots/visualisation/cluster_before_' + fnames[i])
+            fm = FigureMate(heading=title_prefix[i%2] + "Cluster visualisation pre feature engineering", prefix=0, path="../plots/visualisation/before/")
+            construct_cluster_plot(df, df.columns[:-27], fm, dimensions=3, show=0, save=1)
+            fm = FigureMate(heading=title_prefix[i%2], path="../plots/visualisation/before/")
+            construct_seperation_plot(df, df.columns[:-27], fm, std_dev=0.5, show=0, save=1)
+
 
     # saving the cleaned and encoded vanilla datasets
     print("\n*** Saving encoded pre-unsupervised datasets ***")

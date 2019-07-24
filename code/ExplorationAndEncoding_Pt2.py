@@ -1,16 +1,24 @@
 """
 Author: Omar M Khalil - 170018405
 
-This is the second part of ExplorationAndEncoding_pt1.py and includes further changes to post-supervised datasets.
+This is the second part of ExplorationAndEncoding_pt1.py and includes further
+changes to post-supervised datasets.
 
 The file contains code used to:
 1. Load the object containing the datasets.
-2. Check for co-variate numerical features and reduce the features to remove co-variance.
-3. carry out FAMD projection of the data to project the features into a lower feature space. This has the effect of turning all features into numeric features.
-4. Using the numeric feautres, KMeans clustering is applied balance data point count per class.
-5. Re-check for outliers, and based on user input, the outliers are removed or kept.
-6. Plot the seprability plot and 3D cluster plots from steps 10 and 11 are remade to visualise effect of changes.
-7. Save the post-superivsed datasets.
+2. Remove outliers within each class
+3. Check for co-variate numerical features and reduce the features to remove
+co-variance.
+4. carry out FAMD projection of the data to project the features into a lower
+feature space. This has the effect of turning all features into numeric
+features.
+5. Using the numeric feautres, KMeans clustering is applied balance data point
+count per class.
+6. Re-check for outliers, and based on user input, the outliers are removed or
+kept.
+7. Plot the seprability plot and 3D cluster plots from steps 10 and 11 are
+remade to visualise effect of changes.
+8. Save the post-superivsed datasets.
 """
 
 import pandas as pd
@@ -18,7 +26,7 @@ import pickle
 from DataChecking import *
 from DataTransformation import *
 from Plotting import *
-from cleaningAndAugmentation import save_dataset
+from CleaningAndAugmentation import save_dataset
 
 
 def main():
@@ -27,22 +35,30 @@ def main():
             "testingset_augmented_multiclass",
             "testingset_augmented_binary"]
 
+    title_prefix = ['Multiclass Training Set ',
+        'Binary Training Set ',
+        'Multiclass Testing Set ',
+        'Binary Testing Set ']
+
     # loading stored object containing datasets
     print("*** Loading datasets.obj object ***")
     datasets = pickle.load(
         open("../datasets/transformed/datasets_end_pt1.obj", "rb"))
 
-    # now applying un-supervised data quality boosting methods
+    # first removing "outliers" datapoints 3 standard deviations from mean.
+    print("*** Removing outliers ***")
+    for i in range(2):
+        datasets[i] = drop_outliers(datasets[i], datasets[i].iloc[:, 2:-1], 3)
 
-    # first We can check to see if any numerical features are highly correlated
+    # next we can check to see if any numerical features are highly correlated
     # (co-variate). This could allow us to reduce the number of features. The
     # pearson r test is used to detect if there is any correlation between
     # numerical features.
     # the following code will find the correlated features for every class and
     # append a list of tuples of the feature column numbers in
-    # all_correlated_features. Note, this process is only applied to the multiclass
-    # dataset since co-variate features in this dataset will also be covariate in
-    # the binary class, yet not neccessarily the other way around.
+    # all_correlated_features. Note, this process is only applied to the
+    # multiclass dataset since co-variate features in this dataset will also be
+    # covariate in the binary class, yet not neccessarily the other way around.
     print("\n*** Checking for co-variate numerical features ***")
     common_correlated_features = get_correlated_features(datasets[0],
         cols=datasets[0].columns[2:-1],
@@ -74,30 +90,22 @@ def main():
             # balancing sample counts for each class through clustering - only
             # applied on training sets
             print("now clustering data")
-            df = balance_sample_counts(df,
-                max_clusters=3000,
-                mini_batch_multiplier=3,
-                verbose=True)
+            df = balance_sample_counts(df, max_clusters=3000, mini_batch_multiplier=3, verbose=True)
+
+            # plotting barchart to vis ditribution of labels
+            print("Saving label count plot")
+            fm = FigureMate(heading=title_prefix[i], tick_labels=axes_labels[i%2], path="../plots/visualisation/after/")
+            construct_frequency_plot(datasets[i], datasets[i].columns[-1], fm, show=0, save=1)
 
             # re-visualising seperabilitiy of left over engineered features
-            print("\nSaving seprability plots")
-            plotSeperation(df,
-                df.columns[:-1],
-                std_dev=0.5,
-                show=False,
-                save=True,
-                path='../plots/visualisation/sep_after_' + fnames[i])
+            print("\nSaving seprability plot")
+            fm = FigureMate(heading=title_prefix[i%2], path="../plots/visualisation/after/")
+            construct_seperation_plot(df, df.columns[:-1], fm, std_dev=0.5, show=0, save=1)
 
             # visualising clusters
-            print("\nSaving cluster plots")
-            plotClusters(df,
-                df.columns[:-1],
-                title="Cluster visualisation post feature engineering",
-                label_prefixes="Connection type: ",
-                three_D=True,
-                show=False,
-                save=True,
-                path='../plots/visualisation/cluster_after_' + fnames[i])
+            print("\nSaving cluster plot")
+            fm = FigureMate(heading=title_prefix[i%2] + "Cluster visualisation post feature engineering", prefix=0, path="../plots/visualisation/after/")
+            construct_cluster_plot(df, df.columns[:-1], fm, dimensions=3, show=0, save=1)
 
         # saving final datasets
         print("\n*** Saving %s ***" % fnames[i])
