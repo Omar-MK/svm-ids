@@ -80,7 +80,7 @@ def plot_conf_matrix(y, y_predicted, classes, normalise=False, optimisation_stra
     '''
     This function plots a confusion matrix. It requires 3 inputs. y is the actual labels array. y_predicted is the predicted labels array. classes is an array of the classes. This code is adapted from: https://scikit-learn.org/stable/auto_examples/model_selection/plot_confusion_matrix.html?fbclid=IwAR0fjfXZTMLc5_swKfZQut2-4bui0vgnqaT9atuZnSlo2HLOv9gnt_PEd0c
     '''
-    title = "Conf Matrix of actual labels vs predicted labels (model optimisation: " + optimisation_strat + ')'
+    title = "Conf Matrix (model optimisation: " + optimisation_strat + ')'
     if normalise:
         title = "Normalised " + title
     cm = sklm.confusion_matrix(y, y_predicted)
@@ -97,8 +97,8 @@ def plot_conf_matrix(y, y_predicted, classes, normalise=False, optimisation_stra
             ylabel="Actual Label",
             xlabel="Predicted Label")
     # Rotate the tick labels and set their alignment.
-    plt.setp(ax.get_xticklabels(), rotation=45, ha="right", rotation_mode="anchor")
-    fmt = '.3f' if normalise else 'd'
+    plt.setp(ax.get_xticklabels(), rotation=30, ha="right", rotation_mode="anchor")
+    fmt = '.2f' if normalise else 'd'
     thresh = cm.max() / 2.
     for i in range(cm.shape[0]):
         for j in range(cm.shape[1]):
@@ -106,8 +106,9 @@ def plot_conf_matrix(y, y_predicted, classes, normalise=False, optimisation_stra
                     ha="center",
                     va="center",
                     color="white" if cm[i, j] > thresh else "black")
+    fig.tight_layout()
     if save:
-        plt.savefig(path + '_conf_matrix_model_optimisation_' + optimisation_strat + ".png", bbox_inches='tight', dpi=300)
+        plt.savefig(path + '_conf_matrix_model_optimisation_' + optimisation_strat + ".png", bbox_inches='tight', dpi=700)
     if show:
         plt.show()
     plt.close()

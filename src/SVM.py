@@ -1,7 +1,7 @@
 import pickle
 import sklearn.model_selection as ms
 from sklearn.svm import LinearSVC
-from sklearn.linear_model import SGDClassifer
+from sklearn import linear_model
 from PerformanceEvaluation import *
 from sklearn.metrics import make_scorer
 from sklearn.feature_selection import RFECV
@@ -17,7 +17,7 @@ def drop_dataframe_columns(df, bool_list):
     return df.drop(dropped_cols, axis=1)
 
 
-def train_and_test(train, train_n, test, class_labels, stochastic=False, path_model="./", path_results="./"):
+def train_and_test_svm(train, train_n, test, class_labels, stochastic=False, path_model="./", path_results="./"):
     """
     This method:
         1. Searches for the best possible SVM model using the passed kernel. The searches proccess involves a nested recursive feature removal across different regularisation intensities using stratified K fold cross-validation to optimise generalisation of the final model.
@@ -47,7 +47,7 @@ def train_and_test(train, train_n, test, class_labels, stochastic=False, path_mo
             # creating classifer
             svc = None
             if stochastic:
-                svc = SGDClassifer(loss="hinge", penalty="l2", alpha=c, max_iter=10000, n_jobs=-1, learning_rate="adaptive", early_stopping=True, class_weight="balanced")
+                svc = linear_model.SGDClassifier(loss="hinge", penalty="l2", alpha=c, max_iter=10000, n_jobs=-1, learning_rate="adaptive", early_stopping=True, class_weight="balanced")
             else:
                 svc = LinearSVC(C=c, class_weight="balanced", max_iter=10000)
 
