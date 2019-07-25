@@ -24,8 +24,8 @@ from PerformanceEvaluation import *
 def main():
     # loading datasets
     print("*** Loading datasets ***")
-    path1 = "../datasets/transformed/pre-unsupervised/"
-    path2 = "../datasets/transformed/post-unsupervised/"
+    path1 = "../datasets/transformed/preUnsupervised/"
+    path2 = "../datasets/transformed/postUnsupervised/"
 
     train = pickle.load(open(path1 + "trainingset_augmented_multiclass.obj", "rb"))
 
@@ -106,6 +106,7 @@ def main():
             clf.predict(tst.iloc[:, :-1]),
             classes=multiclass_labels,
             optimisation_strat="F1 score",
+            normalise=True,
             show=False,
             save=True,
             path="../plots/results/kernelComp/" + fig_markers[i%2])

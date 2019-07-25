@@ -80,7 +80,7 @@ def train_and_test(train, train_n, test, class_labels, stochastic=False, path_mo
 
         best_model = rfecv_list[best_model_index]
         print_model_perf_stats(best_model, X_tst, y_tst)
-        plot_conf_matrix(y_tst, best_model.predict(X_tst), class_labels, optimisation_strat=scorer, show=False, save=True, path=path_results + train_n + '_')
+        plot_conf_matrix(y_tst, best_model.predict(X_tst), class_labels, optimisation_strat=scorer, normalise=True, show=False, save=True, path=path_results + train_n + '_')
 
         # saving useful column names
         X_trn = drop_dataframe_columns(X_trn, rfecv.support_)
