@@ -85,10 +85,10 @@ def main():
     # reduces the dimensionality of the datasets. This is followed by KMeans
     # clustering to balance out the counts of rows for each class.
 
-    print("\n*** Carrying out FAMD and clustering ***")
     multiclass_scaler = preprocessing.MinMaxScaler()
     binary_scaler = preprocessing.MinMaxScaler()
     for i in range(len(datasets)):
+        print("\n*** Carrying out FAMD and clustering on %s ***" % fnames[i])
         datasets[i] = datasets[i].drop_duplicates()
         df = datasets[i]
         # getting principal components
