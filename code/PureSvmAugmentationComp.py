@@ -20,7 +20,7 @@ def train_svm(path, train_n, test_n, class_labels):
     train = balance_by_sampling(train)
     train = train.sample(500)
     # training and testing
-    train_and_test_svm(train, train_n, test, class_labels, path_model='../trainedModels/augmentation_comp_', path_results='../plots/results/pureSvm/')
+    train_and_test_svm(train, train_n, test, class_labels, stochastic=True, path_model='../trainedModels/augmentation_comp_', path_results='../plots/results/pureSvm/')
 
 
 def main():

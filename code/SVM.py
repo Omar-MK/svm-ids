@@ -1,6 +1,7 @@
 import pickle
 import sklearn.model_selection as ms
 from sklearn.svm import LinearSVC
+from sklearn.linear_model import SGDClassifer
 from PerformanceEvaluation import *
 from sklearn.metrics import make_scorer
 from sklearn.feature_selection import RFECV
@@ -16,7 +17,7 @@ def drop_dataframe_columns(df, bool_list):
     return df.drop(dropped_cols, axis=1)
 
 
-def train_and_test_svm(train, train_n, test, class_labels, path_model="./", path_results="./"):
+def train_and_test(train, train_n, test, class_labels, stochastic=False, path_model="./", path_results="./"):
     """
     This method:
         1. Searches for the best possible SVM model using the passed kernel. The searches proccess involves a nested recursive feature removal across different regularisation intensities using stratified K fold cross-validation to optimise generalisation of the final model.
@@ -30,7 +31,11 @@ def train_and_test_svm(train, train_n, test, class_labels, path_model="./", path
     scoring = {'precision': make_scorer(precision_score, average='weighted'),
                 'recall': make_scorer(recall_score, average='weighted'),
                 'f1_score': make_scorer(f1_score, average='weighted')}
-    reg_strengths = np.arange(0.1, 1.2, 0.1).round(decimals=1)
+    reg_strengths = None
+    if stochastic:
+        reg_strengths = np.arange(0.001, 0.2, 0.001).round(decimals=1)
+    else:
+        reg_strengths = np.arange(0.1, 1, 0.1).round(decimals=1)
     max_test_scores = []
     rfecv_lists = []
     best_model_indexes = []
@@ -39,12 +44,17 @@ def train_and_test_svm(train, train_n, test, class_labels, path_model="./", path
         max_test_score = []
         rfecv_list = []
         for c in reg_strengths:
-            # creating svm
-            svc = LinearSVC(C=c, class_weight="balanced", max_iter=10000)
+            # creating classifer
+            svc = None
+            if stochastic:
+                svc = SGDClassifer(loss="hinge", penalty="l2", alpha=c, max_iter=10000, n_jobs=-1, learning_rate="adaptive", early_stopping=True, class_weight="balanced")
+            else:
+                svc = LinearSVC(C=c, class_weight="balanced", max_iter=10000)
 
             # creating recursive feature elimination model with cross validation
             rfecv = RFECV(
-                svc, step=1,
+                svc,
+                step=1,
                 cv=ms.StratifiedKFold(10),
                 scoring=scorer,
                 n_jobs=-1)
