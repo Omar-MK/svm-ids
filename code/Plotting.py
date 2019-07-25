@@ -145,9 +145,9 @@ def construct_cluster_plot(df, input_cols, fm, dimensions=2, show=1, save=0):
             ax.scatter(df.loc[indicies, "PC1"], df.loc[indicies, "PC2"],  marker='x', c=color, s=8, alpha=0.35)
 
     if fm.legend_labels is None:
-        ax.legend(list(y_set), loc='best')
+        ax.legend(list(y_set), loc='best', fontsize='small')
     else:
-        ax.legend(fm.legend_labels, loc='best')
+        ax.legend(fm.legend_labels, loc='best', fontsize='small')
     ax.grid()
     finalise_figure(title, fig, plt, fm.path, ts, save, show)
 
@@ -193,7 +193,7 @@ def construct_seperation_plot(df, cols, fm, std_dev=0, show=1, save=0):
                 facecolor=colors[i],
                 alpha=0.35)
         i += 1
-    ax.legend(loc='best')
+    ax.legend(loc='best', fontsize='small')
     finalise_figure(title, fig, plt, fm.path, ts, save, show)
 
 

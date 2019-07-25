@@ -27,6 +27,7 @@ from DataTransformation import *
 from Plotting import *
 from CleaningAndAugmentation import save_dataset
 from FigureMate import FigureMate
+from sklearn import preprocessing
 
 def main():
     fnames = ["trainingset_augmented_multiclass",
@@ -43,7 +44,7 @@ def main():
     mcl = pickle.load(open("../datasets/transformed/multiclass_label_encodings.obj", "rb"))
     bl = pickle.load(open("../datasets/transformed/binary_label_encodings.obj", "rb"))
     axes_labels = [mcl, bl]
-
+    
     # loading stored object containing datasets
     print("*** Loading datasets.obj object ***")
     datasets = pickle.load(
@@ -79,19 +80,27 @@ def main():
     print("features remaining: ", datasets[0].columns)
     print("number of features remaining: ", len(datasets[0].columns))
 
-    # the next step is to peform principal component analysis (FAMD) to project
-    # and cat features and numerical features onto common planes. This also
-    # reduces the dimensionality of the datasets. This is followed by KMeans
-    # clustering to balance out the counts of rows for each class.
+    the next step is to peform principal component analysis (FAMD) to project
+    and cat features and numerical features onto common planes. This also
+    reduces the dimensionality of the datasets. This is followed by KMeans
+    clustering to balance out the counts of rows for each class.
 
     print("\n*** Carrying out FAMD and clustering ***")
-
+    multiclass_scaler = preprocessing.MinMaxScaler()
+    binary_scaler = preprocessing.MinMaxScaler()
     for i in range(len(datasets)):
         datasets[i] = datasets[i].drop_duplicates()
         df = datasets[i]
         # getting principal components
         df = get_principal_components(df, len(datasets[0].columns) - 11)
-        print(df)
+        if i == 0:
+            multiclass_scaler.fit(df)
+        elif i == 1:
+            binary_scaler.fit(df)
+        if i % 2 == 0:
+            df = multiclass_scaler.transform(df)
+        else:
+            df = binary_scaler.transform(df)
         if i < 2:
             # balancing sample counts for each class through clustering - only
             # applied on training sets
