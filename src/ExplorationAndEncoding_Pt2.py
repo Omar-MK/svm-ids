@@ -45,46 +45,46 @@ def main():
     bl = pickle.load(open("../datasets/transformed/binary_label_encodings.obj", "rb"))
     axes_labels = [mcl, bl]
 
-    # loading stored object containing datasets
-    print("*** Loading datasets.obj object ***")
-    datasets = pickle.load(
-        open("../datasets/transformed/datasets_end_pt1.obj", "rb"))
-
-    # first removing "outliers" datapoints 3 standard deviations from mean.
-    print("*** Removing outliers ***")
-    for i in range(2):
-        datasets[i] = drop_outliers(datasets[i], datasets[i].iloc[:, 2:-1], 3, verbose=True)
-
-    # next we can check to see if any numerical features are highly correlated
-    # (co-variate). This could allow us to reduce the number of features. The
-    # pearson r test is used to detect if there is any correlation between
-    # numerical features.
-    # the following code will find the correlated features for every class and
-    # append a list of tuples of the feature column numbers in
-    # all_correlated_features. Note, this process is only applied to the
-    # multiclass dataset since co-variate features in this dataset will also be
-    # covariate in the binary class, yet not neccessarily the other way around.
-    print("\n*** Checking for co-variate numerical features ***")
-    common_correlated_features = get_correlated_features(datasets[0],
-        cols=datasets[0].columns[2:-1],
-        classification=True,
-        threshold=0.9,
-        verbose=True)
-
-    # now removing correlated features
-    print("removing correlated features")
-    for d in range(len(datasets)):
-        for [i, j] in common_correlated_features:
-            if j in datasets[d]:
-                datasets[d] = datasets[d].drop([j], axis=1)
-    print("features remaining: ", datasets[0].columns)
-    print("number of features remaining: ", len(datasets[0].columns))
+    # # loading stored object containing datasets
+    # print("*** Loading datasets.obj object ***")
+    # datasets = pickle.load(
+    #     open("../datasets/transformed/datasets_end_pt1.obj", "rb"))
+    #
+    # # first removing "outliers" datapoints 3 standard deviations from mean.
+    # print("*** Removing outliers ***")
+    # for i in range(2):
+    #     datasets[i] = drop_outliers(datasets[i], datasets[i].iloc[:, 2:-1], 3, verbose=True)
+    #
+    # # next we can check to see if any numerical features are highly correlated
+    # # (co-variate). This could allow us to reduce the number of features. The
+    # # pearson r test is used to detect if there is any correlation between
+    # # numerical features.
+    # # the following code will find the correlated features for every class and
+    # # append a list of tuples of the feature column numbers in
+    # # all_correlated_features. Note, this process is only applied to the
+    # # multiclass dataset since co-variate features in this dataset will also be
+    # # covariate in the binary class, yet not neccessarily the other way around.
+    # print("\n*** Checking for co-variate numerical features ***")
+    # common_correlated_features = get_correlated_features(datasets[0],
+    #     cols=datasets[0].columns[2:-1],
+    #     classification=True,
+    #     threshold=0.9,
+    #     verbose=True)
+    #
+    # # now removing correlated features
+    # print("removing correlated features")
+    # for d in range(len(datasets)):
+    #     for [i, j] in common_correlated_features:
+    #         if j in datasets[d]:
+    #             datasets[d] = datasets[d].drop([j], axis=1)
+    # print("features remaining: ", datasets[0].columns)
+    # print("number of features remaining: ", len(datasets[0].columns))
 
     # the next step is to peform principal component analysis (FAMD) to project
     # and cat features and numerical features onto common planes. This also
     # reduces the dimensionality of the datasets. This is followed by KMeans
     # clustering to balance out the counts of rows for each class.
-
+    datasets = pickle.load(open("../datasets/transformed/datasets_mid_pt2.obj", "rb"))
     multiclass_scaler = preprocessing.MinMaxScaler()
     binary_scaler = preprocessing.MinMaxScaler()
     for i in range(len(datasets)):
@@ -93,42 +93,50 @@ def main():
         df = datasets[i]
         # getting principal components
         scaled_features = []
-        df = get_principal_components(df, len(datasets[0].columns) - 11)
+        # df = get_principal_components(df, len(datasets[0].columns) - 11)
+        df = choose_PCA_components(df, categotical_cols=['Destination Port', 'Protocol'], save=True, path="../plots/visualisation/after/")
+        # encoding categorical data
+        y = df.iloc[:,-1]
+        X = pd.get_dummies(df.iloc[:,:-1],
+            columns=df.columns[:2],
+            drop_first=True)
+        df = pd.concat([X, y], axis=1)
+        # scaling between 1 and -1, reason binary and multiclass scaled seperately is because they have different classes
         if i == 0:
-            multiclass_scaler.fit(df.iloc[:, :-1])
+            multiclass_scaler.fit(df.columns[:-27])
         elif i == 1:
-            binary_scaler.fit(df.iloc[:, :-1])
+            binary_scaler.fit(df.columns[:-27])
         if i % 2 == 0:
-            scaled_features = multiclass_scaler.transform(df.iloc[:, :-1].values)
+            scaled_features = multiclass_scaler.transform(df.iloc[:, :-27].values)
         else:
-            scaled_features = binary_scaler.transform(df.iloc[:, :-1].values)
-        df_X = pd.DataFrame(scaled_features, index=df.index, columns=df.columns[:-1])
-        df = pd.concat([df_X, df.iloc[:, -1]], axis=1)
+            scaled_features = binary_scaler.transform(df.iloc[:, :-27].values)
+        df_X_num = pd.DataFrame(scaled_features, index=df.index, columns=df.columns[:-27])
+        df = pd.concat([df_X_num, df.iloc[:, -27:]], axis=1)
         if i < 2:
             # balancing sample counts for each class through clustering - only
             # applied on training sets
-            print("now clustering data")
-            df = balance_sample_counts(df, max_clusters=3000, mini_batch_multiplier=3, verbose=True)
+            # print("now clustering data")
+            # df = balance_sample_counts(df, max_clusters=3000, mini_batch_multiplier=3, verbose=True)
 
             # plotting barchart to vis ditribution of labels
             print("Saving label count plot")
-            fm = FigureMate(heading=title_prefix[i], tick_labels=axes_labels[i%2], path="../plots/visualisation/after/")
+            fm = FigureMate(heading=title_prefix[i], tick_labels=axes_labels[i%2], path="../plots/visualisation/after/pca_")
             construct_frequency_plot(df, df.columns[-1], fm, show=0, save=1)
 
             # re-visualising seperabilitiy of left over engineered features
             print("\nSaving seprability plot")
-            fm = FigureMate(heading=title_prefix[i%2], legend_labels=axes_labels[i%2], path="../plots/visualisation/after/")
+            fm = FigureMate(heading=title_prefix[i%2], legend_labels=axes_labels[i%2], path="../plots/visualisation/after/pca_")
             construct_seperation_plot(df, df.columns[:-1], fm, std_dev=0.5, show=0, save=1)
 
             # visualising clusters
             print("\nSaving cluster plot")
-            fm = FigureMate(heading=title_prefix[i%2] + "Cluster visualisation post feature engineering", legend_labels=axes_labels[i%2], prefix=0, path="../plots/visualisation/after/")
+            fm = FigureMate(heading=title_prefix[i%2] + "Cluster visualisation post feature engineering", legend_labels=axes_labels[i%2], prefix=0, path="../plots/visualisation/after/pca_")
             construct_cluster_plot(df, df.columns[:-1], fm, dimensions=3, show=0, save=1)
 
         # saving final datasets
         print("\n*** Saving %s ***" % fnames[i])
         save_dataset(df,
-            fnames[i] + "_unsupervised",
+            fnames[i] + "_pca_unsupervised",
             "../datasets/transformed/postUnsupervised/",
             save_as="obj")
 

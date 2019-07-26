@@ -1,7 +1,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
 import sklearn.metrics as sklm
-import tabulate
+
 
 def print_model_perf_stats(model, X, y):
     '''
@@ -76,17 +76,18 @@ def plot_multiscore_comp(reg_list, y_lists, scorer_names, show=True, save=False,
     plt.close()
 
 
-def plot_conf_matrix(y, y_predicted, classes, normalise=False, optimisation_strat='', show=True, save=False, path="plots/"):
+def plot_conf_matrix(y, y_predicted, classes, normalise=False, optimisation_strat='', title="Confusion Matrix", figsize=(10, 10), show=True, save=False, path="plots/"):
     '''
     This function plots a confusion matrix. It requires 3 inputs. y is the actual labels array. y_predicted is the predicted labels array. classes is an array of the classes. This code is adapted from: https://scikit-learn.org/stable/auto_examples/model_selection/plot_confusion_matrix.html?fbclid=IwAR0fjfXZTMLc5_swKfZQut2-4bui0vgnqaT9atuZnSlo2HLOv9gnt_PEd0c
     '''
-    title = "Conf Matrix (model optimisation: " + optimisation_strat + ')'
+    if optimisation_strat != '':
+        title += " (model optimisation: " + optimisation_strat + ')'
     if normalise:
         title = "Normalised " + title
     cm = sklm.confusion_matrix(y, y_predicted)
     if normalise:
         cm = cm.astype("float") / cm.sum(axis=1)[:, np.newaxis]
-    fig, ax = plt.subplots()
+    fig, ax = plt.subplots(figsize=figsize)
     im = ax.imshow(cm, interpolation='nearest', cmap=plt.cm.Blues)
     ax.figure.colorbar(im, ax=ax)
     ax.set(xticks=np.arange(cm.shape[1]),
@@ -108,7 +109,7 @@ def plot_conf_matrix(y, y_predicted, classes, normalise=False, optimisation_stra
                     color="white" if cm[i, j] > thresh else "black")
     fig.tight_layout()
     if save:
-        plt.savefig(path + '_conf_matrix_model_optimisation_' + optimisation_strat + ".png", bbox_inches='tight', dpi=700)
+        plt.savefig(path + '_conf_matrix_model_optimisation_' + optimisation_strat + ".png", bbox_inches='tight')
     if show:
         plt.show()
     plt.close()

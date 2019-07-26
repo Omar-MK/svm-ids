@@ -1,7 +1,7 @@
 import pickle
 import sklearn.model_selection as ms
 from sklearn.svm import LinearSVC
-from sklearn import linear_model
+from sklearn.linear_model import SGDClassifier
 from PerformanceEvaluation import *
 from sklearn.metrics import make_scorer
 from sklearn.feature_selection import RFECV
@@ -47,7 +47,7 @@ def train_and_test_svm(train, train_n, test, class_labels, stochastic=False, pat
             # creating classifer
             svc = None
             if stochastic:
-                svc = linear_model.SGDClassifier(loss="hinge", penalty="l2", alpha=c, max_iter=10000, n_jobs=-1, learning_rate="adaptive", early_stopping=True, class_weight="balanced")
+                svc = SGDClassifier(loss="hinge", penalty="l2", alpha=c, max_iter=10000, tol=1e-5, n_jobs=-1, learning_rate="adaptive", early_stopping=True, class_weight="balanced")
             else:
                 svc = LinearSVC(C=c, class_weight="balanced", max_iter=10000)
 

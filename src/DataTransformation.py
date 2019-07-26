@@ -11,7 +11,10 @@ from sklearn.cluster import MiniBatchKMeans
 from scipy.stats.stats import pearsonr
 from sklearn.preprocessing import StandardScaler
 from sklearn.model_selection import train_test_split
-
+from sklearn.decomposition import PCA
+from sklearn.linear_model import SGDClassifier
+from sklearn.pipeline import Pipeline
+from sklearn.model_selection import GridSearchCV
 
 def split_train_test(X, y, propOfTestSet, seed=99):
     """
@@ -80,7 +83,7 @@ def balance_sample_counts(df, max_clusters='', mini_batch_multiplier=3, verbose=
     return pd.DataFrame(data=data)
 
 
-def get_principal_components(df, n_components):
+def get_FAMD_components(df, n_components):
     """
     This method returns the principal components of a dataframe containing both categorical and numerical features as well as a column class.
     The categorical features must be formatted with string format and should not be dummy or one-hot encoded.
@@ -231,3 +234,101 @@ def drop_outliers(df, cols, threshold, verbose=False):
         j += 1
 
     return new_df
+
+
+def choose_PCA_components(df, categotical_cols='', save=False, path=''):
+    """
+    This method searches for an optimal yet reduced number of principal
+    components of a dataframe. The categorical column names should be passed to
+    prevent PCA from being carried out on them. By default this method will
+    plot the results of the search for principal components.
+    Note: the whole dataframe should be passed including the class column - this column should be the last column in the dataframe.
+    This method is adapted from: https://scikit-learn.org/stable/auto_examples/compose/plot_digits_pipe.html#sphx-glr-auto-examples-compose-plot-digits-pipe-py
+    """
+    df_cat = df[categotical_cols]
+    num_cols = [x for x in df.columns if x not in categotical_cols]
+    df_num = df[num_cols]
+    svc = SGDClassifier(loss="hinge", penalty="l2", max_iter=10000, tol=1e-5, n_jobs=-1, learning_rate="adaptive", early_stopping=True, class_weight="balanced", eta0=1)
+    pca = PCA()
+    pipe = Pipeline(steps=[('pca', pca), ('svc', svc)])
+    param_grid = {
+        "pca__n_components": get_component_numbers(len(df_num.columns), 20),
+        "svc__alpha": np.logspace(-2, 2, 10)
+    }
+    search = GridSearchCV(pipe, param_grid, iid=False, cv=5)
+    search.fit(df_num.iloc[:, :-1], df_num.iloc[:, -1])
+    print("Best parameter (CV score=%0.3f):" % search.best_score_)
+    print(search.best_params_)
+
+    # Plotting PCA spectrum
+    pca.fit(df_num.iloc[:, :-1])
+    fig, (ax0, ax1) = plt.subplots(nrows=2, sharex=True, figsize=(6, 6))
+    ax0.plot(pca.explained_variance_ratio_, linewidth=2)
+    ax0.set_ylabel("PCA explained variance")
+    ax0.axvline(search.best_estimator_.named_steps["pca"].n_components, linestyle=':', label="n_components chosen")
+    ax0.legend(prop=dict(size=12))
+    if save:
+        plt.savefig(path + "explained_variance")
+    # For each number of components, find the best classifier results
+    results = pd.DataFrame(search.cv_results_)
+    components_col = "param_pca__n_components"
+    best_clfs = results.groupby(components_col).apply(
+        lambda g: g.nlargest(1, "mean_test_score"))
+    best_clfs.plot(x=components_col, y="mean_test_score", yerr='std_test_score',
+                   legend=False, ax=ax1)
+    ax1.set_ylabel("Classification accuracy (val)")
+    ax1.set_xlabel("n_components")
+    plt.tight_layout()
+    if save:
+        plt.savefig(path + "classification_accuracy")
+    plt.show()
+    n_components = input("Enter number of components chosen: ")
+    pca = PCA(n_components=n_components)
+    pcs = pca.fit_transform(df_num.iloc[:, :-1])
+    pc_df = pd.DataFrame(data=pcs)
+    # re-constructing dataframe and returning
+    return pd.concat([pc_df, df_num.iloc[:, -1]], axis=1)
+
+def get_component_numbers(num, splits):
+    """
+    This method attempts to split a number into equal parts and returns a list
+    of the locations of these parts. In cases where the number cannot be split
+    into n parts, the method will iteratively attempt to split the number into
+    n-1 parts.
+    """
+    splits = None
+    for i in range(20, 1, -1):
+        splits = split_into_n_parts(num - 1, i)
+        if splits is not None:
+            break
+    if splits is None:
+        return np.arange(num)[1:]
+    component_nums = []
+    prev = 0
+    for num in splits:
+        component_nums += [prev + num]
+        prev += num
+    return component_nums
+
+
+def split_into_n_parts(x, n):
+    """
+    This method splits a number into n parts such that the difference between
+    the lagest and smallest part are minimised.
+    Adapted from: https://www.geeksforgeeks.org/split-the-number-into-n-parts-such-that-difference-between-the-smallest-and-the-largest-part-is-minimum/
+    """
+    result = []
+    if(x < n):
+        return None
+    elif (x % n == 0):
+        for i in range(n):
+            result += [x//n]
+    else:
+        zp = n - (x % n)
+        pp = x//n
+        for i in range(n):
+            if(i>= zp):
+                result += [pp + 1]
+            else:
+                result += [pp]
+    return result
