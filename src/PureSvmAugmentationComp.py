@@ -18,7 +18,7 @@ def train_svm(path, train_n, test_n, class_labels):
     train = pickle.load(open(path + train_n, "rb"))
     test = pickle.load(open(path + test_n, "rb"))
     train = balance_by_sampling(train)
-    train = train.sample(500)
+    train = train.sample(1000)
     # training and testing
     train_and_test_svm(train, train_n, test, class_labels, stochastic=True, path_model='../trainedModels/augmentation_comp_', path_results='../plots/results/pureSvm/')
 

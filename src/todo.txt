@@ -1,9 +1,12 @@
-0. will probably need to fix figures for other svm i.e. remove/replace string from bagging classier
+1. implement auto principal components chooser
+2. take choose_PCA_components outside for loop in ExplorationAndEncoding_pt1
+3. apply it only on the multiclass training sets and run it only with a sample of the data
+4. when carrying out pca and FAMD, only fit on the training sets
+5. adjust code so dataframes are saved containing pca, famd, famd + clustering. run this code.
+6. add/edit paths to new dataframes of pca in kernel comparison
+7. use the new dataframes in kernel comparison
+8. add new pca datasets to ensemble (if needed)
+8. run pure svm and ensemble learning svm
 
-add balance_by_sampling in both puresvm and ensemble learning
 
-implement stochastic gradient descent in SVM.py
-sklearn.linear_model.SGDClassifier
-
-
-3. implement a method you pass to it an index and it searches a list of saved training model objections for a model and prints stats for that model. Then plot the conf matrix for this model.
+if needed: implement a method you pass to it an index and it searches a list of saved training model objections for a model and prints stats for that model. Then plot the conf matrix for this model.

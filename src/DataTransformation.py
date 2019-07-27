@@ -15,6 +15,9 @@ from sklearn.decomposition import PCA
 from sklearn.linear_model import SGDClassifier
 from sklearn.pipeline import Pipeline
 from sklearn.model_selection import GridSearchCV
+import matplotlib.pyplot as plt
+from sklearn.metrics import f1_score
+from sklearn.metrics import make_scorer
 
 def split_train_test(X, y, propOfTestSet, seed=99):
     """
@@ -83,22 +86,23 @@ def balance_sample_counts(df, max_clusters='', mini_batch_multiplier=3, verbose=
     return pd.DataFrame(data=data)
 
 
-def get_FAMD_components(df, n_components):
+def get_FAMD_components(df, n_components, famd_obj=None):
     """
     This method returns the principal components of a dataframe containing both categorical and numerical features as well as a column class.
     The categorical features must be formatted with string format and should not be dummy or one-hot encoded.
     Note: the whole dataframe should be passed including the class column - this column should be the last column in the dataframe.
     """
-    famd = prince.FAMD(n_components=n_components,
-        n_iter=3,
-        copy=True,
-        check_input=False,
-        engine='auto')
-    # fitting famd to data to calculate reduced dimensions
-    famd = famd.fit(df.iloc[:, :-1])
+    if famd_obj is None:
+        famd_obj = prince.FAMD(n_components=n_components,
+            n_iter=3,
+            copy=True,
+            check_input=False,
+            engine='auto')
+        # fitting famd to data to calculate reduced dimensions
+        famd_obj = famd_obj.fit(df.iloc[:, :-1])
     # replacing df with df containing data of projected dimensions and labels
-    df = pd.concat([famd.row_coordinates(df.iloc[:, :-1]), df.iloc[:, -1]], axis=1)
-    return df
+    df = pd.concat([famd_obj.row_coordinates(df.iloc[:, :-1]), df.iloc[:, -1]], axis=1)
+    return df, famd_obj
 
 
 def get_correlated_features(df, cols=None, classification=True, threshold=0.9, verbose=False):
@@ -169,6 +173,7 @@ def find_correlations(df, cols, threshold):
                 correlated_features += [(col1, col2)]
     return correlated_features
 
+
 def balance_by_sampling(df):
     """
     This method balances the sample count in a pandas dataframe for each class (in the last column) such that all classes are equal to the count of the smallest class.
@@ -236,60 +241,117 @@ def drop_outliers(df, cols, threshold, verbose=False):
     return new_df
 
 
-def choose_PCA_components(df, categotical_cols='', save=False, path=''):
+def get_best_reduction_FAMD(df, search_res=20, verbose=False, show=True, save=False, path="./"):
     """
     This method searches for an optimal yet reduced number of principal
-    components of a dataframe. The categorical column names should be passed to
-    prevent PCA from being carried out on them. By default this method will
-    plot the results of the search for principal components.
-    Note: the whole dataframe should be passed including the class column - this column should be the last column in the dataframe.
-    This method is adapted from: https://scikit-learn.org/stable/auto_examples/compose/plot_digits_pipe.html#sphx-glr-auto-examples-compose-plot-digits-pipe-py
+    components of a dataframe using FAMD. The categorical column names should be encoded as strings within the dataframe and should not be dummy encoded.
+    Params:
+        df -                the dataframe of [X, [y]]
+        search_res:        the total number of PCA reductions to try. For
+                            example, 20 will cause the algorithm to search 20
+                            equally spaced reductions for the best number of
+                            reductions.
+        verbose:            verbose mode toggle
+        show:               show plotted figures
+        save:               save figures toggle
+        path:               path to place saved figures
+
+    This method is adapted from: https://scikit-learn.org/stable/auto_examples/compose/plot_digits_pipe.html#sphx-glr-auto-examples-compose-plot-digits-pipe-py,
+    The method is improved with algorithms to automate selection of appropriate
+    pcs n_parameters.
+    Returns the optimal number of components.
     """
-    df_cat = df[categotical_cols]
-    num_cols = [x for x in df.columns if x not in categotical_cols]
+    famd = prince.FAMD(n_iter=3, copy=True, check_input=False, engine='auto')
+    return get_best_reduction(df, famd, "PCA", search_res, verbose, show, save, path)
+
+
+def get_best_reduction_PCA(df, categotical_cols=None, search_res=20, verbose=False, show=True, save=False, path="./"):
+    """
+    This method searches for an optimal yet reduced number of principal
+    components of a dataframe using PCA.
+    The categorical column names should be passed to prevent PCA from being
+    carried out on them.
+    Params:
+        df -                the dataframe of [X, [y]]
+        categorical_cols:  the categorical column names to exclude from PCA
+        search_res:        the total number of PCA reductions to try. For
+                            example, 20 will cause the algorithm to search 20
+                            equally spaced reductions for the best number of
+                            reductions.
+        verbose:            verbose mode toggle
+        show:               show plotted figures
+        save:               save figures toggle
+        path:               path to place saved figures
+
+    This method is adapted from: https://scikit-learn.org/stable/auto_examples/compose/plot_digits_pipe.html#sphx-glr-auto-examples-compose-plot-digits-pipe-py,
+    The method is improved with algorithms to automate selection of appropriate
+    pcs n_parameters.
+    Returns the optimal number of components.
+    """
+    num_cols = df.columns
+    if categotical_cols is not None:
+        num_cols = [x for x in df.columns if x not in categotical_cols]
     df_num = df[num_cols]
-    svc = SGDClassifier(loss="hinge", penalty="l2", max_iter=10000, tol=1e-5, n_jobs=-1, learning_rate="adaptive", early_stopping=True, class_weight="balanced", eta0=1)
-    pca = PCA()
-    pipe = Pipeline(steps=[('pca', pca), ('svc', svc)])
+    return get_best_reduction(df_num, PCA(), "PCA", search_res, verbose, show, save, path)
+
+
+def get_best_reduction(df, estimator, estimator_name, search_res, verbose, show, save, path):
+    svc = SGDClassifier(loss="hinge", penalty="l2", max_iter=10000, tol=1e-5, learning_rate="adaptive", early_stopping=True, class_weight="balanced", eta0=1)
+    pipe = Pipeline(steps=[('estimator', estimator), ('svc', svc)])
     param_grid = {
-        "pca__n_components": get_component_numbers(len(df_num.columns), 20),
+        "estimator__n_components": get_component_numbers(len(df.columns), search_res),
         "svc__alpha": np.logspace(-2, 2, 10)
     }
-    search = GridSearchCV(pipe, param_grid, iid=False, cv=5)
-    search.fit(df_num.iloc[:, :-1], df_num.iloc[:, -1])
-    print("Best parameter (CV score=%0.3f):" % search.best_score_)
-    print(search.best_params_)
+    search = GridSearchCV(pipe,
+                          param_grid,
+                          iid=False,
+                          cv=10,
+                          scoring=make_scorer(f1_score, average='weighted'),
+                          n_jobs=-1,
+                          verbose=verbose)
 
-    # Plotting PCA spectrum
-    pca.fit(df_num.iloc[:, :-1])
-    fig, (ax0, ax1) = plt.subplots(nrows=2, sharex=True, figsize=(6, 6))
-    ax0.plot(pca.explained_variance_ratio_, linewidth=2)
-    ax0.set_ylabel("PCA explained variance")
-    ax0.axvline(search.best_estimator_.named_steps["pca"].n_components, linestyle=':', label="n_components chosen")
-    ax0.legend(prop=dict(size=12))
-    if save:
-        plt.savefig(path + "explained_variance")
+    search.fit(df.iloc[:, :-1], df.iloc[:, -1])
+
+    # Plotting estimator spectrum
+    estimator.fit(df.iloc[:, :-1])
+    fig, ax = plt.subplots()
+
+    ax.axvline(search.best_estimator_.named_steps["estimator"].n_components, linestyle=':', label="n_components chosen")
     # For each number of components, find the best classifier results
     results = pd.DataFrame(search.cv_results_)
-    components_col = "param_pca__n_components"
+    components_col = "param_estimator__n_components"
     best_clfs = results.groupby(components_col).apply(
         lambda g: g.nlargest(1, "mean_test_score"))
     best_clfs.plot(x=components_col, y="mean_test_score", yerr='std_test_score',
-                   legend=False, ax=ax1)
-    ax1.set_ylabel("Classification accuracy (val)")
-    ax1.set_xlabel("n_components")
+                   legend=False, ax=ax)
+    ax.set_title(estimator_name + " Dimensionality Reduction Search")
+    ax.set_ylabel("Classification F1 Score")
+    ax.set_xlabel("n_components")
     plt.tight_layout()
     if save:
-        plt.savefig(path + "classification_accuracy")
-    plt.show()
-    n_components = input("Enter number of components chosen: ")
-    pca = PCA(n_components=n_components)
-    pcs = pca.fit_transform(df_num.iloc[:, :-1])
-    pc_df = pd.DataFrame(data=pcs)
-    # re-constructing dataframe and returning
-    return pd.concat([pc_df, df_num.iloc[:, -1]], axis=1)
+        plt.savefig(path + "estimator_grid_search_" + estimator_name, dpi=600)
+    if show:
+        plt.show()
+    return search.best_estimator_.named_steps["estimator"].n_components
 
-def get_component_numbers(num, splits):
+def get_PCA_components(df, n_components=2, include_last_col=False, fitted_pca_obj=None):
+    """
+    Applies PCA on a dataframe and returns the result as a dataframe.
+    The include_last_col param can be used to indicate whether the labels column is included in the given dataframe. By default this column is not included in the PCA process.
+    """
+    pca_df = None
+    if include_last_col:
+        pca_df = df
+    else:
+        pca_df = df.iloc[:, :-1]
+    if fitted_pca_obj is None:
+        fitted_pca_obj = PCA(n_components=n_components).fit(pca_df)
+    principal_components = fitted_pca_obj.transform(pca_df)
+    pc_df = pd.DataFrame(data=principal_components)
+    return pd.concat([pc_df, df.iloc[:, -1]], axis=1), fitted_pca_obj
+
+
+def get_component_numbers(num, n_splits):
     """
     This method attempts to split a number into equal parts and returns a list
     of the locations of these parts. In cases where the number cannot be split
@@ -297,8 +359,8 @@ def get_component_numbers(num, splits):
     n-1 parts.
     """
     splits = None
-    for i in range(20, 1, -1):
-        splits = split_into_n_parts(num - 1, i)
+    for n in range(n_splits, 1, -1):
+        splits = split_into_n_parts(num - 1, n)
         if splits is not None:
             break
     if splits is None:

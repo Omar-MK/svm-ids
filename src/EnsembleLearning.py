@@ -18,7 +18,7 @@ def train_svm(path, train_n, test_n, class_labels):
     train = pickle.load(open(path + train_n, "rb"))
     test = pickle.load(open(path + test_n, "rb"))
     train = balance_by_sampling(train)
-    train = train.sample(500)
+    train = train.sample(1000)
     # training and testing
     train_and_test_svm(train, train_n, test, class_labels, path_model='../trainedModels/ensemble_model_', path_results='../plots/results/ensembleSvm/')
 
@@ -32,11 +32,19 @@ def main():
     binary_labels = pickle.load(open("../datasets/transformed/binary_label_encodings.obj", "rb"))
     labels = [binary_labels, multiclass_labels]
 
-    trn_df_paths = ["trainingset_augmented_binary_unsupervised.obj",
-                    "trainingset_augmented_multiclass_unsupervised.obj"]
+    trn_df_paths = ["trainingset_augmented_binary_PCA.obj",
+                    "trainingset_augmented_multiclass_PCA.obj",
+                    "trainingset_augmented_binary_FAMD.obj",
+                    "trainingset_augmented_multiclass_FAMD.obj",
+                    "trainingset_augmented_binary_FAMD_Clustered.obj",
+                    "trainingset_augmented_multiclass_FAMD_Clustered.obj"]
 
-    tst_df_paths = ["testingset_augmented_binary_unsupervised.obj",
-                    "testingset_augmented_multiclass_unsupervised.obj"]
+    tst_df_paths = ["testingset_augmented_binary_PCA.obj",
+                    "testingset_augmented_multiclass_PCA.obj",
+                    "testingset_augmented_binary_FAMD.obj",
+                    "testingset_augmented_multiclass_FAMD.obj",
+                    "testingset_augmented_binary_FAMD-Clustered.obj",
+                    "testingset_augmented_multiclass_FAMD-Clustered.obj",]
 
     i = 0
     for (trn, tst) in zip(trn_df_paths, tst_df_paths):

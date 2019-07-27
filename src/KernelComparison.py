@@ -1,10 +1,13 @@
 """
 Author: Omar M Khalil 170018405
 
-In this file different SVM kernels are compared for their effectiveness at seperating the intrusion datasets.
+In this file different SVM kernels are compared for their effectiveness at
+seperating the intrusion datasets.
 
-1. The cleaned and encoded (augmented) multiclass, pre and post-supervised datasets are loaded.
-2. Using a grid search cross validation algorithm, the performance of different kernels is compared at different regularisation intensities.
+1. The cleaned and encoded (augmented) multiclass, pre and post-supervised
+   datasets are loaded.
+2. Using a grid search cross validation algorithm, the performance of different
+   kernels is compared at different regularisation intensities.
 """
 
 import pandas as pd
@@ -32,11 +35,14 @@ def main():
     path1 = "../datasets/transformed/preUnsupervised/"
     path2 = "../datasets/transformed/postUnsupervised/"
     train_prefix = "trainingset_augmented_multiclass"
-    fig_markers = ["pre-unsupervised", "post-unsupervised_unclustered", "post-unsupervised_clustered", "post-unsupervised_PCA"]
+    fig_markers = ["pre-unsupervised",
+                   "post-unsupervised_PCA",
+                   "post-unsupervised_FAMD",
+                   "post-unsupervised_FAMD-Clustered"]
     train_files = [path1 + train_prefix ,
-                   path2 + train_prefix + "_unclustered_unsupervised",
-                   path2 + train_prefix + "_unsupervised",
-                   path2 + train_prefix + "_pca_unsupervised"]
+                   path2 + train_prefix + "_PCA",
+                   path2 + train_prefix + "_FAMD",
+                   path2 + train_prefix + "_FAMD-Clustered"]
     datasets = load_datasets(train_files)
 
     # loading class label encodings
@@ -45,7 +51,9 @@ def main():
     tst_sets =  []
     for df in datasets:
         # splitting data into training and testing sets
-        X_trn, X_tst, y_trn, y_tst = split_train_test(df.iloc[:, :-1], df.iloc[:, -1] , 0.2)
+        X_trn, X_tst, y_trn, y_tst = split_train_test(df.iloc[:, :-1],
+                                                      df.iloc[:, -1] ,
+                                                      0.2)
         trn_set = pd.concat([X_trn, y_trn], axis=1)
         tst_set = pd.concat([X_tst, y_tst], axis=1)
         # balancing training set samples and randomly sampling result
@@ -107,14 +115,16 @@ def main():
                                  std_thres = 0.5,
                                  show=False,
                                  save=True,
-                                 path="../plots/results/kernelComp/" + fig_markers[i])
+                                 path="../plots/results/kernelComp/" +
+                                      fig_markers[i])
 
         # plotting confusion matrix on test of best f1 score model
         # print_model_perf_stats(clf, tst.iloc[:, :-1], tst.iloc[:, -1])
         plot_conf_matrix(tst.iloc[:, -1],
                          clf.predict(tst.iloc[:, :-1]),
                          classes=labels,
-                         title="Confusion Matrix " + fig_markers[i].replace('_', ''),
+                         title="Confusion Matrix " +
+                               fig_markers[i].replace('_', ''),
                          normalise=True,
                          show=False,
                          save=True,

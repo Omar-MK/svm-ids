@@ -9,16 +9,14 @@ The file contains code used to:
 2. Remove outliers within each class
 3. Check for co-variate numerical features and reduce the features to remove
 co-variance.
-4. carry out FAMD projection of the data to project the features into a lower
-feature space. This has the effect of turning all features into numeric
-features.
-5. Using the numeric feautres, KMeans clustering is applied balance data point
-count per class.
-6. Re-check for outliers, and based on user input, the outliers are removed or
-kept.
-7. Plot the seprability plot and 3D cluster plots from steps 10 and 11 are
-remade to visualise effect of changes.
-8. Save the post-superivsed datasets.
+4. An algorithm is used to search for the best number of PCA reductions
+5. Next a loop is entered iterating over the training and testing sets where:
+    I. duplicathe data is dropped
+    II. the data in all features is scaled from -1 to 1
+    II. PCA, FAMD, and FAMD + Clustering is carried out the same datasets
+        (clustering is not carried out on testing data)
+    III. Plots to visualise training data are created
+    IV. The PCA, FAMD, and FAMD-Clustered datasets are saved
 """
 
 import pandas as pd
@@ -28,6 +26,8 @@ from Plotting import *
 from CleaningAndAugmentation import save_dataset
 from FigureMate import FigureMate
 from sklearn import preprocessing
+from sklearn.decomposition import PCA
+
 
 def main():
     fnames = ["trainingset_augmented_multiclass",
@@ -80,65 +80,115 @@ def main():
     # print("features remaining: ", datasets[0].columns)
     # print("number of features remaining: ", len(datasets[0].columns))
 
-    # the next step is to peform principal component analysis (FAMD) to project
-    # and cat features and numerical features onto common planes. This also
-    # reduces the dimensionality of the datasets. This is followed by KMeans
-    # clustering to balance out the counts of rows for each class.
+    # Step 4.
     datasets = pickle.load(open("../datasets/transformed/datasets_mid_pt2.obj", "rb"))
-    multiclass_scaler = preprocessing.MinMaxScaler()
-    binary_scaler = preprocessing.MinMaxScaler()
+    # finding best number of components for PCA and FAMD reduction
+    print("*** Finding optimal number of PCA and FAMD components ***")
+    df_temp = balance_by_sampling(datasets[0]).sample(500)
+    comp_PCA = get_best_reduction_PCA(df_temp,
+                                      categotical_cols=df_temp.columns[:2],
+                                      search_res=30,
+                                      verbose=True,
+                                      show=False,
+                                      save=True,
+                                      path="../plots/visualisation/after/")
+    comp_FAMD = get_best_reduction_FAMD(df_temp,
+                                        search_res=30,
+                                        verbose=True,
+                                        show=False,
+                                        save=True,
+                                        path="../plots/visualisation/after/")
+    # Step 5.
+    # initialising a pca, famd, and scaler
+    pca = None
+    famd = None
+    scaler = preprocessing.MinMaxScaler().fit(datasets[0].iloc[:, :-1])
+    # initialising lists of dfs to be saved
+    pca_dfs = []
+    famd_dfs = []
+    famd_clustered_dfs = []
+    trans_lbls = ["PCA", "FAMD", "FAMD-Clustered"]
     for i in range(len(datasets)):
-        print("\n*** Carrying out FAMD and clustering on %s ***" % fnames[i])
-        datasets[i] = datasets[i].drop_duplicates()
+        print("\n*** Carrying out unsupervised methods on %s ***" % fnames[i])
         df = datasets[i]
-        # getting principal components
-        scaled_features = []
-        # df = get_principal_components(df, len(datasets[0].columns) - 11)
-        df = choose_PCA_components(df, categotical_cols=['Destination Port', 'Protocol'], save=True, path="../plots/visualisation/after/")
+
+        # dropping duplicates
+        df = df.drop_duplicates()
+
+        # scaling numerical data
+        scaled_data = scaler.transform(df.iloc[:, 2:-1].values)
+        X = pd.DataFrame(scaled_data, index=df.index, columns=df.columns[2:-1])
+        # re-joining categorical + numerical X and y
+        df = pd.concat([df.iloc[:, :2], X, df.iloc[:, -1]], axis=1)
+
+        # getting principal components using pca (numerical cols only!)
+        print("*** Constructing PCA dataset ***")
+        num_cols, pca = get_PCA_components(df.iloc[:, 2:],
+                                         n_components=comp_PCA,
+                                         fitted_pca_obj=pca)
         # encoding categorical data
-        y = df.iloc[:,-1]
-        X = pd.get_dummies(df.iloc[:,:-1],
-            columns=df.columns[:2],
-            drop_first=True)
-        df = pd.concat([X, y], axis=1)
-        # scaling between 1 and -1, reason binary and multiclass scaled seperately is because they have different classes
-        if i == 0:
-            multiclass_scaler.fit(df.columns[:-27])
-        elif i == 1:
-            binary_scaler.fit(df.columns[:-27])
-        if i % 2 == 0:
-            scaled_features = multiclass_scaler.transform(df.iloc[:, :-27].values)
-        else:
-            scaled_features = binary_scaler.transform(df.iloc[:, :-27].values)
-        df_X_num = pd.DataFrame(scaled_features, index=df.index, columns=df.columns[:-27])
-        df = pd.concat([df_X_num, df.iloc[:, -27:]], axis=1)
+        cat_cols = pd.get_dummies(df.iloc[:, :2], drop_first=True)
+        # concatenating cat_cols and num_cols (note num_cols includes labels)
+        df_pca = pd.concat([cat_cols, num_cols], axis=1)
+        # adding df_pca to pca_dfs
+        pca_dfs += df_pca
+
+        # getting principal components using famd
+        print("*** Constructing FAMD dataset ***")
+        df_famd, famd = get_principal_components(df, comp_FAMD, famd_obj=famd)
+        # adding df_famd to famd_dfs
+        famd_dfs += df_famd
+
+        # check if current dataframes are training sets
         if i < 2:
-            # balancing sample counts for each class through clustering - only
-            # applied on training sets
-            # print("now clustering data")
-            # df = balance_sample_counts(df, max_clusters=3000, mini_batch_multiplier=3, verbose=True)
+            # balancing sample counts for each class through clustering
+            print("*** Constructing Clustered FAMD dataset ***")
+            df_clustered = balance_sample_counts(df_famd,
+                                                 max_clusters=3000,
+                                                 mini_batch_multiplier=3,
+                                                 verbose=True)
+            famd_clustered_dfs += df_clustered
 
-            # plotting barchart to vis ditribution of labels
-            print("Saving label count plot")
-            fm = FigureMate(heading=title_prefix[i], tick_labels=axes_labels[i%2], path="../plots/visualisation/after/pca_")
-            construct_frequency_plot(df, df.columns[-1], fm, show=0, save=1)
+            for (df, lbl) in zip([df_pca, df_famd, df_clustered], trans_lbls):
+                # plotting barchart to vis ditribution of labels
+                print("Saving label count plot")
+                fm = FigureMate(heading=title_prefix[i] + "Post " + lbl,
+                                tick_labels=axes_labels[i%2],
+                                path="../plots/visualisation/after/" + lbl)
+                construct_frequency_plot(df, df.columns[-1], fm, show=0, save=1)
 
-            # re-visualising seperabilitiy of left over engineered features
-            print("\nSaving seprability plot")
-            fm = FigureMate(heading=title_prefix[i%2], legend_labels=axes_labels[i%2], path="../plots/visualisation/after/pca_")
-            construct_seperation_plot(df, df.columns[:-1], fm, std_dev=0.5, show=0, save=1)
+                # re-visualising seperabilitiy of left over engineered features
+                print("\nSaving seprability plot")
+                fm = FigureMate(heading=title_prefix[i%2] + "Post " + lbl,
+                                legend_labels=axes_labels[i%2],
+                                path="../plots/visualisation/after/" + lbl)
+                construct_seperation_plot(df,
+                                          df.columns[:-1],
+                                          fm,
+                                          std_dev=0.5,
+                                          show=0,
+                                          save=1)
 
-            # visualising clusters
-            print("\nSaving cluster plot")
-            fm = FigureMate(heading=title_prefix[i%2] + "Cluster visualisation post feature engineering", legend_labels=axes_labels[i%2], prefix=0, path="../plots/visualisation/after/pca_")
-            construct_cluster_plot(df, df.columns[:-1], fm, dimensions=3, show=0, save=1)
+                # visualising clusters
+                print("\nSaving cluster plot")
+                fm = FigureMate(heading=title_prefix[i%2] + "Post " + lbl,
+                                legend_labels=axes_labels[i%2],
+                                prefix=0,
+                                path="../plots/visualisation/after/" + lbl)
+                construct_cluster_plot(df,
+                                       df.columns[:-1],
+                                       fm,
+                                       dimensions=3,
+                                       show=0,
+                                       save=1)
 
-        # saving final datasets
-        print("\n*** Saving %s ***" % fnames[i])
-        save_dataset(df,
-            fnames[i] + "_pca_unsupervised",
-            "../datasets/transformed/postUnsupervised/",
-            save_as="obj")
+        for (df, lbl) in zip([df_pca, df_famd, df_clustered], trans_lbls):
+            # saving final datasets
+            print("\n*** Saving %s ***" % fnames[i])
+            save_dataset(df,
+                fnames[i] + "_" + lbl,
+                "../datasets/transformed/postUnsupervised/",
+                save_as="obj")
 
 if __name__ == "__main__":
     main()
