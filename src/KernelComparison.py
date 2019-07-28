@@ -36,13 +36,11 @@ def main():
     path2 = "../datasets/transformed/postUnsupervised/"
     train_prefix = "trainingset_augmented_multiclass"
     fig_markers = ["pre-unsupervised",
-                   "post-unsupervised_PCA",
-                   "post-unsupervised_FAMD",
-                   "post-unsupervised_FAMD-Clustered"]
+                   "post-unsupervised_",
+                   "post-unsupervised_Clustered"]
     train_files = [path1 + train_prefix ,
-                   path2 + train_prefix + "_PCA",
-                   path2 + train_prefix + "_FAMD",
-                   path2 + train_prefix + "_FAMD-Clustered"]
+                   path2 + train_prefix,
+                   path2 + train_prefix + "Clustered"]
     datasets = load_datasets(train_files)
 
     # loading class label encodings

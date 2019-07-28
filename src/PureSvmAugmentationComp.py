@@ -25,7 +25,6 @@ def train_svm(path, train_n, test_n, class_labels):
 
 def main():
     path = "../datasets/transformed/preUnsupervised/"
-    krnl = "linear"
 
     # loading class encoding labels (keys)
     multiclass_labels = pickle.load(open("../datasets/transformed/multiclass_label_encodings.obj", "rb"))

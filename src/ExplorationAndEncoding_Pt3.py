@@ -8,13 +8,20 @@ that the sample counts for each class are balanced.
 In this script a loop is entered iterating over the training and testing sets where:
 1. duplicate samples are dropped
 2. the data in all features is scaled from -1 to 1
-3. PCA, and PCA + Clustering is carried out on the same datasets resulting
-    in reduced but unclustered and reduced and clustered datasets.
-    Note: clustering is not carried out on testing data
+3. Clustering is carried out on the training sets datasets (num cols only).
 4. Plots to visualise training data are created
 5. The generated datasets are saved
 """
 
+
+import pickle
+import pandas as pd
+from Plotting import *
+from DataTransformation import *
+from CleaningAndAugmentation import save_dataset
+from FigureMate import FigureMate
+from sklearn import preprocessing
+from sklearn.decomposition import PCA
 
 def main():
     fnames = ["trainingset_augmented_multiclass",
@@ -34,14 +41,11 @@ def main():
 
     # loading datasets
     datasets = pickle.load(open("../datasets/transformed/datasets_end_pt2.obj", "rb"))
-    # loading n_components to use in PCA
-    n_components = pickle.load(open("../datasets/transformed/n_components.obj", "rb"))
 
-    # initialising a PCA scaler
-    pca = None
+    # initialising a min max scaler
     scaler = preprocessing.MinMaxScaler().fit(datasets[0].iloc[:, :-27])
     # defining dataframe object label suffixes
-    trans_lbls = ["PCA", "PCA-Clustered"]
+    trans_lbls = ["", "Clustered"]
     for i in range(len(datasets)):
         print("\n*** Carrying out unsupervised methods on %s ***" % fnames[i])
         df = datasets[i]
@@ -49,30 +53,22 @@ def main():
         # dropping duplicates
         df = df.drop_duplicates()
 
-        # scaling numerical data -27:-1
+        # scaling numerical data
         scaled_data = scaler.transform(df.iloc[:, :-27].values)
         X = pd.DataFrame(scaled_data, index=df.index, columns=df.columns[:-27])
         # re-joining categorical + numerical X, and y
         df = pd.concat([X, df.iloc[:, -27:]], axis=1)
-
-        # getting principal components using pca
-        # print("*** Constructing PCA dataset ***")
-        df_pca, pca = get_PCA_components(df.iloc[:, 2:],
-                                         n_components=n_components,
-                                         fitted_pca_obj=pca)
-
-        print(df_pca[df_pca.Label == 10].describe)
-        print(set(df_pca.iloc[:, -1]))
-        break
-        # check if current dataframes are training sets
+        # if current dataframes are training sets
         if i < 2:
+            # getting df without categorical cols
+            df_num = pd.concat([df.iloc[:, :-27], df.iloc[:, -1]])
             # balancing sample counts for each class through clustering
             print("*** Constructing Clustered PCA dataset ***")
-            df_clustered = balance_sample_counts(df_pca,
+            df_clustered = balance_sample_counts(df_num,
                                                  max_clusters=3000,
                                                  mini_batch_multiplier=3,
                                                  verbose=True)
-            for (df, lbl) in zip([df_pca, df_clustered], trans_lbls):
+            for (df, lbl) in zip([df, df_clustered], trans_lbls):
                 # plotting barchart to vis ditribution of labels
                 print("Saving label count plot")
                 fm = FigureMate(heading=title_prefix[i] + "Post " + lbl,
@@ -105,11 +101,14 @@ def main():
                                        show=0,
                                        save=1)
         else:
-            df_clustered = df_pca
-        for (df, lbl) in zip([df_pca, df_clustered], trans_lbls):
+            df_clustered = df
+        for (df, lbl) in zip([df, df_clustered], trans_lbls):
             # saving final datasets
             print("\n*** Saving %s ***" % fnames[i])
             save_dataset(df,
                 fnames[i] + "_" + lbl,
                 "../datasets/transformed/postUnsupervised/",
                 save_as="obj")
+
+if __name__ == "__main__":
+    main()

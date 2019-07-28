@@ -332,8 +332,7 @@ def get_best_reduction(df, estimator, estimator_name, search_res, verbose, show,
         plt.savefig(path + "estimator_grid_search_" + estimator_name, dpi=600)
     if show:
         plt.show()
-    return search.best_estimator_.named_steps["estimator"].n_components,
-           best_clfs["mean_test_score"].max()
+    return search.best_estimator_.named_steps["estimator"].n_components, best_clfs["mean_test_score"].max()
 
 def get_PCA_components(df, n_components=2, include_last_col=False, fitted_pca_obj=None):
     """

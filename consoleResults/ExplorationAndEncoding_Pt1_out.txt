@@ -212,6 +212,7 @@ Column name:  Bwd IAT Max
 The number of rows containing outliers is:  83126
 Percentage of rows containing outliers:  22.571167903031355 \%
 
-
-number of correlations found:  13
-Correlated features are : [('Flow Duration', 'Fwd IAT Total'), ('Total Fwd Packets', 'Subflow Fwd Packets'), ('Total Backward Packets', 'Subflow Bwd Packets'), ('Total Length of Fwd Packets', 'Subflow Fwd Bytes'), ('Total Length of Bwd Packets', 'Subflow Bwd Bytes'), ('Fwd Packet Length Mean', 'Avg Fwd Segment Size'), ('Bwd Packet Length Max', 'Bwd Packet Length Std'), ('Bwd Packet Length Mean', 'Avg Bwd Segment Size'), ('Flow Packets/s', 'Fwd Packets/s'), ('Fwd Header Length', 'Fwd Header Length.1'), ('Max Packet Length', 'Packet Length Std'), ('% connections d-IP within n=20', '% connections d-IP within n=15'), ('% connections s-IP within n=20', '% connections s-IP within n=15')]
+*** Checking for numerical columns with a constant value ***
+The following columns contain only a single value:
+['Bwd PSH Flags', 'Bwd URG Flags', 'Fwd Avg Bytes/Bulk', 'Fwd Avg Packets/Bulk', 'Fwd Avg Bulk Rate', 'Bwd Avg Bytes/Bulk', 'Bwd Avg Packets/Bulk', 'Bwd Avg Bulk Rate']
+was 101 cols now 93

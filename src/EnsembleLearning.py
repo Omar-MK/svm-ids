@@ -32,19 +32,15 @@ def main():
     binary_labels = pickle.load(open("../datasets/transformed/binary_label_encodings.obj", "rb"))
     labels = [binary_labels, multiclass_labels]
 
-    trn_df_paths = ["trainingset_augmented_binary_PCA.obj",
-                    "trainingset_augmented_multiclass_PCA.obj",
-                    "trainingset_augmented_binary_FAMD.obj",
-                    "trainingset_augmented_multiclass_FAMD.obj",
-                    "trainingset_augmented_binary_FAMD_Clustered.obj",
-                    "trainingset_augmented_multiclass_FAMD_Clustered.obj"]
+    trn_df_paths = ["trainingset_augmented_binary_.obj",
+                    "trainingset_augmented_multiclass_.obj",
+                    "trainingset_augmented_binary_Clustered.obj",
+                    "trainingset_augmented_multiclass_Clustered.obj"]
 
-    tst_df_paths = ["testingset_augmented_binary_PCA.obj",
-                    "testingset_augmented_multiclass_PCA.obj",
-                    "testingset_augmented_binary_FAMD.obj",
-                    "testingset_augmented_multiclass_FAMD.obj",
-                    "testingset_augmented_binary_FAMD-Clustered.obj",
-                    "testingset_augmented_multiclass_FAMD-Clustered.obj",]
+    tst_df_paths = ["testingset_augmented_binary_.obj",
+                    "testingset_augmented_multiclass_.obj",
+                    "testingset_augmented_binary_Clustered.obj",
+                    "testingset_augmented_multiclass_Clustered.obj"]
 
     i = 0
     for (trn, tst) in zip(trn_df_paths, tst_df_paths):

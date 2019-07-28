@@ -6,51 +6,30 @@ The main objective of this file is to explore which component analysis reduction
 
 The file contains code used to:
 1. Load the object containing the datasets.
-2. Remove outliers within each class
-3. Check for co-variate numerical features and reduce the features to remove
+2. Check for co-variate numerical features and reduce the features to remove
 co-variance.
-4. Grid search is used to search for the best number of component analysis
+3. Grid search is used to search for the best number of component analysis
 reductions and max score achieved using:
     I. PCA applied on the numerical columns of the dataset,
     II. PCA applied on both the numerical and dummy encoded categorical columns,
     III. FAMD applied on both the numerical and categorical columns.
-5. The datasets leading to the best score are saved for use in
+4. The datasets leading to the best score are saved for use in
    ExplorationAndEncoding_pt3.
-Note, the reduction techniqe which resulted in the greatest accuracy is used in
-ExplorationAndEncoding_pt3.
 """
 
-import pandas as pd
+
 import pickle
 from DataTransformation import *
-from Plotting import *
-from CleaningAndAugmentation import save_dataset
-from FigureMate import FigureMate
-from sklearn import preprocessing
-from sklearn.decomposition import PCA
 
 
 def main():
     print("*** Loading datasets object ***")
     # loading stored object containing datasets to be used for PCA (numerical
     # cols only) and FAMD
-    datasets = pickle.load(open("datasets/transformed/datasets_end_pt1.obj", "rb"))
+    datasets = pickle.load(open("../datasets/transformed/datasets_end_pt1.obj", "rb"))
     # loading stored object containing datasets to be used for PCA containing
     # dummy encoded categorical features.
     datasets_encoded = pickle.load(open("../datasets/transformed/datasets_end_pt1_cat_encoded.obj", "rb"))
-
-
-    # first removing "outliers" datapoints 3 standard deviations from mean.
-    print("*** Removing outliers ***")
-    for i in range(1):
-        datasets[i] = drop_outliers(datasets[i],
-                                    datasets[i].iloc[:, 2:-1],
-                                    3,
-                                    verbose=True)
-        datasets_encoded[i] = drop_outliers(datasets_encoded[i],
-                                            datasets_encoded[i].iloc[:, :-1],
-                                            3,
-                                            verbose=True)
 
     # next we can check to see if any numerical features are highly correlated
     # (co-variate). This could allow us to reduce the number of features. The
@@ -85,25 +64,25 @@ def main():
     df_temp_with_cat = balance_by_sampling(datasets_encoded[0]).sample(1000)
     PCA_res = get_best_reduction_PCA(df_temp,
                                      categotical_cols=df_temp.columns[:2],
-                                     search_res=50,
+                                     search_res=30,
                                      verbose=True,
                                      show=False,
                                      save=True,
                                      path="../plots/visualisation/after/")
     FAMD_res = get_best_reduction_FAMD(df_temp,
-                                       search_res=50,
+                                       search_res=30,
                                        verbose=True,
                                        show=False,
                                        save=True,
                                        path="../plots/visualisation/after/")
     PCA_with_cat_res = get_best_reduction_PCA(df_temp_with_cat,
-                                              search_res=50,
+                                              search_res=30,
                                               verbose=True,
                                               show=False,
                                               save=True,
                                               path="../plots/visualisation/after/with_cat_")
 
-    if max(PCA_res[1], FAMD_res[1)] > PCA_with_cat_res:
+    if max(PCA_res[1], FAMD_res[1]) > PCA_with_cat_res[1]:
         pickle.dump(datasets, open("../datasets/transformed/datasets_end_pt2.obj", "wb"))
         if PCA_res[1] > FAMD_res[1]:
             print("PCA carried out on the numerical columns only was the best technique")

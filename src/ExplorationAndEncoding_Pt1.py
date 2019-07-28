@@ -206,9 +206,9 @@ def main():
     for df in datasets[:2]:
         for label in set(df.iloc[:, -1]):
             print("\nShowing discriptive stats for class: ", label)
-            # print(df[df.Label == label].describe())
+            print(df[df.Label == label].describe())
             print("\nOutlier information")
-            # print_outlier_information(df[df.Label == label].iloc[:, 2:-1], 3)
+            print_outlier_information(df[df.Label == label].iloc[:, 2:-1], 3)
 
     # this first round result shows that around a 5th of all "outliers" for
     # every class come from a single column, yet this column is different for
@@ -216,6 +216,19 @@ def main():
     # rows containing outliers. These rows could be removed at this point.
     # However, since clustering will be used to reduce the data, this is not
     # carried out.
+
+    # checking for numerical columns with a constant value for all classes
+    print("\n*** Checking for numerical columns with a constant value ***")
+    cols_to_drop = []
+    for col in datasets[0].columns[2:-1]:
+        # checking if the length of the set of the column values is less than 2
+        if len(set(datasets[0][col].values)) < 2:
+            cols_to_drop += [col]
+    print("The following columns contain only a single value: ")
+    print(cols_to_drop)
+    # dropping columns from all dataframes
+    for i in range(len(datasets)):
+        datasets[i].drop(cols_to_drop, axis=1, inplace=True)
 
     # normalising numerical data to have a mean ~0 and variance of 1, aids in
     # clustering process and visualisations as well as SVM model building. Also
