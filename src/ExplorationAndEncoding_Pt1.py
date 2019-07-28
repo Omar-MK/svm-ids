@@ -39,31 +39,34 @@ def save_datasets(datasets, fnames, path, save_as="csv"):
             # saving augmented dataset
             df.to_csv(path + fname + ".csv", index=False)
             # saving non-augmented dataset
-            df_reduced.to_csv((path + fname + ".csv")
-                .replace('_augmented', ''), index=False)
+            df_reduced.to_csv((path + fname + ".csv").replace('_augmented', ''), index=False)
         elif save_as == "obj":
             # saving augmented dataset
             pickle.dump(df, open(path + fname + ".obj", "wb"))
             # saving non-augmented dataset
-            pickle.dump(df_reduced,
-                open((path + fname + ".obj").replace('_augmented', ''), "wb"))
+            pickle.dump(df_reduced,open((path + fname + ".obj").replace('_augmented', ''), "wb"))
 
 
 def plot_label_counts(datasets, title_prefix, axes_labels, path_suffix=''):
     for i in range(len(datasets)):
         # plotting barchart to vis ditribution of labels
-        fm = FigureMate(heading=title_prefix[i], tick_labels=axes_labels[i%2], path="../plots/visualisation/before/" + path_suffix)
-        construct_frequency_plot(datasets[i], datasets[i].columns[-1], fm, show=0, save=1)
-
+        fm = FigureMate(heading=title_prefix[i],
+                        tick_labels=axes_labels[i%2],
+                        path="../plots/visualisation/before/" + path_suffix)
+        construct_frequency_plot(datasets[i],
+                                 datasets[i].columns[-1],
+                                 fm,
+                                 show=0,
+                                 save=1)
 
 def main():
     # loading the input and output data
     print("*** Loading datasets ***")
     path = "../datasets/cleaned/"
     fnames = ["trainingset_augmented_multiclass",
-        "trainingset_augmented_binary",
-        "testingset_augmented_multiclass",
-        "testingset_augmented_binary"]
+              "trainingset_augmented_binary",
+              "testingset_augmented_multiclass",
+              "testingset_augmented_binary"]
 
     datasets = []
     for file in fnames:
@@ -92,10 +95,10 @@ def main():
     # collecting class labels for multiclass axes labels
     mcl = list(class_encodings.keys())
     # defining title labels
-    title_prefix = ['Multiclass Training Set ',
-        'Binary Training Set ',
-        'Multiclass Testing Set ',
-        'Binary Testing Set ']
+    title_prefix = ["Multiclass Training Set ",
+                    "Binary Training Set ",
+                    "Multiclass Testing Set ",
+                    "Binary Testing Set "]
     axes_labels = [mcl, ["BENIGN", "Attack"]]
 
     plot_label_counts(datasets[:2], title_prefix[:2], axes_labels)
@@ -123,11 +126,14 @@ def main():
     print(mcl)
     # saving mcl and binary class encodings
     pickle.dump(mcl,
-        open("../datasets/transformed/multiclass_label_encodings.obj", "wb"))
+                open("../datasets/transformed/multiclass_label_encodings.obj", "wb"))
     pickle.dump(["BENIGN", "Attack"],
-        open("../datasets/transformed/binary_label_encodings.obj", "wb"))
+                open("../datasets/transformed/binary_label_encodings.obj", "wb"))
 
-    plot_label_counts(datasets[:2], title_prefix, axes_labels, path_suffix="changed_")
+    plot_label_counts(datasets[:2],
+                      title_prefix,
+                      axes_labels,
+                      path_suffix="changed_")
 
     # checking counts of values of categorical attributes. This is important to
     # see if the categorical attributes can be dropped. If not, the
@@ -145,7 +151,7 @@ def main():
             cat_df = datasets[0].loc[datasets[0][col].isin(datasets[0][col].value_counts().index[:25])]
 
         fm = FigureMate(heading="Training Set",
-            path="../plots/visualisation/before/")
+                        path="../plots/visualisation/before/")
         construct_frequency_plot(cat_df, col, fm, show=0, save=1)
 
     # plotting categorical features vs labels to get a better understanding of
@@ -155,14 +161,14 @@ def main():
     # plotted.
     cat_df = datasets[0][datasets[0].Label != 0]
     cat_df = cat_df.loc[cat_df[cat_cols[0]]
-        .isin(cat_df[cat_cols[0]]
-        .value_counts()
-        .index[:25])]
+                   .isin(cat_df[cat_cols[0]]
+                   .value_counts()
+                   .index[:25])]
 
     i = 0
     for dataset in datasets[:2]:
         fm = FigureMate(heading=title_prefix[i] + " (attacks only)",
-            path="../plots/visualisation/before/" + title_prefix[i] + 'attacks_only_')
+                        path="../plots/visualisation/before/" + title_prefix[i] + 'attacks_only_')
         construct_frequency_plot(cat_df, cat_cols[0], fm, show=0, save=1)
         construct_box_plot(cat_df, cat_cols, ["Label"], fm, show=0, save=1)
         construct_violin_plot(cat_df, cat_cols, ["Label"], fm, show=0, save=1)

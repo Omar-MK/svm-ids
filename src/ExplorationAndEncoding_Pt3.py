@@ -13,7 +13,6 @@ In this script a loop is entered iterating over the training and testing sets wh
 5. The generated datasets are saved
 """
 
-
 import pickle
 import pandas as pd
 from Plotting import *
@@ -22,6 +21,7 @@ from CleaningAndAugmentation import save_dataset
 from FigureMate import FigureMate
 from sklearn import preprocessing
 from sklearn.decomposition import PCA
+
 
 def main():
     fnames = ["trainingset_augmented_multiclass",
@@ -106,9 +106,9 @@ def main():
             # saving final datasets
             print("\n*** Saving %s ***" % fnames[i])
             save_dataset(df,
-                fnames[i] + "_" + lbl,
-                "../datasets/transformed/postUnsupervised/",
-                save_as="obj")
+                         fnames[i] + "_" + lbl,
+                         "../datasets/transformed/postUnsupervised/",
+                         save_as="obj")
 
 if __name__ == "__main__":
     main()
