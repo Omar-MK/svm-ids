@@ -259,10 +259,10 @@ def get_best_reduction_FAMD(df, search_res=20, verbose=False, show=True, save=Fa
     This method is adapted from: https://scikit-learn.org/stable/auto_examples/compose/plot_digits_pipe.html#sphx-glr-auto-examples-compose-plot-digits-pipe-py,
     The method is improved with algorithms to automate selection of appropriate
     pcs n_parameters.
-    Returns the optimal number of components.
+    Returns a tuple containing the optimal number of components and max score.
     """
     famd = prince.FAMD(n_iter=3, copy=True, check_input=False, engine='auto')
-    return get_best_reduction(df, famd, "PCA", search_res, verbose, show, save, path)
+    return get_best_reduction(df, famd, "FAMD", search_res, verbose, show, save, path)
 
 
 def get_best_reduction_PCA(df, categotical_cols=None, search_res=20, verbose=False, show=True, save=False, path="./"):
@@ -286,7 +286,7 @@ def get_best_reduction_PCA(df, categotical_cols=None, search_res=20, verbose=Fal
     This method is adapted from: https://scikit-learn.org/stable/auto_examples/compose/plot_digits_pipe.html#sphx-glr-auto-examples-compose-plot-digits-pipe-py,
     The method is improved with algorithms to automate selection of appropriate
     pcs n_parameters.
-    Returns the optimal number of components.
+    Returns a tuple containing the optimal number of components and max score.
     """
     num_cols = df.columns
     if categotical_cols is not None:
@@ -315,24 +315,25 @@ def get_best_reduction(df, estimator, estimator_name, search_res, verbose, show,
     # Plotting estimator spectrum
     estimator.fit(df.iloc[:, :-1])
     fig, ax = plt.subplots()
-
     ax.axvline(search.best_estimator_.named_steps["estimator"].n_components, linestyle=':', label="n_components chosen")
     # For each number of components, find the best classifier results
     results = pd.DataFrame(search.cv_results_)
     components_col = "param_estimator__n_components"
+    results[components_col] = results[components_col].astype(float)
     best_clfs = results.groupby(components_col).apply(
         lambda g: g.nlargest(1, "mean_test_score"))
-    best_clfs.plot(x=components_col, y="mean_test_score", yerr='std_test_score',
-                   legend=False, ax=ax)
+    best_clfs.plot(kind="scatter", x=components_col, y="mean_test_score", yerr='std_test_score', legend=False, ax=ax)
     ax.set_title(estimator_name + " Dimensionality Reduction Search")
     ax.set_ylabel("Classification F1 Score")
     ax.set_xlabel("n_components")
+    ax.grid()
     plt.tight_layout()
     if save:
         plt.savefig(path + "estimator_grid_search_" + estimator_name, dpi=600)
     if show:
         plt.show()
-    return search.best_estimator_.named_steps["estimator"].n_components
+    return search.best_estimator_.named_steps["estimator"].n_components,
+           best_clfs["mean_test_score"].max()
 
 def get_PCA_components(df, n_components=2, include_last_col=False, fitted_pca_obj=None):
     """

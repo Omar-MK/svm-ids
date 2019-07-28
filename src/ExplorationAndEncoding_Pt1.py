@@ -222,12 +222,15 @@ def main():
     # dummy encoding categorical data.
     print("\n*** Normalising the numerical features and dummy encoding categorical features ***")
     scaler = StandardScaler().fit(datasets[0].iloc[:, 2:-1])
-    # using the above scaler fitted on the training data, scailing all numerical
+    # using the above scaler fitted on the training data, scaling all numerical
     # training and testing dataset values
     pre_unsupervised_dfs = []
     for i in range(len(datasets)):
         df = datasets[i]
-        df.iloc[:, 2:-1] = scaler.transform(df.iloc[:, 2:-1])
+        scaled_data = scaler.transform(df.iloc[:, 2:-1].values)
+        X = pd.DataFrame(scaled_data, index=df.index, columns=df.columns[2:-1])
+        # re-joining categorical + numerical X and y
+        df = pd.concat([df.iloc[:, :2], X, df.iloc[:, -1]], axis=1)
         datasets[i] = df
         y = df.iloc[:,-1]
         X = pd.get_dummies(df.iloc[:,:-1],
@@ -250,9 +253,12 @@ def main():
     print("\n*** Saving encoded pre-unsupervised datasets ***")
     save_datasets(pre_unsupervised_dfs, fnames, "../datasets/transformed/preUnsupervised/", save_as="obj")
 
-    # saving datasets for second part of ExplorationAndEncoding
+    # saving datasets for second part of ExplorationAndEncoding (without
+    # categorical feature encoding)
     pickle.dump(datasets, open("../datasets/transformed/datasets_end_pt1.obj", "wb"))
-
+    # saving datasets for second part of ExplorationAndEncoding (with
+    # categorical feature dummy encoding)
+    pickle.dump(pre_unsupervised_dfs, open("../datasets/transformed/datasets_end_pt1_cat_encoded.obj", "wb"))
 
 if __name__ == "__main__":
     main()
