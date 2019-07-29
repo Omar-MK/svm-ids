@@ -1,7 +1,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
 import sklearn.metrics as sklm
-
+from textwrap import wrap
 
 def print_model_perf_stats(model, X, y):
     '''
@@ -31,12 +31,17 @@ def print_model_perf_stats(model, X, y):
 
 
 def plot_rfecv_results(scores, reg, scoring, show=True, save=False, path="plots/"):
-    plt.figure()
-    plt.title("No. features vs classification", scoring, " L2 alpha = 1/" +  str(reg))
-    plt.xlabel("Number of features selected")
-    plt.ylabel("Cross-validation ", scoring)
+    fig = plt.figure()
+    ax = fig.gca()
+    title = ax.set_title("\n".join(wrap("No. features vs classification " + str(scoring) + " L2 alpha = " + str(reg), 60)))
+    ax.set_xlabel("Number of features selected")
+    ax.set_ylabel("Cross-validation " + scoring)
     plt.plot(range(1, len(scores) + 1), scores)
+    plt.scatter(range(1, len(scores) + 1), scores)
     plt.grid(which='both')
+    fig.tight_layout()
+    title.set_y(1.05)
+    fig.subplots_adjust(top=0.8)
     if save:
         plt.savefig(path + '_rfecv_results_reg_' + str(reg).replace('.', '_') + '_' + scoring + ".png", dpi=300)
     if show:
@@ -45,14 +50,18 @@ def plot_rfecv_results(scores, reg, scoring, show=True, save=False, path="plots/
 
 
 def plot_reg_vs_score(reg_strengths, training_acc, testing_acc, scoring, show=True, save=False, path="plots/"):
-    plt.figure()
-    plt.title("L2 Reg Strength vs ", scoring, " for best performing model (post K-fold cv feature selection)")
-    plt.xlabel("Regularisation Strengths")
-    plt.ylabel(scoring)
-    plt.scatter(reg_strengths, training_acc, label="Training " + scoring)
+    fig = plt.figure()
+    ax = fig.gca()
+    title = ax.set_title("\n".join(wrap("L2 Reg Strength vs " + str(scoring) + " for best performing model (post K-fold cv feature selection)", 60)))
+    ax.set_xlabel("Regularisation Strengths")
+    ax.set_ylabel(scoring)
+    plt.plot(reg_strengths, training_acc, label="Training " + scoring)
     plt.scatter(reg_strengths, testing_acc, label="Testing " + scoring)
     plt.legend()
     plt.grid(which='both')
+    fig.tight_layout()
+    title.set_y(1.05)
+    fig.subplots_adjust(top=0.8)
     if save:
         plt.savefig(path + '_reg_vs_' + scoring + '_results' + ".png", dpi=300)
     if show:
@@ -62,13 +71,16 @@ def plot_reg_vs_score(reg_strengths, training_acc, testing_acc, scoring, show=Tr
 def plot_multiscore_comp(reg_list, y_lists, scorer_names, show=True, save=False, path="plots/"):
     plt.figure()
     ax = fig.gca()
-    ax.set_title("L2 Reg Strength vs testing scores for best peforming models (post K-fold cv feature selection)")
+    title = ax.set_title("\n".join(wrap("L2 Reg Strength vs testing scores for best peforming models (post K-fold cv feature selection)", 60)))
     ax.set_xlabel("Regularisation Strengths")
     ax.set_ylabel("Score")
     for (list, scorer) in zip(y_lists, scorer_names):
         plt.plot(reg_list, list, '--', label=scorer)
     plt.legend(loc='best')
     plt.grid()
+    fig.tight_layout()
+    title.set_y(1.05)
+    fig.subplots_adjust(top=0.8)
     if save:
         plt.savefig(path + "_scoring_comparison" + ".png", dpi=300)
     if show:
@@ -151,6 +163,7 @@ def plot_grid_search_results(clf, std_thres = 1, show=True, save=False, path='pl
             fig = plt.figure()
             ax = fig.gca()
             y_lbl = scorer.replace(replace_str, '').replace('_', ' ')
+            y_lbl = y_lbl.replace("test", "validation")
             x_lbl = params[0].replace(replace_str, '')
             title = ('Grid search cv results ' + x_lbl + ' vs ' + y_lbl + ' for different ' + grid_param.replace(replace_str, '') + 's')
             ax.set_title(title)

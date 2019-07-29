@@ -9,12 +9,12 @@ from sklearn.metrics import precision_score, recall_score, f1_score
 from sklearn.ensemble import BaggingClassifier
 from sklearn.pipeline import Pipeline
 
-def drop_dataframe_columns(df, bool_list):
-    dropped_cols = []
+def get_selected_features(df, bool_list):
+    kept_cols = []
     for i in range(len(bool_list)):
-        if not bool_list[i]:
-            dropped_cols += [df.columns[i]]
-    return df.drop(dropped_cols, axis=1)
+        if bool_list[i]:
+            kept_cols += [df.columns[i]]
+    return kept_cols
 
 
 def train_and_test_svm(train, train_n, test, class_labels, stochastic=False, path_model="./", path_results="./"):
@@ -33,7 +33,7 @@ def train_and_test_svm(train, train_n, test, class_labels, stochastic=False, pat
                 'f1_score': make_scorer(f1_score, average='weighted')}
     reg_strengths = None
     if stochastic:
-        reg_strengths = np.arange(0.001, 0.2, 0.001).round(decimals=1)
+        reg_strengths = np.arange(0.001, 0.99, 0.05).round(decimals=1)
     else:
         reg_strengths = np.arange(0.1, 1, 0.1).round(decimals=1)
     max_test_scores = []
@@ -47,7 +47,7 @@ def train_and_test_svm(train, train_n, test, class_labels, stochastic=False, pat
             # creating classifer
             svc = None
             if stochastic:
-                svc = SGDClassifier(loss="hinge", penalty="l2", alpha=c, max_iter=10000, tol=1e-5, n_jobs=-1, learning_rate="adaptive", early_stopping=True, class_weight="balanced")
+                svc = SGDClassifier(loss="hinge", penalty="l2", alpha=c, max_iter=10000, tol=1e-5, n_jobs=-1, learning_rate="adaptive", early_stopping=True, class_weight="balanced", eta0=1)
             else:
                 svc = LinearSVC(C=c, class_weight="balanced", max_iter=10000)
 
@@ -83,8 +83,10 @@ def train_and_test_svm(train, train_n, test, class_labels, stochastic=False, pat
         plot_conf_matrix(y_tst, best_model.predict(X_tst), class_labels, optimisation_strat=scorer, normalise=True, show=False, save=True, path=path_results + train_n + '_')
 
         # saving useful column names
-        X_trn = drop_dataframe_columns(X_trn, rfecv.support_)
-        np.savetxt(path_results + train_n + "_usefulFeatures_model_optimisation_strat_" + scorer, list(map(int, X_trn.columns)), delimiter=',')
+        selected_features = get_selected_features(X_trn, rfecv.support_)
+        print("Features kept with %s as the optimisation strategy: " % scorer)
+        print(selected_features)
+        pickle.dump(selected_features, open(path_results + train_n + "_usefulFeatures_model_optimisation_strat_" + scorer, "wb"))
 
     # making plot combining all scorers vs reg on a single figure
     plot_multiscore_comp(reg_strengths, max_test_scores, list(scoring), show=False, save=True, path=path_results + train_n + '_')

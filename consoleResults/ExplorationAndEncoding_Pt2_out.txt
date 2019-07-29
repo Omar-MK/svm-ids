@@ -1,29 +1,24 @@
 *** Loading datasets.obj object ***
 
 *** Checking for co-variate numerical features ***
-/cs/home/omaemak/cs5099/lib/python3.6/site-packages/scipy/stats/stats.py:3399: PearsonRConstantInputWarning: An input array is constant; the correlation coefficent is not defined.
-  warnings.warn(PearsonRConstantInputWarning())
 number of correlations found:  13
 Correlated features are : [('Flow Duration', 'Fwd IAT Total'), ('Total Fwd Packets', 'Subflow Fwd Packets'), ('Total Backward Packets', 'Subflow Bwd Packets'), ('Total Length of Fwd Packets', 'Subflow Fwd Bytes'), ('Total Length of Bwd Packets', 'Subflow Bwd Bytes'), ('Fwd Packet Length Mean', 'Avg Fwd Segment Size'), ('Bwd Packet Length Max', 'Bwd Packet Length Std'), ('Bwd Packet Length Mean', 'Avg Bwd Segment Size'), ('Flow Packets/s', 'Fwd Packets/s'), ('Fwd Header Length', 'Fwd Header Length.1'), ('Max Packet Length', 'Packet Length Std'), ('% connections d-IP within n=20', '% connections d-IP within n=15'), ('% connections s-IP within n=20', '% connections s-IP within n=15')]
 removing correlated features
-features remaining:  Index(['Destination Port', 'Protocol', 'Flow Duration', 'Total Fwd Packets',
-       'Total Backward Packets', 'Total Length of Fwd Packets',
-       'Total Length of Bwd Packets', 'Fwd Packet Length Max',
-       'Fwd Packet Length Min', 'Fwd Packet Length Mean',
-       'Fwd Packet Length Std', 'Bwd Packet Length Max',
-       'Bwd Packet Length Min', 'Bwd Packet Length Mean', 'Flow Bytes/s',
-       'Flow Packets/s', 'Flow IAT Mean', 'Flow IAT Std', 'Flow IAT Max',
-       'Flow IAT Min', 'Fwd IAT Mean', 'Fwd IAT Std', 'Fwd IAT Max',
-       'Fwd IAT Min', 'Bwd IAT Total', 'Bwd IAT Mean', 'Bwd IAT Std',
-       'Bwd IAT Max', 'Bwd IAT Min', 'Fwd PSH Flags', 'Bwd PSH Flags',
-       'Fwd URG Flags', 'Bwd URG Flags', 'Fwd Header Length',
-       'Bwd Header Length', 'Bwd Packets/s', 'Min Packet Length',
-       'Max Packet Length', 'Packet Length Mean', 'Packet Length Variance',
+features remaining:  Index(['Destination Port', 'Protocol', 'Fwd Packet Length Max',
+       'Fwd Packet Length Min', 'Fwd Packet Length Std',
+       'Bwd Packet Length Max', 'Bwd Packet Length Min',
+       'Bwd Packet Length Mean', 'Flow Bytes/s', 'Flow IAT Mean',
+       'Flow IAT Std', 'Flow IAT Max', 'Flow IAT Min', 'Fwd IAT Total',
+       'Fwd IAT Mean', 'Fwd IAT Std', 'Fwd IAT Max', 'Fwd IAT Min',
+       'Bwd IAT Total', 'Bwd IAT Mean', 'Bwd IAT Std', 'Bwd IAT Max',
+       'Bwd IAT Min', 'Fwd PSH Flags', 'Fwd URG Flags', 'Bwd Header Length',
+       'Fwd Packets/s', 'Bwd Packets/s', 'Min Packet Length',
+       'Packet Length Mean', 'Packet Length Std', 'Packet Length Variance',
        'FIN Flag Count', 'SYN Flag Count', 'RST Flag Count', 'PSH Flag Count',
        'ACK Flag Count', 'URG Flag Count', 'CWE Flag Count', 'ECE Flag Count',
-       'Down/Up Ratio', 'Average Packet Size', 'Fwd Avg Bytes/Bulk',
-       'Fwd Avg Packets/Bulk', 'Fwd Avg Bulk Rate', 'Bwd Avg Bytes/Bulk',
-       'Bwd Avg Packets/Bulk', 'Bwd Avg Bulk Rate', 'Init_Win_bytes_forward',
+       'Down/Up Ratio', 'Average Packet Size', 'Avg Fwd Segment Size',
+       'Fwd Header Length.1', 'Subflow Fwd Packets', 'Subflow Fwd Bytes',
+       'Subflow Bwd Packets', 'Subflow Bwd Bytes', 'Init_Win_bytes_forward',
        'Init_Win_bytes_backward', 'act_data_pkt_fwd', 'min_seg_size_forward',
        'Active Mean', 'Active Std', 'Active Max', 'Active Min', 'Idle Mean',
        'Idle Std', 'Idle Max', 'Idle Min',
@@ -43,146 +38,6 @@ features remaining:  Index(['Destination Port', 'Protocol', 'Flow Duration', 'To
        'Av time diff between last n connections, n=10',
        'Av time diff between last n connections, n=5', 'Label'],
       dtype='object')
-number of features remaining:  88
-
-*** Carrying out FAMD and clustering ***
-now clustering data
-Label  0  has  1736977 samples, clustering sample to  1439  samples in batches of  4317
-Label  1  has  1439 samples, clustering sample to  1439  samples in batches of  4317
-Label  2  has  102410 samples, clustering sample to  1439  samples in batches of  4317
-Label  3  has  8233 samples, clustering sample to  1439  samples in batches of  4317
-Label  4  has  146904 samples, clustering sample to  1439  samples in batches of  4317
-Label  5  has  4221 samples, clustering sample to  1439  samples in batches of  4317
-Label  6  has  4541 samples, clustering sample to  1439  samples in batches of  4317
-Label  7  has  6347 samples, clustering sample to  1439  samples in batches of  4317
-Label  8  has  6175 samples, clustering sample to  1439  samples in batches of  4317
-Label  9  has  4718 samples, clustering sample to  1439  samples in batches of  4317
-Label  10  has  1743 samples, clustering sample to  1439  samples in batches of  4317
-
-Re-checking for outliers after clustering
-
-Outlier information for class :  0.0
-Total outliers found:  1879
-That makes up  1.5008826372081505 % of the data
-Maximum number of outliers in a single column:  55
-Column name:  48
-The number of rows containing outliers is:  623
-Percentage of rows containing outliers:  43.29395413481584 \%
-
-Outlier information for class :  1.0
-Total outliers found:  2024
-That makes up  1.6167038093184125 % of the data
-Maximum number of outliers in a single column:  47
-Column name:  34
-The number of rows containing outliers is:  226
-Percentage of rows containing outliers:  15.705350938151494 \%
-
-Outlier information for class :  2.0
-Total outliers found:  771
-That makes up  0.6158491289449091 % of the data
-Maximum number of outliers in a single column:  60
-Column name:  48
-The number of rows containing outliers is:  238
-Percentage of rows containing outliers:  16.539263377345378 \%
-
-Outlier information for class :  3.0
-Total outliers found:  1887
-That makes up  1.50727277084182 % of the data
-Maximum number of outliers in a single column:  68
-Column name:  11
-The number of rows containing outliers is:  357
-Percentage of rows containing outliers:  24.80889506601807 \%
-
-Outlier information for class :  4.0
-Total outliers found:  1427
-That makes up  1.1398400869058174 % of the data
-Maximum number of outliers in a single column:  39
-Column name:  37
-The number of rows containing outliers is:  315
-Percentage of rows containing outliers:  21.890201528839473 \%
-
-Outlier information for class :  5.0
-Total outliers found:  1670
-That makes up  1.3339403960285319 % of the data
-Maximum number of outliers in a single column:  74
-Column name:  78
-The number of rows containing outliers is:  313
-Percentage of rows containing outliers:  21.751216122307156 \%
-
-Outlier information for class :  6.0
-Total outliers found:  1264
-That makes up  1.009641114119799 % of the data
-Maximum number of outliers in a single column:  50
-Column name:  63
-The number of rows containing outliers is:  341
-Percentage of rows containing outliers:  23.697011813759556 \%
-
-Outlier information for class :  7.0
-Total outliers found:  632
-That makes up  0.5048205570598995 % of the data
-Maximum number of outliers in a single column:  46
-Column name:  57
-The number of rows containing outliers is:  169
-Percentage of rows containing outliers:  11.744266851980543 \%
-
-Outlier information for class :  8.0
-Total outliers found:  1927
-That makes up  1.5392234390101682 % of the data
-Maximum number of outliers in a single column:  96
-Column name:  1
-The number of rows containing outliers is:  383
-Percentage of rows containing outliers:  26.61570535093815 \%
-
-Outlier information for class :  9.0
-Total outliers found:  704
-That makes up  0.562331759762926 % of the data
-Maximum number of outliers in a single column:  49
-Column name:  57
-The number of rows containing outliers is:  247
-Percentage of rows containing outliers:  17.164697706740792 \%
-
-Outlier information for class :  10.0
-Total outliers found:  2853
-That makes up  2.278881407107426 % of the data
-Maximum number of outliers in a single column:  81
-Column name:  20
-The number of rows containing outliers is:  400
-Percentage of rows containing outliers:  27.79708130646282 \%
-
-Saving seprability plots
-
-Saving cluster plots
-
-*** Saving trainingset_augmented_multiclass ***
-now clustering data
-Label  0  has  1736977 samples, clustering sample to  3000  samples in batches of  9000
-Label  1  has  286769 samples, clustering sample to  3000  samples in batches of  9000
-
-Re-checking for outliers after clustering
-
-Outlier information for class :  0.0
-Total outliers found:  3927
-That makes up  1.5045977011494251 % of the data
-Maximum number of outliers in a single column:  98
-Column name:  48
-The number of rows containing outliers is:  1274
-Percentage of rows containing outliers:  42.46666666666667 \%
-
-Outlier information for class :  1.0
-Total outliers found:  4323
-That makes up  1.6563218390804597 % of the data
-Maximum number of outliers in a single column:  201
-Column name:  2
-The number of rows containing outliers is:  954
-Percentage of rows containing outliers:  31.8 \%
-
-Saving seprability plots
-
-Saving cluster plots
-
-*** Saving trainingset_augmented_binary ***
-
-*** Saving testingset_augmented_multiclass ***
-
-*** Saving testingset_augmented_binary ***
-
+number of features remaining:  80
+*** Finding optimal number of PCA and FAMD components ***
+PCA carried out on both the numerical and dummy encoded categorical features was the best technique

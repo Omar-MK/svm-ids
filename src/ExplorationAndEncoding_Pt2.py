@@ -17,9 +17,43 @@ reductions and max score achieved using:
    ExplorationAndEncoding_pt3.
 """
 
-
 import pickle
 from DataTransformation import *
+import statistics as stats
+
+
+def choose_features_to_drop(df, correlated_features):
+    """
+    Out of a tuple of correlated features (columns) in a dataframe, chooses to
+    keep a feature by calculating the mean value of the current column for
+    each class, the mean difference between each adjacent mean value is then
+    calculated and this is used to select the column which seperates the
+    classes more optimally.
+    Note the last column should be the classes column.
+    """
+    to_drop = []
+    for (i, j) in correlated_features:
+        i_class_means = []
+        j_class_means = []
+        i_class_diffs = []
+        j_class_diffs = []
+        # for each label work out mean ith col and jth col value
+        for label in set(df.iloc[:, -1]):
+            df_curr = df[df.Label == label]
+            i_class_means += [df_curr[i].mean()]
+            j_class_means += [df_curr[j].mean()]
+        # now sorting and calculating averages differences between adjacents
+        i_class_means.sort()
+        j_class_means.sort()
+        for n in range(1, len(i_class_means)):
+            i_class_diffs += [abs(i_class_means[n] - i_class_means[n - 1])]
+            j_class_diffs += [abs(j_class_means[n] - j_class_means[n - 1])]
+        # adding col to drop in to_drop based on mean diffs
+        if stats.mean(i_class_diffs) > stats.mean(j_class_diffs):
+            to_drop += [j]
+        else:
+            to_drop += [i]
+    return to_drop
 
 
 def main():
@@ -46,13 +80,12 @@ def main():
                                             classification=True,
                                             threshold=0.9,
                                             verbose=True)
-
+    cols_to_drop = choose_features_to_drop(datasets[0], corr_features)
     # now removing correlated features from all datasets
     print("removing correlated features")
     for n in range(len(datasets)):
-        for [i, j] in corr_features:
-                datasets[n] = datasets[n].drop([j], axis=1)
-                datasets_encoded[n] = datasets_encoded[n].drop([j], axis=1)
+        datasets[n] = datasets[n].drop(cols_to_drop, axis=1)
+        datasets_encoded[n] = datasets_encoded[n].drop(cols_to_drop, axis=1)
 
     print("features remaining: ", datasets[0].columns)
     print("number of features remaining: ", len(datasets[0].columns))

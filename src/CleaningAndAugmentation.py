@@ -112,6 +112,7 @@ def change_everything_except(list, except_val, to_val):
 def save_dataset(df, fname, path, save_as="csv"):
     fname = fname.replace(".csv", "")
     fname = fname.replace(".obj", "")
+    fname = fname.replace(' ', '_')
     if save_as== "csv":
         df.to_csv(path + fname + ".csv", index=False)
     elif save_as== "obj":

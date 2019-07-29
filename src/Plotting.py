@@ -103,7 +103,7 @@ def construct_cluster_plot(df, input_cols, fm, dimensions=2, show=1, save=0):
     # checking input_cols columns contain numerical data only
     for col in input_cols:
         type = df[col].dtypes
-        if type != "float64" and type != "int64":
+        if not np.issubdtype(type, np.number):
             raise ValueError("balance_sample_counts only works with numerical data, and the dataframe passed contains non-numerical inputs.")
 
     # checking number of dimensions to plot
@@ -202,7 +202,7 @@ def finalise_figure(title, fig, plt, path, ts, save, show):
     title.set_y(1.05)
     fig.subplots_adjust(top=0.8)
     if save:
-        plt.savefig((path + ts + ".png").replace(' ', '_'), dpi=300)
+        plt.savefig((path + ts + ".png").replace(' ', '_'), dpi=500)
     if show:
         plt.show()
     plt.close()

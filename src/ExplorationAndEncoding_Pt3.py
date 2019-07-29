@@ -7,10 +7,9 @@ that the sample counts for each class are balanced.
 
 In this script a loop is entered iterating over the training and testing sets where:
 1. duplicate samples are dropped
-2. the data in all features is scaled from -1 to 1
-3. Clustering is carried out on the training sets datasets (num cols only).
-4. Plots to visualise training data are created
-5. The generated datasets are saved
+2. Clustering is carried out on the training sets datasets (num cols only).
+3. Plots to visualise training data are created
+4. The generated datasets are saved
 """
 
 import pickle
@@ -41,31 +40,22 @@ def main():
 
     # loading datasets
     datasets = pickle.load(open("../datasets/transformed/datasets_end_pt2.obj", "rb"))
-
-    # initialising a min max scaler
-    scaler = preprocessing.MinMaxScaler().fit(datasets[0].iloc[:, :-27])
     # defining dataframe object label suffixes
-    trans_lbls = ["", "Clustered"]
+    trans_lbls = ["Pearson R Reduction (PRR) ", "PRR + Clustering "]
     for i in range(len(datasets)):
         print("\n*** Carrying out unsupervised methods on %s ***" % fnames[i])
         df = datasets[i]
-
         # dropping duplicates
         df = df.drop_duplicates()
 
-        # scaling numerical data
-        scaled_data = scaler.transform(df.iloc[:, :-27].values)
-        X = pd.DataFrame(scaled_data, index=df.index, columns=df.columns[:-27])
-        # re-joining categorical + numerical X, and y
-        df = pd.concat([X, df.iloc[:, -27:]], axis=1)
         # if current dataframes are training sets
         if i < 2:
             # getting df without categorical cols
-            df_num = pd.concat([df.iloc[:, :-27], df.iloc[:, -1]])
+            df_num = pd.concat([df.iloc[:, :-27], df.iloc[:, -1]], axis=1)
             # balancing sample counts for each class through clustering
             print("*** Constructing Clustered PCA dataset ***")
             df_clustered = balance_sample_counts(df_num,
-                                                 max_clusters=3000,
+                                                 max_clusters=500,
                                                  mini_batch_multiplier=3,
                                                  verbose=True)
             for (df, lbl) in zip([df, df_clustered], trans_lbls):
@@ -78,7 +68,7 @@ def main():
 
                 # re-visualising seperabilitiy of left over engineered features
                 print("\nSaving seprability plot")
-                fm = FigureMate(heading=title_prefix[i%2] + "Post " + lbl,
+                fm = FigureMate(heading=title_prefix[i] + "Post " + lbl,
                                 legend_labels=axes_labels[i%2],
                                 path="../plots/visualisation/after/")
                 construct_seperation_plot(df,
@@ -90,7 +80,7 @@ def main():
 
                 # visualising clusters
                 print("\nSaving cluster plot")
-                fm = FigureMate(heading=title_prefix[i%2] + "Post " + lbl,
+                fm = FigureMate(heading=title_prefix[i] + "Post " + lbl,
                                 legend_labels=axes_labels[i%2],
                                 prefix=0,
                                 path="../plots/visualisation/after/")

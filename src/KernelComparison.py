@@ -36,11 +36,11 @@ def main():
     path2 = "../datasets/transformed/postUnsupervised/"
     train_prefix = "trainingset_augmented_multiclass"
     fig_markers = ["pre-unsupervised",
-                   "post-unsupervised_",
-                   "post-unsupervised_Clustered"]
-    train_files = [path1 + train_prefix ,
-                   path2 + train_prefix,
-                   path2 + train_prefix + "Clustered"]
+                   "_Pearson_R_Reduction_(PRR)_",
+                   "_PRR_+_Clustering_"]
+    train_files = [path1 + train_prefix,
+                   path2 + train_prefix + fig_markers[1],
+                   path2 + train_prefix + fig_markers[2]]
     datasets = load_datasets(train_files)
 
     # loading class label encodings
@@ -63,8 +63,8 @@ def main():
 
     print("*** Initialising training process ***")
     # grid search kernel and regularisation params
-    reg_params = np.arange(0.1, 0.2, 0.1)
-    kernels = ['linear'] #, 'poly', 'rbf', 'sigmoid']
+    reg_params = np.arange(0.1, 1.1, 0.1)
+    kernels = ['linear' , 'poly', 'rbf', 'sigmoid']
     params = [{'bag__base_estimator__svc__C': reg_params,
                'bag__base_estimator__svc__kernel': kernels}]
 
@@ -113,11 +113,10 @@ def main():
                                  std_thres = 0.5,
                                  show=False,
                                  save=True,
-                                 path="../plots/results/kernelComp/" +
-                                      fig_markers[i])
+                                 path="../plots/results/kernelComp/" + fig_markers[i])
 
         # plotting confusion matrix on test of best f1 score model
-        # print_model_perf_stats(clf, tst.iloc[:, :-1], tst.iloc[:, -1])
+        print_model_perf_stats(clf, tst.iloc[:, :-1], tst.iloc[:, -1])
         plot_conf_matrix(tst.iloc[:, -1],
                          clf.predict(tst.iloc[:, :-1]),
                          classes=labels,

@@ -18,29 +18,30 @@ def train_svm(path, train_n, test_n, class_labels):
     train = pickle.load(open(path + train_n, "rb"))
     test = pickle.load(open(path + test_n, "rb"))
     train = balance_by_sampling(train)
-    train = train.sample(1000)
+    train = train.sample(3000)
     # training and testing
-    train_and_test_svm(train, train_n, test, class_labels, path_model='../trainedModels/ensemble_model_', path_results='../plots/results/ensembleSvm/')
+    train_and_test_svm(train, train_n, test, class_labels, path_model='../trainedModels/ensemble_model_', path_results='../plots/results/ensembleLearning/')
 
 
 def main():
     path = "../datasets/transformed/postUnsupervised/"
-    krnl = "linear"
+    path_suff = ["_Pearson_R_Reduction_(PRR)_",
+                 "_PRR_+_Clustering_"]
 
     # loading class encoding labels (keys)
     multiclass_labels = pickle.load(open("../datasets/transformed/multiclass_label_encodings.obj", "rb"))
     binary_labels = pickle.load(open("../datasets/transformed/binary_label_encodings.obj", "rb"))
     labels = [binary_labels, multiclass_labels]
 
-    trn_df_paths = ["trainingset_augmented_binary_.obj",
-                    "trainingset_augmented_multiclass_.obj",
-                    "trainingset_augmented_binary_Clustered.obj",
-                    "trainingset_augmented_multiclass_Clustered.obj"]
+    trn_df_paths = ["trainingset_augmented_binary" + path_suff[0] + ".obj",
+                    "trainingset_augmented_multiclass" + path_suff[0] +  ".obj",
+                    "trainingset_augmented_binary" + path_suff[1] + ".obj",
+                    "trainingset_augmented_multiclass" + path_suff[1] +  ".obj"]
 
-    tst_df_paths = ["testingset_augmented_binary_.obj",
-                    "testingset_augmented_multiclass_.obj",
-                    "testingset_augmented_binary_Clustered.obj",
-                    "testingset_augmented_multiclass_Clustered.obj"]
+    tst_df_paths = ["testingset_augmented_binary" + path_suff[0] + ".obj",
+                    "testingset_augmented_multiclass" + path_suff[0] +  ".obj",
+                    "testingset_augmented_binary" + path_suff[1] + ".obj",
+                    "testingset_augmented_multiclass" + path_suff[1] +  ".obj"]
 
     i = 0
     for (trn, tst) in zip(trn_df_paths, tst_df_paths):

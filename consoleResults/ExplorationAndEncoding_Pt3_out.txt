@@ -1,0 +1,66 @@
+*** Carrying out unsupervised methods on trainingset_augmented_multiclass ***
+*** Constructing Clustered PCA dataset ***
+Label  0  has  1736853 samples, clustering sample to  500  samples in batches of  1500
+Label  1  has  1439 samples, clustering sample to  500  samples in batches of  1500
+Label  2  has  102410 samples, clustering sample to  500  samples in batches of  1500
+Label  3  has  8233 samples, clustering sample to  500  samples in batches of  1500
+Label  4  has  146903 samples, clustering sample to  500  samples in batches of  1500
+Label  5  has  4221 samples, clustering sample to  500  samples in batches of  1500
+Label  6  has  4541 samples, clustering sample to  500  samples in batches of  1500
+Label  7  has  6347 samples, clustering sample to  500  samples in batches of  1500
+Label  8  has  6175 samples, clustering sample to  500  samples in batches of  1500
+Label  9  has  4718 samples, clustering sample to  500  samples in batches of  1500
+Label  10  has  1743 samples, clustering sample to  500  samples in batches of  1500
+Saving label count plot
+
+Saving seprability plot
+
+Saving cluster plot
+/cs/scratch/omaemak/svm-ids/src/Plotting.py:201: UserWarning: This figure includes Axes that are not compatible with tight_layout, so results might be incorrect.
+  fig.tight_layout()
+Saving label count plot
+
+Saving seprability plot
+
+Saving cluster plot
+/cs/scratch/omaemak/svm-ids/src/Plotting.py:201: UserWarning: This figure includes Axes that are not compatible with tight_layout, so results might be incorrect.
+  fig.tight_layout()
+
+*** Saving trainingset_augmented_multiclass ***
+
+*** Saving trainingset_augmented_multiclass ***
+
+*** Carrying out unsupervised methods on trainingset_augmented_binary ***
+*** Constructing Clustered PCA dataset ***
+Label  0  has  1736853 samples, clustering sample to  500  samples in batches of  1500
+Label  1  has  286768 samples, clustering sample to  500  samples in batches of  1500
+Saving label count plot
+
+Saving seprability plot
+
+Saving cluster plot
+/cs/scratch/omaemak/svm-ids/src/Plotting.py:201: UserWarning: This figure includes Axes that are not compatible with tight_layout, so results might be incorrect.
+  fig.tight_layout()
+Saving label count plot
+
+Saving seprability plot
+
+Saving cluster plot
+/cs/scratch/omaemak/svm-ids/src/Plotting.py:201: UserWarning: This figure includes Axes that are not compatible with tight_layout, so results might be incorrect.
+  fig.tight_layout()
+
+*** Saving trainingset_augmented_binary ***
+
+*** Saving trainingset_augmented_binary ***
+
+*** Carrying out unsupervised methods on testingset_augmented_multiclass ***
+
+*** Saving testingset_augmented_multiclass ***
+
+*** Saving testingset_augmented_multiclass ***
+
+*** Carrying out unsupervised methods on testingset_augmented_binary ***
+
+*** Saving testingset_augmented_binary ***
+
+*** Saving testingset_augmented_binary ***
