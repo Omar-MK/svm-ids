@@ -41,3 +41,7 @@ features remaining:  Index(['Destination Port', 'Protocol', 'Fwd Packet Length M
 number of features remaining:  80
 *** Finding optimal number of PCA and FAMD components ***
 PCA carried out on both the numerical and dummy encoded categorical features was the best technique
+
+AT THIS POINT WE DISPOSE OF DATAFRAME WITH NON-AUGMENTED CATEGORICAL FEATURES.
+
+THIS MEANS WE HAVE 83 COLS.

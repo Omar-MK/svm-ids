@@ -215,4 +215,8 @@ Percentage of rows containing outliers:  22.571167903031355 \%
 *** Checking for numerical columns with a constant value ***
 The following columns contain only a single value:
 ['Bwd PSH Flags', 'Bwd URG Flags', 'Fwd Avg Bytes/Bulk', 'Fwd Avg Packets/Bulk', 'Fwd Avg Bulk Rate', 'Bwd Avg Bytes/Bulk', 'Bwd Avg Packets/Bulk', 'Bwd Avg Bulk Rate']
-was 101 cols now 93
+was 101, encoded categorical features becomes 104, removed 8 cols now 93.
+(augmented)
+
+
+As for non-augmented: we removed 26 (augmentation cols) from 96 giving 70 cols

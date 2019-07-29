@@ -48,16 +48,23 @@ def main():
         # dropping duplicates
         df = df.drop_duplicates()
 
-        # if current dataframes are training sets
+        # saving unclustered version of df
+        print("\n*** Saving unclustered %s ***" % title_prefix[i])
+        save_dataset(df,
+                     fnames[i] + "_" + trans_lbls[0],
+                     "../datasets/transformed/postUnsupervised/",
+                     save_as="obj")
+
+        # now dropping categorical columns to allow for clustering
+        df_clustered = pd.concat([df.iloc[:, :-27], df.iloc[:, -1]], axis=1)
+        # if current dataframe is a training set cluster
         if i < 2:
-            # getting df without categorical cols
-            df_num = pd.concat([df.iloc[:, :-27], df.iloc[:, -1]], axis=1)
-            # balancing sample counts for each class through clustering
             print("*** Constructing Clustered PCA dataset ***")
-            df_clustered = balance_sample_counts(df_num,
-                                                 max_clusters=500,
-                                                 mini_batch_multiplier=3,
-                                                 verbose=True)
+            df_clustered = balance_sample_counts(df_clustered,
+                                       max_clusters=500,
+                                       mini_batch_multiplier=3,
+                                       verbose=True)
+
             for (df, lbl) in zip([df, df_clustered], trans_lbls):
                 # plotting barchart to vis ditribution of labels
                 print("Saving label count plot")
@@ -90,15 +97,13 @@ def main():
                                        dimensions=3,
                                        show=0,
                                        save=1)
-        else:
-            df_clustered = df
-        for (df, lbl) in zip([df, df_clustered], trans_lbls):
-            # saving final datasets
-            print("\n*** Saving %s ***" % fnames[i])
-            save_dataset(df,
-                         fnames[i] + "_" + lbl,
-                         "../datasets/transformed/postUnsupervised/",
-                         save_as="obj")
+
+        # saving clustered version of df
+        print("\n*** Saving clustered %s ***" % title_prefix[i])
+        save_dataset(df_clustered,
+                     fnames[i] + "_" + trans_lbls[1],
+                     "../datasets/transformed/postUnsupervised/",
+                     save_as="obj")
 
 if __name__ == "__main__":
     main()
