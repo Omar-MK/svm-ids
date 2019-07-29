@@ -33,9 +33,9 @@ def train_and_test_svm(train, train_n, test, class_labels, stochastic=False, pat
                 'f1_score': make_scorer(f1_score, average='weighted')}
     reg_strengths = None
     if stochastic:
-        reg_strengths = np.arange(0.001, 0.99, 0.05).round(decimals=1)
+        reg_strengths = np.arange(0.001, 0.99, 0.05).round(decimals=3)
     else:
-        reg_strengths = np.arange(0.1, 1, 0.1).round(decimals=1)
+        reg_strengths = np.arange(0.1, 1, 0.1).round(decimals=3)
     max_test_scores = []
     rfecv_lists = []
     best_model_indexes = []
