@@ -34,13 +34,13 @@ def main():
     labels = [binary_labels, multiclass_labels]
 
     trn_df_paths = ["trainingset_binary.obj",
-                    "trainingset_augmented_binary.obj",
                     "trainingset_multiclass.obj",
+                    "trainingset_augmented_binary.obj",
                     "trainingset_augmented_multiclass.obj"]
 
     tst_df_paths = ["testingset_binary.obj",
-                    "testingset_augmented_binary.obj",
                     "testingset_multiclass.obj",
+                    "testingset_augmented_binary.obj",
                     "testingset_augmented_multiclass.obj"]
 
     i = 0
