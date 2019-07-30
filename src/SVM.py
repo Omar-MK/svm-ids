@@ -30,14 +30,10 @@ def train_and_test_svm(train, train_n, test, class_labels, stochastic=False, pat
     n_cv = len(set(y_tst))
     if n_cv - 2 > 2:
         n_cv = n_cv - 2
-    scoring = {'precision': make_scorer(precision_score, average='weighted'),
-               'recall': make_scorer(recall_score, average='weighted'),
-               'f1_score': make_scorer(f1_score, average='weighted')}
-    reg_strengths = None
-    if stochastic:
-        reg_strengths = np.arange(0.001, 0.4, 0.02).round(decimals=3)
-    else:
-        reg_strengths = np.arange(0.001, 0.4, 0.02).round(decimals=3)
+    scoring = {'Precision': make_scorer(precision_score, average='weighted'),
+               'Recall': make_scorer(recall_score, average='weighted'),
+               'F1-score': make_scorer(f1_score, average='weighted')}
+    reg_strengths = np.arange(0.001, 0.8, 0.02).round(decimals=3)
     max_test_scores = []
     rfecv_lists = []
     best_model_indexes = []
@@ -49,7 +45,7 @@ def train_and_test_svm(train, train_n, test, class_labels, stochastic=False, pat
             # creating classifer
             svc = None
             if stochastic:
-                svc = SGDClassifier(loss="hinge", penalty="l2", alpha=c, max_iter=100000, tol=1e-5, n_jobs=-1, learning_rate="adaptive", early_stopping=True, class_weight="balanced", eta0=1)
+                svc = SGDClassifier(loss="hinge", penalty="l2", alpha=c, max_iter=10000, tol=1e-5, n_jobs=-1, learning_rate="adaptive", early_stopping=True, class_weight="balanced", eta0=0.01)
             else:
                 svc = LinearSVC(C=c, class_weight="balanced", max_iter=10000)
 
