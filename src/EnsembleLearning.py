@@ -18,7 +18,9 @@ def train_svm(path, train_n, test_n, class_labels):
     train = pickle.load(open(path + train_n, "rb"))
     test = pickle.load(open(path + test_n, "rb"))
     train = balance_by_sampling(train)
-    train = train.sample(3000)
+    test = balance_by_sampling(test)
+    train = train.sample(5000)
+    train_n = train_n.replace("trainingset", '').replace('_', ' ')
     # training and testing
     train_and_test_svm(train, train_n, test, class_labels, path_model='../trainedModels/ensemble_model_', path_results='../plots/results/ensembleLearning/')
 

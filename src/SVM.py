@@ -27,15 +27,17 @@ def train_and_test_svm(train, train_n, test, class_labels, stochastic=False, pat
     y_trn = train.iloc[:, -1]
     X_tst = test.iloc[:, :-1]
     y_tst = test.iloc[:, -1]
-
+    n_cv = len(set(y_tst))
+    if n_cv - 2 > 2:
+        n_cv = n_cv - 2
     scoring = {'precision': make_scorer(precision_score, average='weighted'),
-                'recall': make_scorer(recall_score, average='weighted'),
-                'f1_score': make_scorer(f1_score, average='weighted')}
+               'recall': make_scorer(recall_score, average='weighted'),
+               'f1_score': make_scorer(f1_score, average='weighted')}
     reg_strengths = None
     if stochastic:
-        reg_strengths = np.arange(0.001, 0.99, 0.05).round(decimals=3)
+        reg_strengths = np.arange(0.001, 0.4, 0.02).round(decimals=3)
     else:
-        reg_strengths = np.arange(0.1, 1, 0.1).round(decimals=3)
+        reg_strengths = np.arange(0.001, 0.4, 0.02).round(decimals=3)
     max_test_scores = []
     rfecv_lists = []
     best_model_indexes = []
@@ -47,7 +49,7 @@ def train_and_test_svm(train, train_n, test, class_labels, stochastic=False, pat
             # creating classifer
             svc = None
             if stochastic:
-                svc = SGDClassifier(loss="hinge", penalty="l2", alpha=c, max_iter=10000, tol=1e-5, n_jobs=-1, learning_rate="adaptive", early_stopping=True, class_weight="balanced", eta0=1)
+                svc = SGDClassifier(loss="hinge", penalty="l2", alpha=c, max_iter=100000, tol=1e-5, n_jobs=-1, learning_rate="adaptive", early_stopping=True, class_weight="balanced", eta0=1)
             else:
                 svc = LinearSVC(C=c, class_weight="balanced", max_iter=10000)
 
@@ -55,8 +57,8 @@ def train_and_test_svm(train, train_n, test, class_labels, stochastic=False, pat
             rfecv = RFECV(
                 svc,
                 step=1,
-                cv=ms.StratifiedKFold(10),
-                scoring=scorer,
+                cv=ms.StratifiedKFold(n_cv),
+                scoring=scoring[scorer],
                 n_jobs=-1)
 
             print("training set size: ", len(X_trn), " testing set size: ", len(X_tst))
@@ -71,25 +73,24 @@ def train_and_test_svm(train, train_n, test, class_labels, stochastic=False, pat
         rfecv_lists += [rfecv_list]
 
         # plotting results
-        best_model_index = max_test_score.index(max(max_test_score))
+        best_model_index = max_train_score.index(max(max_train_score))
         best_model_indexes += [best_model_index]
         print("Optimal number of features: ", rfecv.n_features_)
-        plot_rfecv_results(rfecv.grid_scores_, reg_strengths[best_model_index], scorer, show=False, save=True, path=path_results + train_n + '_')
-        plot_reg_vs_score(reg_strengths, max_train_score, max_test_score, scorer, show=False, save=True, path=path_results + train_n + '_')
+        plot_rfecv_results(rfecv.grid_scores_, reg_strengths[best_model_index], scorer, show=False, save=True, title_suffix=train_n ,path=path_results + train_n)
+        plot_reg_vs_score(reg_strengths, max_train_score, max_test_score, scorer, show=False, save=True, title_suffix=train_n, path=path_results + train_n)
 
 
         best_model = rfecv_list[best_model_index]
         print_model_perf_stats(best_model, X_tst, y_tst)
-        plot_conf_matrix(y_tst, best_model.predict(X_tst), class_labels, optimisation_strat=scorer, normalise=True, show=False, save=True, path=path_results + train_n + '_')
+        plot_conf_matrix(y_tst, best_model.predict(X_tst), class_labels, title="Confusion Matrix " +  train_n, optimisation_strat=scorer, normalise=True, show=False, save=True, path=path_results + train_n + '_')
 
         # saving useful column names
         selected_features = get_selected_features(X_trn, rfecv.support_)
         print("Features kept with %s as the optimisation strategy: " % scorer)
         print(selected_features)
-        pickle.dump(selected_features, open(path_results + train_n + "_usefulFeatures_model_optimisation_strat_" + scorer, "wb"))
+        pickle.dump(selected_features, open(path_results + train_n + "_usefulFeatures_model_optimisation_strat_" + scorer + ".obj", "wb"))
 
     # making plot combining all scorers vs reg on a single figure
-    plot_multiscore_comp(reg_strengths, max_test_scores, list(scoring), show=False, save=True, path=path_results + train_n + '_')
-
+    plot_multiscore_comp(reg_strengths, max_test_scores, list(scoring), show=False, save=True, title_suffix=train_n, path=path_results + train_n + '_')
     # saving trained models
-    pickle.dump(rfecv_lists, open(path_model + fname + "_trained_models.obj", "wb"))
+    pickle.dump(rfecv_lists, open(path_model + train_n.replace(' ', '_') + "_trained_models.obj", "wb"))

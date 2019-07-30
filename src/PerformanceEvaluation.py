@@ -30,10 +30,10 @@ def print_model_perf_stats(model, X, y):
         print()
 
 
-def plot_rfecv_results(scores, reg, scoring, show=True, save=False, path="plots/"):
+def plot_rfecv_results(scores, reg, scoring, show=True, save=False, title_suffix='' ,path="plots/"):
     fig = plt.figure()
     ax = fig.gca()
-    title = ax.set_title("\n".join(wrap("No. features vs classification " + str(scoring) + " L2 alpha = " + str(reg), 60)))
+    title = ax.set_title("\n".join(wrap("No. features vs classification " + str(scoring) + " L2 alpha = " + str(reg) + title_suffix, 60)))
     ax.set_xlabel("Number of features selected")
     ax.set_ylabel("Cross-validation " + scoring)
     plt.plot(range(1, len(scores) + 1), scores)
@@ -43,16 +43,16 @@ def plot_rfecv_results(scores, reg, scoring, show=True, save=False, path="plots/
     title.set_y(1.05)
     fig.subplots_adjust(top=0.8)
     if save:
-        plt.savefig(path + '_rfecv_results_reg_' + str(reg).replace('.', '_') + '_' + scoring + ".png", dpi=300)
+        plt.savefig(path.replace(' ', '_') + '_rfecv_results_reg_' + str(reg).replace('.', '_') + '_' + scoring + ".png", dpi=300)
     if show:
         plt.show()
     plt.close()
 
 
-def plot_reg_vs_score(reg_strengths, training_acc, testing_acc, scoring, show=True, save=False, path="plots/"):
+def plot_reg_vs_score(reg_strengths, training_acc, testing_acc, scoring, show=True, save=False, title_suffix='', path="plots/"):
     fig = plt.figure()
     ax = fig.gca()
-    title = ax.set_title("\n".join(wrap("L2 Reg Strength vs " + str(scoring) + " for best performing model (post K-fold cv feature selection)", 60)))
+    title = ax.set_title("\n".join(wrap("L2 Reg Strength vs " + str(scoring) + " for best performing model (post K-fold cv feature selection)" + title_suffix, 60)))
     ax.set_xlabel("Regularisation Strengths")
     ax.set_ylabel(scoring)
     plt.plot(reg_strengths, training_acc, label="Training " + scoring, color="green")
@@ -65,15 +65,15 @@ def plot_reg_vs_score(reg_strengths, training_acc, testing_acc, scoring, show=Tr
     title.set_y(1.05)
     fig.subplots_adjust(top=0.8)
     if save:
-        plt.savefig(path + '_reg_vs_' + scoring + '_results' + ".png", dpi=300)
+        plt.savefig(path.replace(' ', '_') + '_reg_vs_' + scoring + '_results' + ".png", dpi=300)
     if show:
         plt.show()
     plt.close()
 
-def plot_multiscore_comp(reg_list, y_lists, scorer_names, show=True, save=False, path="plots/"):
-    plt.figure()
+def plot_multiscore_comp(reg_list, y_lists, scorer_names, show=True, save=False, title_suffix='', path="plots/"):
+    fig = plt.figure()
     ax = fig.gca()
-    title = ax.set_title("\n".join(wrap("L2 Reg Strength vs testing scores for best peforming models (post K-fold cv feature selection)", 60)))
+    title = ax.set_title("\n".join(wrap("L2 Reg Strength vs testing scores for best peforming models (post K-fold cv feature selection)" + title_suffix, 60)))
     ax.set_xlabel("Regularisation Strengths")
     ax.set_ylabel("Score")
     for (list, scorer) in zip(y_lists, scorer_names):
@@ -84,7 +84,7 @@ def plot_multiscore_comp(reg_list, y_lists, scorer_names, show=True, save=False,
     title.set_y(1.05)
     fig.subplots_adjust(top=0.8)
     if save:
-        plt.savefig(path + "_scoring_comparison" + ".png", dpi=300)
+        plt.savefig(path.replace(' ', '_') + "_scoring_comparison" + ".png", dpi=300)
     if show:
         plt.show()
     plt.close()
@@ -123,7 +123,7 @@ def plot_conf_matrix(y, y_predicted, classes, normalise=False, optimisation_stra
                     color="white" if cm[i, j] > thresh else "black")
     fig.tight_layout()
     if save:
-        plt.savefig(path + '_conf_matrix_model_optimisation_' + optimisation_strat + ".png", bbox_inches='tight')
+        plt.savefig(path.replace(' ', '_') + '_conf_matrix_model_optimisation_' + optimisation_strat + ".png", bbox_inches='tight')
     if show:
         plt.show()
     plt.close()
