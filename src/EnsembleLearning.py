@@ -12,6 +12,18 @@ In this file the following tasks are accomplished:
 import pickle
 from SVM import train_and_test_svm
 from DataTransformation import balance_by_sampling
+from sklearn.preprocessing import StandardScaler
+
+def scale_train_test(train, test, cols):
+    non_scaled_cols = list(set(df.columns) - set(cols))
+    scaler = StandardScaler().fit(train[cols])
+    scaled_data = scaler.transform(train[cols].values)
+    X = pd.DataFrame(scaled_data, index=train.index, columns=cols)
+    train = pd.concat([X, train[non_scaled_cols], axis=1)
+    scaled_data = scaler.transform(test[cols].values)
+    X = pd.DataFrame(scaled_data, index=test.index, columns=cols)
+    test = pd.concat([X, test[non_scaled_cols], axis=1)
+    return train, test
 
 def train_svm(path, train_n, test_n, class_labels):
     # loading datasets
@@ -19,10 +31,12 @@ def train_svm(path, train_n, test_n, class_labels):
     test = pickle.load(open(path + test_n, "rb"))
     train = balance_by_sampling(train)
     test = balance_by_sampling(test)
-    train = train.sample(5000)
+    train, test = scale_train_test(train, test, train.columns[:-27])
+    if len(train) > 5000:
+        train = train.sample(5000)
     train_n = train_n.replace("trainingset", '').replace('_', ' ')
     # training and testing
-    train_and_test_svm(train, train_n, test, class_labels, path_model='../trainedModels/ensemble_model_', path_results='../plots/results/ensembleLearning/')
+    train_and_test_svm(train, train_n.replace(".obj", ''), test, class_labels, path_model='../trainedModels/ensemble_model_', path_results='../plots/results/ensembleLearning/')
 
 
 def main():
