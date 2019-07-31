@@ -37,6 +37,7 @@ def plot_rfecv_results(scores, reg, scoring, show=True, save=False, title_suffix
     ax.set_xlabel("Number of features selected")
     ax.set_ylabel("Cross-validation " + scoring)
     plt.plot(range(1, len(scores) + 1), scores)
+    plt.axvline(x=np.argmax(scores) + 1, linestyle='--')
     # plt.scatter(range(1, len(scores) + 1), scores)
     plt.grid(which='both')
     fig.tight_layout()

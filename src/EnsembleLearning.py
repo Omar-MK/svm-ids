@@ -13,16 +13,17 @@ import pickle
 from SVM import train_and_test_svm
 from DataTransformation import balance_by_sampling
 from sklearn.preprocessing import StandardScaler
+import pandas as pd
 
-def scale_train_test(train, test, cols):
-    non_scaled_cols = list(set(df.columns) - set(cols))
-    scaler = StandardScaler().fit(train[cols])
-    scaled_data = scaler.transform(train[cols].values)
-    X = pd.DataFrame(scaled_data, index=train.index, columns=cols)
-    train = pd.concat([X, train[non_scaled_cols], axis=1)
-    scaled_data = scaler.transform(test[cols].values)
-    X = pd.DataFrame(scaled_data, index=test.index, columns=cols)
-    test = pd.concat([X, test[non_scaled_cols], axis=1)
+def scale_train_test(train, test, last_col_index):
+    # only scales first col to last col index
+    scaler = StandardScaler().fit(train.iloc[:, :last_col_index])
+    scaled_data = scaler.transform(train.iloc[:, :last_col_index].values)
+    X = pd.DataFrame(scaled_data, index=train.index, columns=train.columns[:last_col_index])
+    train = pd.concat([X, train.iloc[:, last_col_index:]], axis=1)
+    scaled_data = scaler.transform(test.iloc[:, :last_col_index].values)
+    X = pd.DataFrame(scaled_data, index=test.index, columns=train.columns[:last_col_index])
+    test = pd.concat([X, test.iloc[:, last_col_index:]], axis=1)
     return train, test
 
 def train_svm(path, train_n, test_n, class_labels):
@@ -31,7 +32,7 @@ def train_svm(path, train_n, test_n, class_labels):
     test = pickle.load(open(path + test_n, "rb"))
     train = balance_by_sampling(train)
     test = balance_by_sampling(test)
-    train, test = scale_train_test(train, test, train.columns[:-27])
+    train, test = scale_train_test(train, test, -27)
     if len(train) > 5000:
         train = train.sample(5000)
     train_n = train_n.replace("trainingset", '').replace('_', ' ')
@@ -49,14 +50,10 @@ def main():
     binary_labels = pickle.load(open("../datasets/transformed/binary_label_encodings.obj", "rb"))
     labels = [binary_labels, multiclass_labels]
 
-    trn_df_paths = ["trainingset_augmented_binary" + path_suff[0] + ".obj",
-                    "trainingset_augmented_multiclass" + path_suff[0] +  ".obj",
-                    "trainingset_augmented_binary" + path_suff[1] + ".obj",
+    trn_df_paths = ["trainingset_augmented_binary" + path_suff[1] + ".obj",
                     "trainingset_augmented_multiclass" + path_suff[1] +  ".obj"]
 
-    tst_df_paths = ["testingset_augmented_binary" + path_suff[0] + ".obj",
-                    "testingset_augmented_multiclass" + path_suff[0] +  ".obj",
-                    "testingset_augmented_binary" + path_suff[1] + ".obj",
+    tst_df_paths = ["testingset_augmented_binary" + path_suff[1] + ".obj",
                     "testingset_augmented_multiclass" + path_suff[1] +  ".obj"]
 
     i = 0

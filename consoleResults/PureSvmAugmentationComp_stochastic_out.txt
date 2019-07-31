@@ -1,0 +1,296 @@
+training set size:  5000  testing set size:  184142
+
+BINARY NO AUGMENTATION - Precision optimisation
+
+Optimal number of features:  64
+Evaluation Metrics:
+Accuracy     0.917
+Macro precision       0.9186760002537074
+Micro recall      0.9172106309261331
+
+                     0         1
+ Precision :          0.9434452345770226           0.8939067659303923
+
+                     0         1
+ Recall :          0.8876301984338174           0.9467910634184488
+
+                     0         1
+ F1 :          0.9146870365706932           0.9195892166739631
+
+                     0         1
+ Correct Predictions :          92071           92071
+Features kept with precision as the optimisation strategy:
+['Flow Duration', 'Total Fwd Packets', 'Total Backward Packets', 'Total Length of Fwd Packets', 'Total Length of Bwd Packets', 'Fwd Packet Length Max', 'Fwd Packet Length Min', 'Fwd Packet Length Mean', 'Fwd Packet Length Std', 'Bwd Packet Length Max', 'Bwd Packet Length Min', 'Bwd Packet Length Mean', 'Bwd Packet Length Std', 'Flow Bytes/s', 'Flow Packets/s', 'Flow IAT Mean', 'Flow IAT Std', 'Flow IAT Max', 'Flow IAT Min', 'Fwd IAT Total', 'Fwd IAT Mean', 'Fwd IAT Std', 'Fwd IAT Max', 'Fwd IAT Min', 'Bwd IAT Total', 'Bwd IAT Mean', 'Bwd IAT Std', 'Bwd IAT Max', 'Bwd IAT Min', 'Fwd PSH Flags', 'Bwd Header Length', 'Fwd Packets/s', 'Bwd Packets/s', 'Min Packet Length', 'Max Packet Length', 'Packet Length Mean', 'Packet Length Std', 'Packet Length Variance', 'FIN Flag Count', 'SYN Flag Count', 'PSH Flag Count', 'ACK Flag Count', 'URG Flag Count', 'CWE Flag Count', 'ECE Flag Count', 'Down/Up Ratio', 'Average Packet Size', 'Avg Fwd Segment Size', 'Avg Bwd Segment Size', 'Subflow Fwd Packets', 'Subflow Fwd Bytes', 'Subflow Bwd Packets', 'Subflow Bwd Bytes', 'Init_Win_bytes_forward', 'Init_Win_bytes_backward', 'act_data_pkt_fwd', 'Active Mean', 'Active Std', 'Active Max', 'Active Min', 'Idle Mean', 'Idle Std', 'Idle Max', 'Idle Min']
+
+BINARY NO AUGMENTATION - Recall optimisation
+
+Optimal number of features:  58
+Evaluation Metrics:
+Accuracy     0.913
+Macro precision       0.91477737731182
+Micro recall      0.9129964918378208
+
+                     0         1
+ Precision :          0.9419558799600176           0.8875988746636223
+
+                     0         1
+ Recall :          0.8802337326628363           0.9457592510128053
+
+                     0         1
+ F1 :          0.9100494640922131           0.9157565400289207
+
+                     0         1
+ Correct Predictions :          92071           92071
+Features kept with recall as the optimisation strategy:
+['Flow Duration', 'Total Fwd Packets', 'Total Backward Packets', 'Total Length of Fwd Packets', 'Fwd Packet Length Max', 'Fwd Packet Length Min', 'Fwd Packet Length Mean', 'Fwd Packet Length Std', 'Bwd Packet Length Max', 'Bwd Packet Length Min', 'Bwd Packet Length Mean', 'Bwd Packet Length Std', 'Flow Bytes/s', 'Flow Packets/s', 'Flow IAT Mean', 'Flow IAT Std', 'Flow IAT Max', 'Flow IAT Min', 'Fwd IAT Total', 'Fwd IAT Mean', 'Fwd IAT Std', 'Fwd IAT Max', 'Fwd IAT Min', 'Bwd IAT Total', 'Bwd IAT Mean', 'Bwd IAT Std', 'Bwd IAT Max', 'Bwd IAT Min', 'Fwd PSH Flags', 'Fwd Packets/s', 'Bwd Packets/s', 'Min Packet Length', 'Max Packet Length', 'Packet Length Mean', 'Packet Length Std', 'Packet Length Variance', 'FIN Flag Count', 'SYN Flag Count', 'PSH Flag Count', 'ACK Flag Count', 'URG Flag Count', 'Down/Up Ratio', 'Average Packet Size', 'Avg Fwd Segment Size', 'Avg Bwd Segment Size', 'Subflow Fwd Packets', 'Subflow Fwd Bytes', 'Subflow Bwd Packets', 'Init_Win_bytes_forward', 'Init_Win_bytes_backward', 'act_data_pkt_fwd', 'Active Mean', 'Active Std', 'Active Max', 'Idle Mean', 'Idle Std', 'Idle Max', 'Idle Min']
+
+BINARY NO AUGMENTATION - F1 optimisation
+
+Optimal number of features:  41
+Evaluation Metrics:
+Accuracy     0.914
+Macro precision       0.9159200802657075
+Micro recall      0.914343278556766
+
+                     0         1
+ Precision :          0.9415291312701095           0.8903110292613055
+
+                     0         1
+ Recall :          0.88355725472733           0.945129302386202
+
+                     0         1
+ F1 :          0.9116224863144565           0.916901549436018
+
+                     0         1
+ Correct Predictions :          92071           92071
+Features kept with f1_score as the optimisation strategy:
+['Flow Duration', 'Total Length of Fwd Packets', 'Fwd Packet Length Max', 'Fwd Packet Length Min', 'Fwd Packet Length Mean', 'Fwd Packet Length Std', 'Bwd Packet Length Min', 'Bwd Packet Length Mean', 'Bwd Packet Length Std', 'Flow IAT Mean', 'Flow IAT Std', 'Flow IAT Max', 'Fwd IAT Total', 'Fwd IAT Std', 'Fwd IAT Max', 'Bwd IAT Total', 'Bwd IAT Std', 'Bwd IAT Max', 'Bwd IAT Min', 'Fwd PSH Flags', 'Fwd Packets/s', 'Bwd Packets/s', 'Min Packet Length', 'Packet Length Mean', 'Packet Length Std', 'Packet Length Variance', 'FIN Flag Count', 'SYN Flag Count', 'PSH Flag Count', 'ACK Flag Count', 'URG Flag Count', 'Average Packet Size', 'Avg Fwd Segment Size', 'Avg Bwd Segment Size', 'Subflow Fwd Bytes', 'Init_Win_bytes_backward', 'Active Mean', 'Idle Mean', 'Idle Std', 'Idle Max', 'Idle Min']
+
+
+BINARY WITH AUGMENTATION - Precision optimisation
+
+
+Optimal number of features:  80
+Evaluation Metrics:
+Accuracy     0.979
+Macro precision       0.9792365110311246
+Micro recall      0.978798970359831
+
+                     0         1
+ Precision :          0.9937170312132514           0.9647559908489979
+
+                     0         1
+ Recall :          0.9636910645045671           0.9939068762150949
+
+                     0         1
+ F1 :          0.9784737538597265           0.9791145064304209
+
+                     0         1
+ Correct Predictions :          92071           92071
+Features kept with precision as the optimisation strategy:
+['Flow Duration', 'Total Backward Packets', 'Total Length of Fwd Packets', 'Fwd Packet Length Max', 'Fwd Packet Length Min', 'Fwd Packet Length Mean', 'Fwd Packet Length Std', 'Bwd Packet Length Max', 'Bwd Packet Length Min', 'Bwd Packet Length Mean', 'Bwd Packet Length Std', 'Flow Bytes/s', 'Flow Packets/s', 'Flow IAT Mean', 'Flow IAT Std', 'Flow IAT Max', 'Flow IAT Min', 'Fwd IAT Total', 'Fwd IAT Mean', 'Fwd IAT Std', 'Fwd IAT Max', 'Fwd IAT Min', 'Bwd IAT Total', 'Bwd IAT Mean', 'Bwd IAT Std', 'Bwd IAT Max', 'Bwd IAT Min', 'Fwd PSH Flags', 'Bwd Packets/s', 'Min Packet Length', 'Max Packet Length', 'Packet Length Mean', 'Packet Length Std', 'Packet Length Variance', 'FIN Flag Count', 'PSH Flag Count', 'ACK Flag Count', 'URG Flag Count', 'Down/Up Ratio', 'Average Packet Size', 'Avg Fwd Segment Size', 'Avg Bwd Segment Size', 'Subflow Fwd Packets', 'Subflow Fwd Bytes', 'Subflow Bwd Packets', 'Init_Win_bytes_forward', 'Init_Win_bytes_backward', 'Active Std', 'Active Max', 'Active Min', 'Idle Mean', 'Idle Std', 'Idle Max', 'Idle Min', '% connections s-IP to d-port within n=20', '% connections s-IP to d-port within n=15', '% connections s-IP to d-port within n=10', '% connections s-IP to d-port within n=5', '% connections s-IP to d-IP within n=20', '% connections s-IP to d-IP within n=15', '% connections s-IP to d-IP within n=10', '% connections s-IP to d-IP within n=5', '% connections d-IP within n=20', '% connections d-IP within n=15', '% connections d-IP within n=10', '% connections d-IP within n=5', '% connections s-IP within n=20', '% connections s-IP within n=15', '% connections s-IP within n=10', '% connections s-IP within n=5', 'time since last conn', 'Av time diff between last n connections, n=20', 'Av time diff between last n connections, n=15', 'Av time diff between last n connections, n=10', 'Av time diff between last n connections, n=5', 'Destination Port_21', 'Destination Port_22', 'Destination Port_80', 'Destination Port_8080', 'Protocol_6']
+
+
+BINARY WITH AUGMENTATION - Recall optimisation
+
+Optimal number of features:  72
+Evaluation Metrics:
+Accuracy     0.978
+Macro precision       0.9782763367215754
+Micro recall      0.9777562967709702
+
+                     0         1
+ Precision :          0.9940472847756501           0.9625053886675008
+
+                     0         1
+ Recall :          0.9612690206471093           0.9942435728948311
+
+                     0         1
+ F1 :          0.9773834108201827           0.9781170864097276
+
+                     0         1
+ Correct Predictions :          92071           92071
+Features kept with recall as the optimisation strategy:
+['Flow Duration', 'Total Length of Fwd Packets', 'Fwd Packet Length Max', 'Fwd Packet Length Min', 'Fwd Packet Length Mean', 'Fwd Packet Length Std', 'Bwd Packet Length Max', 'Bwd Packet Length Min', 'Bwd Packet Length Mean', 'Bwd Packet Length Std', 'Flow Bytes/s', 'Flow IAT Mean', 'Flow IAT Max', 'Flow IAT Min', 'Fwd IAT Total', 'Fwd IAT Mean', 'Fwd IAT Std', 'Fwd IAT Max', 'Bwd IAT Total', 'Bwd IAT Mean', 'Bwd IAT Std', 'Bwd IAT Max', 'Bwd IAT Min', 'Bwd Packets/s', 'Min Packet Length', 'Max Packet Length', 'Packet Length Mean', 'Packet Length Std', 'Packet Length Variance', 'FIN Flag Count', 'PSH Flag Count', 'ACK Flag Count', 'URG Flag Count', 'Down/Up Ratio', 'Average Packet Size', 'Avg Fwd Segment Size', 'Avg Bwd Segment Size', 'Subflow Fwd Bytes', 'Init_Win_bytes_forward', 'Init_Win_bytes_backward', 'Active Std', 'Active Max', 'Active Min', 'Idle Mean', 'Idle Std', 'Idle Max', 'Idle Min', '% connections s-IP to d-port within n=20', '% connections s-IP to d-port within n=15', '% connections s-IP to d-port within n=10', '% connections s-IP to d-port within n=5', '% connections s-IP to d-IP within n=20', '% connections s-IP to d-IP within n=15', '% connections s-IP to d-IP within n=10', '% connections s-IP to d-IP within n=5', '% connections d-IP within n=20', '% connections d-IP within n=15', '% connections d-IP within n=10', '% connections d-IP within n=5', '% connections s-IP within n=20', '% connections s-IP within n=15', '% connections s-IP within n=10', 'time since last conn', 'Av time diff between last n connections, n=20', 'Av time diff between last n connections, n=15', 'Av time diff between last n connections, n=10', 'Av time diff between last n connections, n=5', 'Destination Port_21', 'Destination Port_22', 'Destination Port_80', 'Destination Port_8080', 'Protocol_6']
+
+
+
+BINARY WITH AUGMENTATION - F1 optimisation
+
+Optimal number of features:  95
+Evaluation Metrics:
+Accuracy     0.978
+Macro precision       0.9783378439413288
+Micro recall      0.9778377556450999
+
+                     0         1
+ Precision :          0.9938042965856286           0.9628713912970289
+
+                     0         1
+ Recall :          0.9616708844261493           0.9940046268640506
+
+                     0         1
+ F1 :          0.9774735738139266           0.9781903494567628
+
+                     0         1
+ Correct Predictions :          92071           92071
+Features kept with f1_score as the optimisation strategy:
+['Flow Duration', 'Total Fwd Packets', 'Total Backward Packets', 'Total Length of Fwd Packets', 'Total Length of Bwd Packets', 'Fwd Packet Length Max', 'Fwd Packet Length Min', 'Fwd Packet Length Mean', 'Fwd Packet Length Std', 'Bwd Packet Length Max', 'Bwd Packet Length Min', 'Bwd Packet Length Mean', 'Bwd Packet Length Std', 'Flow Bytes/s', 'Flow Packets/s', 'Flow IAT Mean', 'Flow IAT Std', 'Flow IAT Max', 'Flow IAT Min', 'Fwd IAT Total', 'Fwd IAT Mean', 'Fwd IAT Std', 'Fwd IAT Max', 'Fwd IAT Min', 'Bwd IAT Total', 'Bwd IAT Mean', 'Bwd IAT Std', 'Bwd IAT Max', 'Bwd IAT Min', 'Fwd PSH Flags', 'Fwd URG Flags', 'Fwd Header Length', 'Bwd Header Length', 'Fwd Packets/s', 'Bwd Packets/s', 'Min Packet Length', 'Max Packet Length', 'Packet Length Mean', 'Packet Length Std', 'Packet Length Variance', 'FIN Flag Count', 'SYN Flag Count', 'RST Flag Count', 'PSH Flag Count', 'ACK Flag Count', 'URG Flag Count', 'CWE Flag Count', 'ECE Flag Count', 'Down/Up Ratio', 'Average Packet Size', 'Avg Fwd Segment Size', 'Avg Bwd Segment Size', 'Fwd Header Length.1', 'Subflow Fwd Packets', 'Subflow Fwd Bytes', 'Subflow Bwd Packets', 'Subflow Bwd Bytes', 'Init_Win_bytes_forward', 'Init_Win_bytes_backward', 'act_data_pkt_fwd', 'min_seg_size_forward', 'Active Mean', 'Active Std', 'Active Max', 'Active Min', 'Idle Mean', 'Idle Std', 'Idle Max', 'Idle Min', '% connections s-IP to d-port within n=20', '% connections s-IP to d-port within n=15', '% connections s-IP to d-port within n=10', '% connections s-IP to d-port within n=5', '% connections s-IP to d-IP within n=20', '% connections s-IP to d-IP within n=15', '% connections s-IP to d-IP within n=10', '% connections s-IP to d-IP within n=5', '% connections d-IP within n=20', '% connections d-IP within n=15', '% connections d-IP within n=10', '% connections d-IP within n=5', '% connections s-IP within n=20', '% connections s-IP within n=15', '% connections s-IP within n=10', '% connections s-IP within n=5', 'time since last conn', 'Av time diff between last n connections, n=20', 'Av time diff between last n connections, n=15', 'Av time diff between last n connections, n=10', 'Av time diff between last n connections, n=5', 'Destination Port_21', 'Destination Port_22', 'Destination Port_80', 'Destination Port_8080', 'Protocol_6']
+
+MULTICLASS NO AUGMENTATION - Precision optimisation
+
+Optimal number of features:  69
+Evaluation Metrics:
+Accuracy     0.886
+Macro precision       0.8929038730748204
+Micro recall      0.8858405022087886
+
+                     0         1         2         3         4         5         6         7         8         9         10
+ Precision :          0.8581081081081081           0.8928571428571429           0.8426724137931034           0.9641943734015346           0.9336870026525199           0.9512195121951219           0.9331395348837209           0.9265402843601895           0.7878787878787878           0.7678571428571429           0.9637883008356546
+
+                     0         1         2         3         4         5         6         7         8         9         10
+ Recall :          0.649616368286445           0.639386189258312           1.0           0.9641943734015346           0.9002557544757033           0.8976982097186701           0.8209718670076727           1.0           0.9974424552429667           0.989769820971867           0.8849104859335039
+
+                     0         1         2         3         4         5         6         7         8         9         10
+ F1 :          0.7394468704512371           0.7451564828614009           0.9146198830409357           0.9641943734015346           0.9166666666666666           0.9236842105263158           0.8734693877551021           0.9618696186961869           0.8803611738148984           0.864804469273743           0.9226666666666667
+
+                     0         1         2         3         4         5         6         7         8         9         10
+ Correct Predictions :          391           391           391           391           391           391           391           391           391           391           391
+Features kept with precision as the optimisation strategy:
+['Flow Duration', 'Total Fwd Packets', 'Total Backward Packets', 'Total Length of Fwd Packets', 'Total Length of Bwd Packets', 'Fwd Packet Length Max', 'Fwd Packet Length Min', 'Fwd Packet Length Mean', 'Fwd Packet Length Std', 'Bwd Packet Length Max', 'Bwd Packet Length Min', 'Bwd Packet Length Mean', 'Bwd Packet Length Std', 'Flow Bytes/s', 'Flow Packets/s', 'Flow IAT Mean', 'Flow IAT Std', 'Flow IAT Max', 'Flow IAT Min', 'Fwd IAT Total', 'Fwd IAT Mean', 'Fwd IAT Std', 'Fwd IAT Max', 'Fwd IAT Min', 'Bwd IAT Total', 'Bwd IAT Mean', 'Bwd IAT Std', 'Bwd IAT Max', 'Bwd IAT Min', 'Fwd PSH Flags', 'Fwd URG Flags', 'Fwd Header Length', 'Bwd Header Length', 'Fwd Packets/s', 'Bwd Packets/s', 'Min Packet Length', 'Max Packet Length', 'Packet Length Mean', 'Packet Length Std', 'Packet Length Variance', 'FIN Flag Count', 'SYN Flag Count', 'RST Flag Count', 'PSH Flag Count', 'ACK Flag Count', 'URG Flag Count', 'CWE Flag Count', 'ECE Flag Count', 'Down/Up Ratio', 'Average Packet Size', 'Avg Fwd Segment Size', 'Avg Bwd Segment Size', 'Fwd Header Length.1', 'Subflow Fwd Packets', 'Subflow Fwd Bytes', 'Subflow Bwd Packets', 'Subflow Bwd Bytes', 'Init_Win_bytes_forward', 'Init_Win_bytes_backward', 'act_data_pkt_fwd', 'min_seg_size_forward', 'Active Mean', 'Active Std', 'Active Max', 'Active Min', 'Idle Mean', 'Idle Std', 'Idle Max', 'Idle Min']
+
+MULTICLASS NO AUGMENTATION - Precision optimisation
+
+Optimal number of features:  59
+Evaluation Metrics:
+Accuracy     0.880
+Macro precision       0.8844457658304109
+Micro recall      0.879562892350616
+
+                     0         1         2         3         4         5         6         7         8         9         10
+ Precision :          0.8           0.8861209964412812           0.8690744920993227           0.9534246575342465           0.956989247311828           0.9102902374670184           0.9048991354466859           0.9198113207547169           0.7909836065573771           0.789795918367347           0.9475138121546961
+
+                     0         1         2         3         4         5         6         7         8         9         10
+ Recall :          0.7161125319693095           0.6368286445012787           0.9846547314578005           0.8900255754475703           0.9104859335038363           0.8823529411764706           0.80306905370844           0.9974424552429667           0.9872122762148338           0.989769820971867           0.8772378516624041
+
+                     0         1         2         3         4         5         6         7         8         9         10
+ F1 :          0.7557354925775978           0.7410714285714285           0.9232613908872901           0.9206349206349207           0.9331585845347313           0.8961038961038962           0.8509485094850948           0.9570552147239264           0.8782707622298067           0.8785471055618614           0.9110225763612217
+
+                     0         1         2         3         4         5         6         7         8         9         10
+ Correct Predictions :          391           391           391           391           391           391           391           391           391           391           391
+Features kept with precision as the optimisation strategy:
+['Flow Duration', 'Total Fwd Packets', 'Total Backward Packets', 'Total Length of Fwd Packets', 'Fwd Packet Length Max', 'Fwd Packet Length Min', 'Fwd Packet Length Mean', 'Fwd Packet Length Std', 'Bwd Packet Length Max', 'Bwd Packet Length Min', 'Bwd Packet Length Mean', 'Bwd Packet Length Std', 'Flow Bytes/s', 'Flow Packets/s', 'Flow IAT Mean', 'Flow IAT Std', 'Flow IAT Max', 'Flow IAT Min', 'Fwd IAT Total', 'Fwd IAT Mean', 'Fwd IAT Std', 'Fwd IAT Max', 'Fwd IAT Min', 'Bwd IAT Total', 'Bwd IAT Mean', 'Bwd IAT Std', 'Bwd IAT Max', 'Bwd IAT Min', 'Fwd PSH Flags', 'Fwd Packets/s', 'Bwd Packets/s', 'Min Packet Length', 'Max Packet Length', 'Packet Length Mean', 'Packet Length Std', 'Packet Length Variance', 'FIN Flag Count', 'SYN Flag Count', 'PSH Flag Count', 'ACK Flag Count', 'URG Flag Count', 'Down/Up Ratio', 'Average Packet Size', 'Avg Fwd Segment Size', 'Avg Bwd Segment Size', 'Subflow Fwd Packets', 'Subflow Fwd Bytes', 'Subflow Bwd Packets', 'Init_Win_bytes_forward', 'Init_Win_bytes_backward', 'act_data_pkt_fwd', 'Active Mean', 'Active Std', 'Active Max', 'Active Min', 'Idle Mean', 'Idle Std', 'Idle Max', 'Idle Min']
+training set size:  5000  testing set size:  4301
+
+
+MULTICLASS NO AUGMENTATION - Recall optimisation
+
+Optimal number of features:  68
+Evaluation Metrics:
+Accuracy     0.881
+Macro precision       0.8851877465929054
+Micro recall      0.8807254126947222
+
+                     0         1         2         3         4         5         6         7         8         9         10
+ Precision :          0.7965616045845272           0.8645833333333334           0.8693693693693694           0.9559228650137741           0.9568733153638814           0.9302949061662198           0.9036827195467422           0.9241706161137441           0.7930327868852459           0.789795918367347           0.9527777777777777
+
+                     0         1         2         3         4         5         6         7         8         9         10
+ Recall :          0.710997442455243           0.6368286445012787           0.9872122762148338           0.887468030690537           0.907928388746803           0.887468030690537           0.8158567774936062           0.9974424552429667           0.989769820971867           0.989769820971867           0.8772378516624041
+
+                     0         1         2         3         4         5         6         7         8         9         10
+ F1 :          0.7513513513513513           0.7334315169366716           0.9245508982035928           0.9204244031830239           0.9317585301837271           0.9083769633507853           0.8575268817204301           0.959409594095941           0.8805460750853243           0.8785471055618614           0.9134487350199734
+
+                     0         1         2         3         4         5         6         7         8         9         10
+ Correct Predictions :          391           391           391           391           391           391           391           391           391           391           391
+Features kept with recall as the optimisation strategy:
+['Flow Duration', 'Total Fwd Packets', 'Total Backward Packets', 'Total Length of Fwd Packets', 'Total Length of Bwd Packets', 'Fwd Packet Length Max', 'Fwd Packet Length Min', 'Fwd Packet Length Mean', 'Fwd Packet Length Std', 'Bwd Packet Length Max', 'Bwd Packet Length Min', 'Bwd Packet Length Mean', 'Bwd Packet Length Std', 'Flow Bytes/s', 'Flow Packets/s', 'Flow IAT Mean', 'Flow IAT Std', 'Flow IAT Max', 'Flow IAT Min', 'Fwd IAT Total', 'Fwd IAT Mean', 'Fwd IAT Std', 'Fwd IAT Max', 'Fwd IAT Min', 'Bwd IAT Total', 'Bwd IAT Mean', 'Bwd IAT Std', 'Bwd IAT Max', 'Bwd IAT Min', 'Fwd PSH Flags', 'Fwd URG Flags', 'Bwd Header Length', 'Fwd Packets/s', 'Bwd Packets/s', 'Min Packet Length', 'Max Packet Length', 'Packet Length Mean', 'Packet Length Std', 'Packet Length Variance', 'FIN Flag Count', 'SYN Flag Count', 'RST Flag Count', 'PSH Flag Count', 'ACK Flag Count', 'URG Flag Count', 'CWE Flag Count', 'ECE Flag Count', 'Down/Up Ratio', 'Average Packet Size', 'Avg Fwd Segment Size', 'Avg Bwd Segment Size', 'Fwd Header Length.1', 'Subflow Fwd Packets', 'Subflow Fwd Bytes', 'Subflow Bwd Packets', 'Subflow Bwd Bytes', 'Init_Win_bytes_forward', 'Init_Win_bytes_backward', 'act_data_pkt_fwd', 'min_seg_size_forward', 'Active Mean', 'Active Std', 'Active Max', 'Active Min', 'Idle Mean', 'Idle Std', 'Idle Max', 'Idle Min']
+
+MULTICLASS NO AUGMENTATION - F1 optimisation
+
+Optimal number of features:  58
+Evaluation Metrics:
+Accuracy     0.881
+Macro precision       0.8859227504656659
+Micro recall      0.8814229249011857
+
+                     0         1         2         3         4         5         6         7         8         9         10
+ Precision :          0.8075801749271136           0.8671328671328671           0.8707482993197279           0.9567567567567568           0.9573333333333334           0.9302949061662198           0.9028571428571428           0.9263657957244655           0.7877551020408163           0.7881873727087576           0.9501385041551247
+
+                     0         1         2         3         4         5         6         7         8         9         10
+ Recall :          0.7084398976982097           0.6342710997442456           0.9820971867007673           0.9053708439897699           0.9181585677749361           0.887468030690537           0.8081841432225064           0.9974424552429667           0.9872122762148338           0.989769820971867           0.8772378516624041
+
+                     0         1         2         3         4         5         6         7         8         9         10
+ F1 :          0.7547683923705722           0.7326440177252586           0.923076923076923           0.9303547963206308           0.9373368146214098           0.9083769633507853           0.8529014844804319           0.960591133004926           0.8762769580022702           0.8775510204081634           0.9122340425531914
+
+                     0         1         2         3         4         5         6         7         8         9         10
+ Correct Predictions :          391           391           391           391           391           391           391           391           391           391           391
+Features kept with f1_score as the optimisation strategy:
+['Flow Duration', 'Total Fwd Packets', 'Total Backward Packets', 'Total Length of Fwd Packets', 'Fwd Packet Length Max', 'Fwd Packet Length Min', 'Fwd Packet Length Mean', 'Fwd Packet Length Std', 'Bwd Packet Length Max', 'Bwd Packet Length Min', 'Bwd Packet Length Mean', 'Bwd Packet Length Std', 'Flow Bytes/s', 'Flow Packets/s', 'Flow IAT Mean', 'Flow IAT Std', 'Flow IAT Max', 'Flow IAT Min', 'Fwd IAT Total', 'Fwd IAT Mean', 'Fwd IAT Std', 'Fwd IAT Max', 'Fwd IAT Min', 'Bwd IAT Total', 'Bwd IAT Mean', 'Bwd IAT Std', 'Bwd IAT Max', 'Bwd IAT Min', 'Fwd PSH Flags', 'Fwd Packets/s', 'Bwd Packets/s', 'Min Packet Length', 'Max Packet Length', 'Packet Length Mean', 'Packet Length Std', 'Packet Length Variance', 'FIN Flag Count', 'SYN Flag Count', 'PSH Flag Count', 'ACK Flag Count', 'URG Flag Count', 'Down/Up Ratio', 'Average Packet Size', 'Avg Fwd Segment Size', 'Avg Bwd Segment Size', 'Subflow Fwd Packets', 'Subflow Fwd Bytes', 'Subflow Bwd Packets', 'Init_Win_bytes_forward', 'Init_Win_bytes_backward', 'Active Mean', 'Active Std', 'Active Max', 'Active Min', 'Idle Mean', 'Idle Std', 'Idle Max', 'Idle Min']
+training set size:  5000  testing set size:  4301
+
+MULTICLASS AUGMENTED - Precision  optimisation
+
+Optimal number of features:  94
+Evaluation Metrics:
+Accuracy     0.956
+Macro precision       0.9570422958523835
+Micro recall      0.9555917228551499
+
+                     0         1         2         3         4         5         6         7         8         9         10
+ Precision :          0.836405529953917           0.9821428571428571           0.964735516372796           0.9893333333333333           0.9745042492917847           0.9324324324324325           0.8982630272952854           0.9974489795918368           0.972568578553616           0.9974424552429667           0.9821882951653944
+
+                     0         1         2         3         4         5         6         7         8         9         10
+ Recall :          0.928388746803069           0.9846547314578005           0.979539641943734           0.948849104859335           0.8797953964194374           0.8823529411764706           0.9258312020460358           1.0           0.9974424552429667           0.9974424552429667           0.9872122762148338
+
+                     0         1         2         3         4         5         6         7         8         9         10
+ F1 :          0.8800000000000001           0.983397190293742           0.9720812182741116           0.968668407310705           0.924731182795699           0.9067017082785809           0.9118387909319898           0.9987228607918263           0.9848484848484849           0.9974424552429667           0.9846938775510203
+
+                     0         1         2         3         4         5         6         7         8         9         10
+ Correct Predictions :          391           391           391           391           391           391           391           391           391           391           391
+Features kept with precision as the optimisation strategy:
+['Flow Duration', 'Total Fwd Packets', 'Total Backward Packets', 'Total Length of Fwd Packets', 'Total Length of Bwd Packets', 'Fwd Packet Length Max', 'Fwd Packet Length Min', 'Fwd Packet Length Mean', 'Fwd Packet Length Std', 'Bwd Packet Length Max', 'Bwd Packet Length Min', 'Bwd Packet Length Mean', 'Bwd Packet Length Std', 'Flow Bytes/s', 'Flow Packets/s', 'Flow IAT Mean', 'Flow IAT Std', 'Flow IAT Max', 'Flow IAT Min', 'Fwd IAT Total', 'Fwd IAT Mean', 'Fwd IAT Std', 'Fwd IAT Max', 'Fwd IAT Min', 'Bwd IAT Total', 'Bwd IAT Mean', 'Bwd IAT Std', 'Bwd IAT Max', 'Bwd IAT Min', 'Fwd PSH Flags', 'Fwd URG Flags', 'Bwd Header Length', 'Fwd Packets/s', 'Bwd Packets/s', 'Min Packet Length', 'Max Packet Length', 'Packet Length Mean', 'Packet Length Std', 'Packet Length Variance', 'FIN Flag Count', 'SYN Flag Count', 'RST Flag Count', 'PSH Flag Count', 'ACK Flag Count', 'URG Flag Count', 'CWE Flag Count', 'ECE Flag Count', 'Down/Up Ratio', 'Average Packet Size', 'Avg Fwd Segment Size', 'Avg Bwd Segment Size', 'Fwd Header Length.1', 'Subflow Fwd Packets', 'Subflow Fwd Bytes', 'Subflow Bwd Packets', 'Subflow Bwd Bytes', 'Init_Win_bytes_forward', 'Init_Win_bytes_backward', 'act_data_pkt_fwd', 'min_seg_size_forward', 'Active Mean', 'Active Std', 'Active Max', 'Active Min', 'Idle Mean', 'Idle Std', 'Idle Max', 'Idle Min', '% connections s-IP to d-port within n=20', '% connections s-IP to d-port within n=15', '% connections s-IP to d-port within n=10', '% connections s-IP to d-port within n=5', '% connections s-IP to d-IP within n=20', '% connections s-IP to d-IP within n=15', '% connections s-IP to d-IP within n=10', '% connections s-IP to d-IP within n=5', '% connections d-IP within n=20', '% connections d-IP within n=15', '% connections d-IP within n=10', '% connections d-IP within n=5', '% connections s-IP within n=20', '% connections s-IP within n=15', '% connections s-IP within n=10', '% connections s-IP within n=5', 'time since last conn', 'Av time diff between last n connections, n=20', 'Av time diff between last n connections, n=15', 'Av time diff between last n connections, n=10', 'Av time diff between last n connections, n=5', 'Destination Port_21', 'Destination Port_22', 'Destination Port_80', 'Destination Port_8080', 'Protocol_6']
+
+MULTICLASS AUGMENTED - Recall  optimisation
+
+Optimal number of features:  84
+Evaluation Metrics:
+Accuracy     0.956
+Macro precision       0.9575201864531105
+Micro recall      0.9562892350616136
+
+                     0         1         2         3         4         5         6         7         8         9         10
+ Precision :          0.8395348837209302           0.9822335025380711           0.964824120603015           0.9893048128342246           0.9692737430167597           0.9398907103825137           0.9029850746268657           0.9974489795918368           0.972568578553616           0.9974424552429667           0.9772151898734177
+
+                     0         1         2         3         4         5         6         7         8         9         10
+ Recall :          0.9232736572890026           0.989769820971867           0.9820971867007673           0.9462915601023018           0.887468030690537           0.8797953964194374           0.928388746803069           1.0           0.9974424552429667           0.9974424552429667           0.9872122762148338
+
+                     0         1         2         3         4         5         6         7         8         9         10
+ F1 :          0.879415347137637           0.9859872611464969           0.973384030418251           0.9673202614379084           0.9265687583444592           0.9088507265521797           0.9155107187894073           0.9987228607918263           0.9848484848484849           0.9974424552429667           0.9821882951653944
+
+                     0         1         2         3         4         5         6         7         8         9         10
+ Correct Predictions :          391           391           391           391           391           391           391           391           391           391           391
+Features kept with recall as the optimisation strategy:
+['Flow Duration', 'Total Fwd Packets', 'Total Backward Packets', 'Total Length of Fwd Packets', 'Fwd Packet Length Max', 'Fwd Packet Length Min', 'Fwd Packet Length Mean', 'Fwd Packet Length Std', 'Bwd Packet Length Max', 'Bwd Packet Length Min', 'Bwd Packet Length Mean', 'Bwd Packet Length Std', 'Flow Bytes/s', 'Flow Packets/s', 'Flow IAT Mean', 'Flow IAT Std', 'Flow IAT Max', 'Flow IAT Min', 'Fwd IAT Total', 'Fwd IAT Mean', 'Fwd IAT Std', 'Fwd IAT Max', 'Fwd IAT Min', 'Bwd IAT Total', 'Bwd IAT Mean', 'Bwd IAT Std', 'Bwd IAT Max', 'Bwd IAT Min', 'Fwd PSH Flags', 'Fwd Packets/s', 'Bwd Packets/s', 'Min Packet Length', 'Max Packet Length', 'Packet Length Mean', 'Packet Length Std', 'Packet Length Variance', 'FIN Flag Count', 'SYN Flag Count', 'PSH Flag Count', 'ACK Flag Count', 'URG Flag Count', 'Down/Up Ratio', 'Average Packet Size', 'Avg Fwd Segment Size', 'Avg Bwd Segment Size', 'Subflow Fwd Packets', 'Subflow Fwd Bytes', 'Subflow Bwd Packets', 'Init_Win_bytes_forward', 'Init_Win_bytes_backward', 'Active Mean', 'Active Std', 'Active Max', 'Active Min', 'Idle Mean', 'Idle Std', 'Idle Max', 'Idle Min', '% connections s-IP to d-port within n=20', '% connections s-IP to d-port within n=15', '% connections s-IP to d-port within n=10', '% connections s-IP to d-port within n=5', '% connections s-IP to d-IP within n=20', '% connections s-IP to d-IP within n=15', '% connections s-IP to d-IP within n=10', '% connections s-IP to d-IP within n=5', '% connections d-IP within n=20', '% connections d-IP within n=15', '% connections d-IP within n=10', '% connections d-IP within n=5', '% connections s-IP within n=20', '% connections s-IP within n=15', '% connections s-IP within n=10', '% connections s-IP within n=5', 'time since last conn', 'Av time diff between last n connections, n=20', 'Av time diff between last n connections, n=15', 'Av time diff between last n connections, n=10', 'Av time diff between last n connections, n=5', 'Destination Port_21', 'Destination Port_22', 'Destination Port_80', 'Destination Port_8080', 'Protocol_6']
+
+
+MULTICLASS AUGMENTED - F1  optimisation
+
+Optimal number of features:  91
+Evaluation Metrics:
+Accuracy     0.955
+Macro precision       0.9564949970228142
+Micro recall      0.9551267147175075
+
+                     0         1         2         3         4         5         6         7         8         9         10
+ Precision :          0.836027713625866           0.9846938775510204           0.9623115577889447           0.9892761394101877           0.969187675070028           0.9347826086956522           0.8980099502487562           0.9974489795918368           0.972568578553616           0.9974424552429667           0.9796954314720813
+
+                     0         1         2         3         4         5         6         7         8         9         10
+ Recall :          0.9258312020460358           0.9872122762148338           0.979539641943734           0.9437340153452686           0.8849104859335039           0.8797953964194374           0.9232736572890026           1.0           0.9974424552429667           0.9974424552429667           0.9872122762148338
+
+                     0         1         2         3         4         5         6         7         8         9         10
+ F1 :          0.8786407766990292           0.9859514687100894           0.9708491761723701           0.9659685863874345           0.9251336898395722           0.9064558629776021           0.9104665825977302           0.9987228607918263           0.9848484848484849           0.9974424552429667           0.9834394904458599
+
+                     0         1         2         3         4         5         6         7         8         9         10
+ Correct Predictions :          391           391           391           391           391           391           391           391           391           391           391
+Features kept with f1_score as the optimisation strategy:
+['Flow Duration', 'Total Fwd Packets', 'Total Backward Packets', 'Total Length of Fwd Packets', 'Total Length of Bwd Packets', 'Fwd Packet Length Max', 'Fwd Packet Length Min', 'Fwd Packet Length Mean', 'Fwd Packet Length Std', 'Bwd Packet Length Max', 'Bwd Packet Length Min', 'Bwd Packet Length Mean', 'Bwd Packet Length Std', 'Flow Bytes/s', 'Flow Packets/s', 'Flow IAT Mean', 'Flow IAT Std', 'Flow IAT Max', 'Flow IAT Min', 'Fwd IAT Total', 'Fwd IAT Mean', 'Fwd IAT Std', 'Fwd IAT Max', 'Fwd IAT Min', 'Bwd IAT Total', 'Bwd IAT Mean', 'Bwd IAT Std', 'Bwd IAT Max', 'Bwd IAT Min', 'Fwd PSH Flags', 'Fwd URG Flags', 'Fwd Packets/s', 'Bwd Packets/s', 'Min Packet Length', 'Max Packet Length', 'Packet Length Mean', 'Packet Length Std', 'Packet Length Variance', 'FIN Flag Count', 'SYN Flag Count', 'RST Flag Count', 'PSH Flag Count', 'ACK Flag Count', 'URG Flag Count', 'CWE Flag Count', 'ECE Flag Count', 'Down/Up Ratio', 'Average Packet Size', 'Avg Fwd Segment Size', 'Avg Bwd Segment Size', 'Subflow Fwd Packets', 'Subflow Fwd Bytes', 'Subflow Bwd Packets', 'Subflow Bwd Bytes', 'Init_Win_bytes_forward', 'Init_Win_bytes_backward', 'act_data_pkt_fwd', 'Active Mean', 'Active Std', 'Active Max', 'Active Min', 'Idle Mean', 'Idle Std', 'Idle Max', 'Idle Min', '% connections s-IP to d-port within n=20', '% connections s-IP to d-port within n=15', '% connections s-IP to d-port within n=10', '% connections s-IP to d-port within n=5', '% connections s-IP to d-IP within n=20', '% connections s-IP to d-IP within n=15', '% connections s-IP to d-IP within n=10', '% connections s-IP to d-IP within n=5', '% connections d-IP within n=20', '% connections d-IP within n=15', '% connections d-IP within n=10', '% connections d-IP within n=5', '% connections s-IP within n=20', '% connections s-IP within n=15', '% connections s-IP within n=10', '% connections s-IP within n=5', 'time since last conn', 'Av time diff between last n connections, n=20', 'Av time diff between last n connections, n=15', 'Av time diff between last n connections, n=10', 'Av time diff between last n connections, n=5', 'Destination Port_21', 'Destination Port_22', 'Destination Port_80', 'Destination Port_8080', 'Protocol_6']
