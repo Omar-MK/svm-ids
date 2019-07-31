@@ -1,0 +1,99 @@
+
+"trainingset_augmented_binary"  "_Pearson_R_Reduction_(PRR)_"
+
+training set size:  5000  testing set size:  145672
+*** Beginning training ***
+Optimal number of features:  45
+Evaluation Metrics:
+Accuracy     0.982
+Macro precision       0.981665653969244
+Micro recall      0.9815613158328299
+
+                     0         1
+ Precision :          0.9887548074243353           0.9745765005141527
+
+                     0         1
+ Recall :          0.9742023175352847           0.9889203141303751
+
+                     0         1
+ F1 :          0.9814246196403872           0.981696014828545
+
+                     0         1
+ Correct Predictions :          72836           72836
+Features kept with F1-score as the optimisation strategy:
+['Fwd Packet Length Max', 'Fwd Packet Length Std', 'Bwd Packet Length Max', 'Bwd Packet Length Mean', 'Flow Bytes/s', 'Flow IAT Max', 'Fwd IAT Mean', 'Fwd IAT Max', 'Fwd IAT Min', 'Bwd IAT Total', 'Bwd IAT Std', 'Bwd IAT Max', 'Packet Length Mean', 'Packet Length Std', 'Packet Length Variance', 'FIN Flag Count', 'PSH Flag Count', 'ACK Flag Count', 'Down/Up Ratio', 'Subflow Fwd Packets', 'Subflow Fwd Bytes', 'Subflow Bwd Packets', 'act_data_pkt_fwd', 'Active Std', 'Active Max', 'Idle Mean', 'Idle Max', '% connections s-IP to d-port within n=20', '% connections s-IP to d-port within n=15', '% connections s-IP to d-port within n=10', '% connections s-IP to d-IP within n=20', '% connections s-IP to d-IP within n=15', '% connections s-IP to d-IP within n=10', '% connections s-IP to d-IP within n=5', '% connections d-IP within n=20', '% connections d-IP within n=10', '% connections d-IP within n=5', '% connections s-IP within n=20', '% connections s-IP within n=5', 'time since last conn', 'Destination Port_21', 'Destination Port_22', 'Destination Port_80', 'Destination Port_8080', 'Protocol_6']
+
+"trainingset_augmented_multiclass"  "_Pearson_R_Reduction_(PRR)_"
+
+training set size:  5000  testing set size:  4180
+Optimal number of features:  78
+Evaluation Metrics:
+Accuracy     0.980
+Macro precision       0.9801139252503656
+Micro recall      0.9799043062200957
+
+                     0         1         2         3         4         5         6         7         8         9         10
+ Precision :          0.9941176470588236           0.9689922480620154           0.9895833333333334           0.9869451697127938           0.9765625           0.9656992084432717           0.9511568123393316           0.9973753280839895           0.9817232375979112           0.9973753280839895           0.9717223650385605
+
+                     0         1         2         3         4         5         6         7         8         9         10
+ Recall :          0.8894736842105263           0.9868421052631579           1.0           0.9947368421052631           0.9868421052631579           0.9631578947368421           0.9736842105263158           1.0           0.9894736842105263           1.0           0.9947368421052631
+
+                     0         1         2         3         4         5         6         7         8         9         10
+ F1 :          0.938888888888889           0.9778357235984353           0.9947643979057591           0.9908256880733946           0.9816753926701569           0.9644268774703557           0.9622886866059818           0.9986859395532194           0.9855832241153342           0.9986859395532194           0.9830949284785436
+
+                     0         1         2         3         4         5         6         7         8         9         10
+ Correct Predictions :          380           380           380           380           380           380           380           380           380           380           380
+Features kept with F1-score as the optimisation strategy:
+['Fwd Packet Length Max', 'Fwd Packet Length Min', 'Fwd Packet Length Std', 'Bwd Packet Length Max', 'Bwd Packet Length Min', 'Bwd Packet Length Mean', 'Flow Bytes/s', 'Flow IAT Mean', 'Flow IAT Std', 'Flow IAT Max', 'Flow IAT Min', 'Fwd IAT Total', 'Fwd IAT Mean', 'Fwd IAT Std', 'Fwd IAT Max', 'Fwd IAT Min', 'Bwd IAT Total', 'Bwd IAT Mean', 'Bwd IAT Std', 'Bwd IAT Max', 'Bwd IAT Min', 'Fwd PSH Flags', 'Fwd URG Flags', 'Bwd Header Length', 'Fwd Packets/s', 'Bwd Packets/s', 'Min Packet Length', 'Packet Length Mean', 'Packet Length Std', 'Packet Length Variance', 'FIN Flag Count', 'SYN Flag Count', 'RST Flag Count', 'PSH Flag Count', 'ACK Flag Count', 'URG Flag Count', 'CWE Flag Count', 'Down/Up Ratio', 'Average Packet Size', 'Avg Fwd Segment Size', 'Fwd Header Length.1', 'Subflow Fwd Packets', 'Subflow Fwd Bytes', 'Subflow Bwd Packets', 'Subflow Bwd Bytes', 'Init_Win_bytes_forward', 'Init_Win_bytes_backward', 'act_data_pkt_fwd', 'min_seg_size_forward', 'Active Mean', 'Active Max', 'Active Min', 'Idle Mean', 'Idle Std', 'Idle Max', 'Idle Min', '% connections s-IP to d-port within n=20', '% connections s-IP to d-port within n=15', '% connections s-IP to d-port within n=10', '% connections s-IP to d-port within n=5', '% connections s-IP to d-IP within n=20', '% connections s-IP to d-IP within n=15', '% connections s-IP to d-IP within n=5', '% connections d-IP within n=20', '% connections d-IP within n=10', '% connections s-IP within n=20', '% connections s-IP within n=10', '% connections s-IP within n=5', 'time since last conn', 'Av time diff between last n connections, n=20', 'Av time diff between last n connections, n=15', 'Av time diff between last n connections, n=10', 'Av time diff between last n connections, n=5', 'Destination Port_21', 'Destination Port_22', 'Destination Port_80', 'Destination Port_8080', 'Protocol_6']
+
+
+
+trainingset_augmented_binary "_PRR_+_Clustering_"
+
+training set size:  1000  testing set size:  145672
+*** Beginning training ***
+Optimal number of features:  22
+Evaluation Metrics:
+Accuracy     0.918
+Macro precision       0.9187605638967071
+Micro recall      0.9182066560492064
+
+                     0         1
+ Precision :          0.9339906250445239           0.9035305027488905
+
+                     0         1
+ Recall :          0.9000219671590971           0.9363913449393158
+
+                     0         1
+ F1 :          0.9166917209120211           0.9196674779700784
+
+                     0         1
+ Correct Predictions :          72836           72836
+Features kept with F1-score as the optimisation strategy:
+[0, 2, 3, 4, 5, 6, 16, 17, 18, 20, 27, 28, 29, 33, 34, 35, 39, 42, 44, 45, 47, 54]
+
+
+"trainingset_augmented_multiclass" "_PRR_+_Clustering_"
+
+
+Optimal number of features:  47
+Evaluation Metrics:
+Accuracy     0.911
+Macro precision       0.91585117728288
+Micro recall      0.9105263157894736
+
+                     0         1         2         3         4         5         6         7         8         9         10
+ Precision :          0.9771863117870723           0.8640483383685801           0.8459821428571429           0.958656330749354           0.9523809523809523           0.9417989417989417           0.927027027027027           0.949748743718593           0.7882599580712788           0.921760391198044           0.9475138121546961
+
+                     0         1         2         3         4         5         6         7         8         9         10
+ Recall :          0.6763157894736842           0.7526315789473684           0.9973684210526316           0.9763157894736842           0.8947368421052632           0.9368421052631579           0.9026315789473685           0.9947368421052631           0.9894736842105263           0.9921052631578947           0.9026315789473685
+
+                     0         1         2         3         4         5         6         7         8         9         10
+ F1 :          0.7993779160186625           0.8045007032348804           0.9154589371980676           0.9674054758800521           0.9226594301221167           0.9393139841688655           0.9146666666666667           0.9717223650385605           0.8774795799299884           0.9556400506970849           0.9245283018867925
+
+                     0         1         2         3         4         5         6         7         8         9         10
+ Correct Predictions :          380           380           380           380           380           380           380           380           380           380           380
+Features kept with F1-score as the optimisation strategy:
+[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 23, 24, 25, 26, 27, 28, 29, 31, 33, 34, 35, 39, 40, 42, 43, 45, 46, 47, 48, 50, 51, 52, 53, 54, 55]
+
+
