@@ -96,6 +96,7 @@ class DataWrangler:
             nulls = self.df.isnull()
             print("%d NaN and inf cells found in df" % nulls.sum().sum())
             columns_with_nulls = self.df.columns[nulls.any()]
+            print(columns_with_nulls)
             print("Number of columns containing NaN/inf values: ", nulls.any().sum())
             print("Number of rows dropped containing NaN/inf values: ", nulls.sum(axis=1).sum())
 
@@ -109,8 +110,8 @@ class DataWrangler:
         Checks if the data types of the columns in the object's pandas dataframe are consistent with the data types of a representative sample of the values present in the columns.
         Returns a list of column names where inconsistenices are detected.
         """
-        # 10% or 20 rows (whichever is lower) of the current column are randomly sampled and stored in a list
-        sampled_df = self.df.sample(n = min(int(len(self.df.index) * 0.1), 20))
+        # 40% or 20 rows (whichever is lower) of the current column are randomly sampled and stored in a list
+        sampled_df = self.df.sample(n = min(int(len(self.df.index) * 0.4), 20))
 
         i = 0
         for col in self.df.columns:

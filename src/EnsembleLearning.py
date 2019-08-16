@@ -50,10 +50,14 @@ def main():
     binary_labels = pickle.load(open("../datasets/transformed/binary_label_encodings.obj", "rb"))
     labels = [binary_labels, multiclass_labels]
 
-    trn_df_paths = ["trainingset_augmented_binary" + path_suff[1] + ".obj",
+    trn_df_paths = ["trainingset_augmented_binary" + path_suff[0] + ".obj",
+                    "trainingset_augmented_multiclass" + path_suff[0] +  ".obj",
+                    "trainingset_augmented_binary" + path_suff[1] + ".obj",
                     "trainingset_augmented_multiclass" + path_suff[1] +  ".obj"]
 
-    tst_df_paths = ["testingset_augmented_binary" + path_suff[1] + ".obj",
+    tst_df_paths = ["testingset_augmented_binary" + path_suff[0] + ".obj",
+                    "testingset_augmented_multiclass" + path_suff[0] +  ".obj",
+                    "testingset_augmented_binary" + path_suff[1] + ".obj",
                     "testingset_augmented_multiclass" + path_suff[1] +  ".obj"]
 
     i = 0

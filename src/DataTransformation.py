@@ -296,7 +296,7 @@ def get_best_reduction_PCA(df, categotical_cols=None, search_res=20, verbose=Fal
 
 
 def get_best_reduction(df, estimator, estimator_name, search_res, verbose, show, save, path):
-    svc = SGDClassifier(loss="hinge", penalty="l2", max_iter=10000, tol=1e-5, learning_rate="adaptive", early_stopping=True, class_weight="balanced", eta0=1)
+    svc = SGDClassifier(loss="hinge", penalty="l2", max_iter=10000, tol=1e-5, learning_rate="adaptive", early_stopping=True, class_weight="balanced", eta0=0.3)
     pipe = Pipeline(steps=[('estimator', estimator), ('svc', svc)])
     param_grid = {
         "estimator__n_components": get_component_numbers(len(df.columns), search_res),

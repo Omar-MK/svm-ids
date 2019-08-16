@@ -210,11 +210,6 @@ def main():
     le.fit(df.Label)
     df.Label = le.transform(df.Label)
 
-    # removing duplicated rows
-    print("Calculating number of duplicated rows...")
-    print("Number of duplicated rows: ", df.duplicated().sum())
-    df = df.drop_duplicates(keep='first')
-
     # writing multi-class names and encoding to csv
     print("Creating csv with class keys and values...")
     mapping_names = dict(zip(le.classes_, le.transform(le.classes_)))
@@ -232,6 +227,12 @@ def main():
     # Now filling in empty cells for time diff column (discussed above)
     print("Empty time difference values are filled with max time diff from training data")
     df.loc[:,"time since last conn"] = fill_missing(df["time since last conn"], max_diff)
+
+    # removing duplicated rows
+    print("Calculating number of duplicated rows...")
+    print("Number of duplicated rows: ", df.duplicated().sum())
+    df = df.drop_duplicates(keep='first')
+
 
     # Resplitting filled df
     X = df.iloc[:,:-1]
