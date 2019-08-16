@@ -96,7 +96,6 @@ class DataWrangler:
             nulls = self.df.isnull()
             print("%d NaN and inf cells found in df" % nulls.sum().sum())
             columns_with_nulls = self.df.columns[nulls.any()]
-            print(columns_with_nulls)
             print("Number of columns containing NaN/inf values: ", nulls.any().sum())
             print("Number of rows dropped containing NaN/inf values: ", nulls.sum(axis=1).sum())
 
